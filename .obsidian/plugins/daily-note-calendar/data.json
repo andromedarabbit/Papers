@@ -1,0 +1,38 @@
+{
+  "generalSettings": {
+    "displayNotesCreatedOnDate": true,
+    "displayNoteIndicator": true,
+    "useModifierKeyToCreateNote": false,
+    "firstDayOfWeek": 1
+  },
+  "notesSettings": {
+    "displayDateTemplate": "HH:mm",
+    "useCreatedOnDateFromProperties": false,
+    "createdOnDatePropertyName": "creation date"
+  },
+  "dailyNotes": {
+    "nameTemplate": "yyyy-MM-dd",
+    "folder": "Daily Notes",
+    "templateFile": "템플릿/Daily"
+  },
+  "weeklyNotes": {
+    "nameTemplate": "yyyy-ww",
+    "folder": "Weekly Notes",
+    "templateFile": "템플릿/Weekly"
+  },
+  "monthlyNotes": {
+    "nameTemplate": "yyyy-MM",
+    "folder": "Monthly Notes",
+    "templateFile": "템플릿/Monthly"
+  },
+  "quarterlyNotes": {
+    "nameTemplate": "yyyy-Qq",
+    "folder": "Quarterly Notes",
+    "templateFile": "템플릿//Quarterly"
+  },
+  "yearlyNotes": {
+    "nameTemplate": "yyyy",
+    "folder": "Yearly Notes",
+    "templateFile": "템플릿//Yearly"
+  }
+}

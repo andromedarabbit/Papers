@@ -1,0 +1,290 @@
+{
+  "choices": [
+    {
+      "id": "12cc4df1-1007-4faa-b051-ddf980798ce6",
+      "name": "Daily Note",
+      "type": "Multi",
+      "command": false,
+      "choices": [
+        {
+          "id": "0ed987f7-98b4-4848-a796-ef1e8e6ae1b8",
+          "name": "New Today",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "Daily Notes/{{DATE:yyyy}}/{{DATE:yyyy-MM-DD}}.md",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Daily.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "{{VALUE}} #task 🔼 ➕ {{DATE:}}"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "### 🆕 New Today",
+            "insertAtEnd": false,
+            "considerSubsections": true,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "40d22322-e5e7-4e62-a340-d727a38e0a3c",
+          "name": "Work",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "Daily Notes/{{DATE:yyyy}}/{{DATE:yyyy-MM-DD}}.md",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Daily.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "{{VALUE}} #task 🔼 ➕ {{DATE:}}"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "###  📔 Work",
+            "insertAtEnd": false,
+            "considerSubsections": true,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": true,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "af5340bf-450f-4bfc-87dd-16badbb67c9b",
+          "name": "Memo",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "Daily Notes/{{DATE:yyyy}}/{{DATE:yyyy-MM-DD}}.md",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Daily.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "**{{DATE:HH:mm}}** {{VALUE:본문}}\\n"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "## 📔 Memo",
+            "insertAtEnd": false,
+            "considerSubsections": true,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "ded2553d-354b-4660-9c8a-c943e25246e1",
+          "name": "잡담",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "Daily Notes/{{DATE:yyyy}}/{{DATE:yyyy-MM-DD}}.md",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Daily.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "**{{DATE:HH:mm}}** #잡담 {{VALUE:본문}}\\n\\n"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "## 📔 Memo",
+            "insertAtEnd": false,
+            "considerSubsections": true,
+            "createIfNotFound": true,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "id": "4bc872e8-5ca1-4560-b729-2f3210b13266",
+      "name": "New Note",
+      "type": "Multi",
+      "command": false,
+      "choices": [
+        {
+          "id": "aaf2f246-6571-4838-b780-04a213eabeef",
+          "name": "\b초안",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "초안/{{DATE:YYYY-MM-DD}} {{VALUE:제목}}",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Default.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "{{VALUE:본문}}\\n"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "%% content begins %%",
+            "insertAtEnd": true,
+            "considerSubsections": false,
+            "createIfNotFound": false,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        },
+        {
+          "id": "c7d16a80-758e-4428-9dce-370e3e66c156",
+          "name": "Work",
+          "type": "Capture",
+          "command": false,
+          "appendLink": false,
+          "captureTo": "업무/{{DATE:YYYY-MM-DD}} {{VALUE:제목}}",
+          "captureToActiveFile": false,
+          "createFileIfItDoesntExist": {
+            "enabled": true,
+            "createWithTemplate": true,
+            "template": "템플릿/Work.md"
+          },
+          "format": {
+            "enabled": true,
+            "format": "{{VALUE:본문}}\\n"
+          },
+          "insertAfter": {
+            "enabled": true,
+            "after": "%% content begins %%",
+            "insertAtEnd": true,
+            "considerSubsections": false,
+            "createIfNotFound": false,
+            "createIfNotFoundLocation": "top"
+          },
+          "prepend": false,
+          "task": false,
+          "openFileInNewTab": {
+            "enabled": false,
+            "direction": "vertical",
+            "focus": true
+          },
+          "openFile": true,
+          "openFileInMode": "default"
+        }
+      ]
+    }
+  ],
+  "macros": [],
+  "inputPrompt": "multi-line",
+  "devMode": false,
+  "templateFolderPath": "템플릿",
+  "announceUpdates": true,
+  "version": "1.11.5",
+  "disableOnlineFeatures": true,
+  "enableRibbonIcon": true,
+  "ai": {
+    "defaultModel": "Ask me",
+    "defaultSystemPrompt": "As an AI assistant within Obsidian, your primary goal is to help users manage their ideas and knowledge more effectively. Format your responses using Markdown syntax. Please use the [[Obsidian]] link format. You can write aliases for the links by writing [[Obsidian|the alias after the pipe symbol]]. To use mathematical notation, use LaTeX syntax. LaTeX syntax for larger equations should be on separate lines, surrounded with double dollar signs ($$). You can also inline math expressions by wrapping it in $ symbols. For example, use $$w_{ij}^{\text{new}}:=w_{ij}^{\text{current}}+etacdotdelta_jcdot x_{ij}$$ on a separate line, but you can write \"($eta$ = learning rate, $delta_j$ = error term, $x_{ij}$ = input)\" inline.",
+    "promptTemplatesFolderPath": "",
+    "showAssistant": true,
+    "providers": [
+      {
+        "name": "OpenAI",
+        "endpoint": "https://api.openai.com/v1",
+        "apiKey": "",
+        "models": [
+          {
+            "name": "gpt-3.5-turbo",
+            "maxTokens": 4096
+          },
+          {
+            "name": "gpt-3.5-turbo-16k",
+            "maxTokens": 16384
+          },
+          {
+            "name": "gpt-3.5-turbo-1106",
+            "maxTokens": 16385
+          },
+          {
+            "name": "gpt-4",
+            "maxTokens": 8192
+          },
+          {
+            "name": "gpt-4-32k",
+            "maxTokens": 32768
+          },
+          {
+            "name": "gpt-4-1106-preview",
+            "maxTokens": 128000
+          },
+          {
+            "name": "text-davinci-003",
+            "maxTokens": 4096
+          }
+        ]
+      }
+    ]
+  },
+  "migrations": {
+    "migrateToMacroIDFromEmbeddedMacro": true,
+    "useQuickAddTemplateFolder": true,
+    "incrementFileNameSettingMoveToDefaultBehavior": true,
+    "mutualExclusionInsertAfterAndWriteToBottomOfFile": true,
+    "setVersionAfterUpdateModalRelease": true,
+    "addDefaultAIProviders": true
+  }
+}

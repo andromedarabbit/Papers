@@ -1,0 +1,15 @@
+{
+  "autoCollectAttachments": true,
+  "changeNoteBacklinksAlt": true,
+  "consistencyReportFile": "자동생성 노트/consistency-report.md",
+  "deleteAttachmentsWithNote": true,
+  "deleteEmptyFolders": true,
+  "deleteExistFilesWhenMoveNote": true,
+  "moveAttachmentsWithNote": true,
+  "showWarning": false,
+  "updateLinks": true,
+  "excludePaths": [
+    "/consistency-report\\.md$/"
+  ],
+  "includePaths": []
+}

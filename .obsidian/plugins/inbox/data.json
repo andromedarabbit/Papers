@@ -1,0 +1,14 @@
+{
+  "inboxes": [
+    {
+      "trackingType": "folder",
+      "path": "Inbox",
+      "compareType": "compareToLastTracked",
+      "inboxNoteBaseContents": "",
+      "inboxNoteContents": "",
+      "inboxFolderFiles": [],
+      "noticeDurationSeconds": null
+    }
+  ],
+  "walkthroughStatus": "completed"
+}

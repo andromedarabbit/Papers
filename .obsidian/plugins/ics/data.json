@@ -1,0 +1,26 @@
+{
+  "format": {
+    "timeFormat": "HH:mm",
+    "dataViewSyntax": false
+  },
+  "calendars": {
+    "휴일": {
+      "icsName": "휴일",
+      "icsUrl": "https://calendar.google.com/calendar/ical/en.south_korea%23holiday%40group.v.calendar.google.com/public/basic.ics",
+      "ownerEmail": "",
+      "format": {
+        "checkbox": true,
+        "includeEventEndTime": true,
+        "icsName": true,
+        "summary": true,
+        "location": true,
+        "description": false,
+        "calendarType": "remote",
+        "showAttendees": false,
+        "showOngoing": false,
+        "showTransparentEvents": false
+      },
+      "calendarType": "remote"
+    }
+  }
+}

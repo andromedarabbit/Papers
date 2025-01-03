@@ -1,0 +1,53 @@
+{
+  "command_timeout": 5,
+  "templates_folder": "템플릿",
+  "templates_pairs": [
+    [
+      "",
+      ""
+    ]
+  ],
+  "trigger_on_file_creation": true,
+  "auto_jump_to_cursor": true,
+  "enable_system_commands": false,
+  "shell_path": "",
+  "user_scripts_folder": "",
+  "enable_folder_templates": true,
+  "folder_templates": [
+    {
+      "folder": "초안",
+      "template": "템플릿/Default.md"
+    },
+    {
+      "folder": "업무",
+      "template": "템플릿/Work.md"
+    },
+    {
+      "folder": "초안/업무",
+      "template": "템플릿/Work.md"
+    },
+    {
+      "folder": "코드 스니펫",
+      "template": "템플릿/Snippet.md"
+    },
+    {
+      "folder": "초안/리팩터링",
+      "template": "템플릿/Refactor.md"
+    }
+  ],
+  "enable_file_templates": false,
+  "file_templates": [
+    {
+      "regex": ".*",
+      "template": ""
+    }
+  ],
+  "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
+  "enabled_templates_hotkeys": [
+    ""
+  ],
+  "startup_templates": [
+    ""
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "trashOption": "local",
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "초안",
+  "showUnsupportedFiles": true,
+  "attachmentFolderPath": "./첨부파일",
+  "uriCallbacks": true
+}
