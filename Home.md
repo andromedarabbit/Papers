@@ -49,19 +49,15 @@ no due date
 heading does not include Wishlist
 heading does not include 업무
 heading does not include Work
-heading does not include 딥서치
 description does not include Wishlist
 description does not include 업무
 description does not include Work
-description does not include 딥서치
 tags does not include empty
 tags does not include 업무
 tags does not include work
-tags does not include 딥서치
 tags does not include notask
 tags does not include notodo
 path does not include 업무
-path does not include 딥서치
 path does not include Archive
 path does not include Excalidraw
 path does not include 템플릿
@@ -80,7 +76,7 @@ shortmode
 
 ```dataview
 task
-where (contains(text, "#업무") OR contains(tags, "#업무") OR contains(string(section), "업무") OR contains(text, "#work") OR contains(tags, "#work") OR contains(string(section), "Work") OR contains(text, "#딥서치") OR contains(text, "#우아한형제들") OR contains(tags, "#우아한형제들") OR contains(string(section), "우아한형제들")) AND (!contains(path, "Archive") AND !contains(path, "템플릿") AND !contains(path, "Checklist") AND !contains(path, "체크리스트"))
+where (contains(text, "#업무") OR contains(tags, "#업무") OR contains(string(section), "업무") OR contains(text, "#work") OR contains(tags, "#work")) AND (!contains(path, "Archive") AND !contains(path, "템플릿") AND !contains(path, "Checklist") AND !contains(path, "체크리스트"))
 and !completed and status != "-"
 where !contains(file.tags, "#notodo") AND !contains(file.tags, "#notask") AND !contains(file.tags, "#done")
 group by file.folder

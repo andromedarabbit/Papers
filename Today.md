@@ -7,7 +7,7 @@ tags:
 plugin-prettier: true
 ---
 
-![[2025-01-03]]%%embed%%
+![[2025-01-04]]%%embed%%
 %%
 참고: [Dynamic (Embedded) Link for today's Daily Note - Help - Obsidian Forum](https://forum.obsidian.md/t/dynamic-embedded-link-for-todays-daily-note/68314)
 %%
