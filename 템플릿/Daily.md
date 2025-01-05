@@ -1,4 +1,7 @@
 ---
+created: <%
+tp.file.creation_date("YYYY-MM-DDTHH:mm") %>
+updated: <% await tp.file.last_modified_date("YYYY-MM-DD'T'HH:mm") %>
 aliases: ["<% tp.date.now("MMMM Do, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMMM D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMM D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMM. D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M/D/YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M-D-YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("YYYY-MM-DD", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M.D.YYYY", 0, tp.file.title, "YYYY.MM.DD") %>",]
 tags:
 - DailyNote-<% tp.file.title.split('-')[0] %>
@@ -80,8 +83,3 @@ hide backlink
 
 
 ## 📈  Invest
-
-
----
-Creation Date::  `=dateformat(this.file.ctime, "[[yyyy-MM-dd]]")` `=dateformat(this.file.ctime, "HH:mm")`
-Modification Date:: `=dateformat(this.file.mtime, "[[yyyy-MM-dd]]")` `=dateformat(this.file.mtime, "HH:mm")`
