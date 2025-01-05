@@ -1,0 +1,19 @@
+{
+  "dateFormat": "yyyy-MM-dd'T'HH:mm",
+  "enableCreateTime": true,
+  "headerUpdated": "updated",
+  "headerCreated": "created",
+  "minMinutesBetweenSaves": 1,
+  "ignoreGlobalFolder": [
+    "템플릿",
+    "자동생성 노트"
+  ],
+  "ignoreCreatedFolder": [],
+  "enableExperimentalHash": false,
+  "fileHashMap": {
+    "Welcome.md": "ecd0dfb6b21143ff52cfe36f93636df57e5b21773c101491b86f10ce17556ca8",
+    "Today.md": "eb10626a597629b9d6cfbdc50515d1f855f0714efd964d9b9ca16c70c4ab8969",
+    "Home.md": "c40efb6d73cb48d6f28736cf6efec96fd22d3447a1b2a40fd9646c4654ba482e",
+    "Daily Notes/2025/2025-01-05.md": "a85bd9cb3a5ff37c96a3f0dd8d54dffdaad2c30dba72f1e8f77d443167f5a345"
+  }
+}
