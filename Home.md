@@ -2,11 +2,13 @@
 tags:
   - Home
   - "2023"
-  - "2023-01-26"
+  - 2023-01-26
 plugin-prettier: true
+created: 2025-01-06T11:29
+updated: 2025-01-06T21:53
 ---
 
-# 📆 <%+ tp.file.title %>
+# Home
 
 > Just be patient. Let the game come to you. Don't rush. Be quick, but don't hurry.
 > — <cite>Earl Monroe</cite>
