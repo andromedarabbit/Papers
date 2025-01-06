@@ -1,0 +1,12 @@
+{
+  "userIllegalSymbols": [
+    "📆"
+  ],
+  "ignoredFiles": {},
+  "ignoreRegex": "템플릿/.*",
+  "useFileOpenHook": true,
+  "useFileSaveHook": true,
+  "newHeadingStyle": "Prefix",
+  "replaceStyle": false,
+  "underlineString": "==="
+}

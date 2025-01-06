@@ -11,7 +11,7 @@ plugin-prettier: true
 AutoNoteMover: disable
 ---
 
-# 📆 `=this.file.name`
+# 📆 <% tp.date.now("YYYY-MM-DD", 0, tp.file.title, "YYYY.MM.DD") %>
 
 « [[<%tp.date.now("YYYY-MM-DD", -1, tp.file.title, "YYYY-MM-DD") %>]] | [[<% tp.date.now("YYYY-MM-DD", 1, tp.file.title, "YYYY-MM-DD") %>]] »
 
