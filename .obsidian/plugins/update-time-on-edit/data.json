@@ -8,7 +8,9 @@
     "템플릿",
     "자동생성 노트"
   ],
-  "ignoreCreatedFolder": [],
+  "ignoreCreatedFolder": [
+    "Daily Notes"
+  ],
   "enableExperimentalHash": false,
   "fileHashMap": {
     "Welcome.md": "ecd0dfb6b21143ff52cfe36f93636df57e5b21773c101491b86f10ce17556ca8",
