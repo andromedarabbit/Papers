@@ -68,4 +68,4 @@ Papers/
 이 Vault 템플릿은 [MIT 라이선스](LICENSE)에 따라 배포됩니다.
 
 ---
-Created with 💖 by andromedarabbit
+Created with 💖 by [andromedarabbit](https://github.com/andromedarabbit)
