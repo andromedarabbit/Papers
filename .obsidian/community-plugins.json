@@ -17,7 +17,6 @@
   "obsidian-new-bullet-with-time",
   "omnisearch",
   "text-extractor",
-  "ai-image-analyzer",
   "obsidian-plugin-prettier",
   "ics",
   "obsidian-reminder-plugin",
@@ -36,5 +35,6 @@
   "rich-foot",
   "obsidian-filename-heading-sync",
   "nldates-obsidian",
-  "beautitab"
+  "beautitab",
+  "ai-image-analyzer"
 ]
