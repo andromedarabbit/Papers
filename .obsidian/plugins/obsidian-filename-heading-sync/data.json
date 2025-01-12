@@ -3,7 +3,7 @@
     "📆"
   ],
   "ignoredFiles": {},
-  "ignoreRegex": "템플릿/.*",
+  "ignoreRegex": "템플릿/.*|README\\.md",
   "useFileOpenHook": true,
   "useFileSaveHook": true,
   "newHeadingStyle": "Prefix",

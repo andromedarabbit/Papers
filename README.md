@@ -1,8 +1,13 @@
- # 📚 Papers
+---
+created: 2025-01-12T13:21
+updated: 2025-01-13T16:24
+---
+
+# 📚 Papers
 
 ## 🎯 소개
-이 Obsidian Vault는 다양한 노트와 작업을 체계적으로 관리하기 위해 설계되었습니다.
 
+이 Obsidian Vault는 다양한 노트와 작업을 체계적으로 관리하기 위해 설계되었습니다.
 
 ## 📂 폴더 구조
 
@@ -50,24 +55,29 @@ Papers/
 
 ## Quickstart
 
+### 초기 설치
+ - AI image analyzer 에 쓸 LLM 모델을 다운로드 받습니다.
+	 - <img src="첨부파일/Pasted image 20250112215542.png" width="600" />
+- Obsidian Web Clippers 에서 Note Location 위치를 `Inbox/Clippings`로 바꿉니다.
+	- <img src="첨부파일/Pasted image 20250113120947.png" width="600" />
+
 ### DailyNote에 빠르게 Task와 메모 쓰기
 
 1. `cmd` + `p`
 2. `QuickAdd: Run QiuckAdd`
    1. <img src="첨부파일/SCR-20250108-mpum.png" width="600" />
-
 3. 이제 원하는 작업을 선택해 글을 씁니다. 예를 들어 Daily Note 중 New Today 섹션에 Task를 추가하려면 아래와 같이 합니다
    1. <img src="첨부파일/SCR-20250108-mpwc.png" width="600" />
    2. <img src="첨부파일/SCR-20250108-mqbr.png" width="600" />
 4. 이렇게 Task가 추가됩니다.
    1. <img src="첨부파일/SCR-20250108-mqdt.png" width="600" />
 
-
 ## 🤝 기여하기
 
 이 템플릿의 개선을 위한 제안이나 기여는 언제나 환영합니다.
 
 ## 📜 라이선스
+
 이 Vault 템플릿은 [MIT 라이선스](LICENSE)에 따라 배포됩니다.
 
 ---
