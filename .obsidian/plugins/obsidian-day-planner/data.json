@@ -27,7 +27,14 @@
   "pluginVersion": "0.27.0",
   "showCompletedTasks": true,
   "showSubtasksInTaskBlocks": true,
-  "icals": [],
+  "icals": [
+    {
+      "name": "대한민국 휴일",
+      "email": "",
+      "url": "https://calendar.google.com/calendar/ical/en.south_korea%23holiday%40group.v.calendar.google.com/public/basic.ics",
+      "color": "#ffffff"
+    }
+  ],
   "colorOverrides": [],
   "releaseNotes": true,
   "taskStatusOnCreation": " ",
