@@ -48,6 +48,8 @@ Papers/
 2. **Weekly Notes**로 주간 계획을 세웁니다.
 3. **Inbox**에 아이디어를 수집하고 정리합니다.
 
+## Quickstart
+
 ### DailyNote에 빠르게 Task와 메모 쓰기
 
 1. `cmd` + `p`
@@ -57,7 +59,8 @@ Papers/
 3. 이제 원하는 작업을 선택해 글을 씁니다. 예를 들어 Daily Note 중 New Today 섹션에 Task를 추가하려면 아래와 같이 합니다
    1. <img src="첨부파일/SCR-20250108-mpwc.png" width="600" />
    2. <img src="첨부파일/SCR-20250108-mqbr.png" width="600" />
-   3. <img src="첨부파일/SCR-20250108-mqdt.png" width="600" />
+4. 이렇게 Task가 추가됩니다.
+   1. <img src="첨부파일/SCR-20250108-mqdt.png" width="600" />
 
 
 ## 🤝 기여하기
