@@ -3684,6 +3684,7 @@ function readDocType$1(xmlData, i){
             if (xmlData[i] === '<' && !comment) { //Determine the tag type
                 if( hasBody && isEntity(xmlData, i)){
                     i += 7; 
+                    let entityName, val;
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
                     if(val.indexOf("&") === -1) //Parameter entities are not supported
                         entities[ validateEntityName(entityName) ] = {
@@ -6373,7 +6374,7 @@ md5$1.exports;
 var md5Exports = md5$1.exports;
 var md5 = /*@__PURE__*/getDefaultExportFromCjs(md5Exports);
 
-const APP_TITLE = "Local Images Plus  0.16.0";
+const APP_TITLE = "Local Images Plus  0.16.1";
 //Option to enable debugging
 let VERBOSE = false;
 function setDebug(value = false) {
@@ -6392,7 +6393,7 @@ const MD_SEARCH_PATTERN = [
     /\!\[(?<anchor>(.{0}|[^\[]+?))\]\((?<link>((http(s){0,1}|(data\:.+?base64\,)).+?\)))/gm
 ];
 const MD_LINK = /\http(s){0,1}.+?( {1}|\)\n)/g;
-const ATT_SIZE_ACHOR = /(?<attdesc>.{0,}\|){0,1}(?<attsize>[0-9]{1,})/gm;
+const ATT_SIZE_ACHOR = /(^(?<attdesc>.{1,})\|(?<attsize>[0-9]{2,4})$)|(?<attsize2>^[0-9]{2,4}$)/gm;
 // Looks like timeouts in Obsidian API are set in milliseconds
 const NOTICE_TIMEOUT = 5 * 1000;
 const TIMEOUT_LIKE_INFINITY = 24 * 60 * 60 * 1000;
@@ -6500,8 +6501,9 @@ function replaceAsync(str, regex, asyncFn) {
                 anchor = trimAny(match.groups.anchor, [")", "(", "]", "[", " "]);
                 const AttSizeMatch = anchor.matchAll(ATT_SIZE_ACHOR);
                 for (const match of AttSizeMatch) {
-                    AttSize = trimAny(match.groups.attsize, [")", "(", "]", "[", " "]);
-                    logError("match size " + AttSize);
+                    AttSize = (match.groups.attsize !== undefined) ? trimAny(match.groups.attsize, [")", "(", "]", "[", " "]) :
+                        (match.groups.attsize2 !== undefined) ? trimAny(match.groups.attsize2, [")", "(", "]", "[", " "]) :
+                            "";
                 }
                 link = ((_a = match.groups.link.match(MD_LINK)) !== null && _a !== void 0 ? _a : [match.groups.link])[0];
                 caption = trimAny((match.groups.link.match(MD_LINK) !== null ?
@@ -6513,7 +6515,8 @@ function replaceAsync(str, regex, asyncFn) {
                 logError("repl: " + replp +
                     "\r\nahc: " + anchor +
                     "\r\nlink: " + link +
-                    "\r\ncaption: " + caption);
+                    "\r\ncaption: " + caption +
+                    "\r\nAttSize: " + AttSize);
                 dictPatt[replp] = [anchor, link, caption, AttSize];
             }
         });
@@ -14094,7 +14097,7 @@ class SettingTab extends obsidian.PluginSettingTab {
             yield this.plugin.saveSettings();
         })));
         new obsidian.Setting(containerEl)
-            .setName("Use MD5 for new attachments (Pasted Images)")
+            .setName("Use MD5 for new attachments (Pasted images and files)")
             .setDesc("The plugin will use MD5 when renaming all new attachments.")
             .addToggle((toggle) => toggle
             .setValue(this.plugin.settings.useMD5ForNewAtt)
@@ -14203,7 +14206,7 @@ class SettingTab extends obsidian.PluginSettingTab {
             yield this.plugin.saveSettings();
         })));
         new obsidian.Setting(containerEl)
-            .setName("includepattern")
+            .setName("Include pattern")
             .setDesc("Include only files with extensions only matching this pattern. Example: md|canvas")
             .addText((text) => text.setValue(this.plugin.settings.includeps).onChange((value) => __awaiter(this, void 0, void 0, function* () {
             //Transform string to regex
