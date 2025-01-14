@@ -6,5 +6,6 @@
   "showUnsupportedFiles": true,
   "attachmentFolderPath": "./첨부파일",
   "uriCallbacks": true,
-  "propertiesInDocument": "source"
+  "propertiesInDocument": "source",
+  "defaultViewMode": "preview"
 }
