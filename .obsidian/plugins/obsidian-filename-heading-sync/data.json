@@ -4,7 +4,7 @@
   ],
   "ignoredFiles": {},
   "ignoreRegex": "템플릿/.*|README\\.md",
-  "useFileOpenHook": true,
+  "useFileOpenHook": false,
   "useFileSaveHook": true,
   "newHeadingStyle": "Prefix",
   "replaceStyle": false,
