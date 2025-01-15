@@ -4,7 +4,9 @@
   "downrankedFoldersFilters": [],
   "ignoreDiacritics": true,
   "ignoreArabicDiacritics": false,
-  "indexedFileTypes": [],
+  "indexedFileTypes": [
+    "txt"
+  ],
   "displayTitle": "",
   "PDFIndexing": true,
   "officeIndexing": true,
