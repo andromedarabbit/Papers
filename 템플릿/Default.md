@@ -7,6 +7,9 @@ tags:
 plugin-prettier: true
 ---
 
-# `=this.file.name`
+<%*
+let title = tp.file.title;
+-%>
+# <% title %>
 
 %% content begins %%
