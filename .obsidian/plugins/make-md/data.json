@@ -85,5 +85,6 @@
   "basicsSettings": null,
   "firstLaunch": true,
   "notesPreview": false,
-  "editStickerInSidebar": true
+  "editStickerInSidebar": true,
+  "overrideNativeMenu": false
 }

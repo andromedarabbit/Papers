@@ -19928,6 +19928,9 @@ function copyAttributes(node, attributes) {
     node.setAttribute(attr.name, attr.value);
   });
 }
+function isNumber(str) {
+  return !isNaN(parseFloat(str));
+}
 
 // src/pdf.ts
 async function getDestPosition(pdfDoc) {
@@ -20159,8 +20162,8 @@ async function exportToPDF(outputFile, config, w, { doc, frontMatter }) {
   let pageSize = config["pageSize"];
   if (config["pageSize"] == "Custom" && config["pageWidth"] && config["pageHeight"]) {
     pageSize = {
-      width: parseFloat((_a = config["pageWidth"]) != null ? _a : "0") / 25.4,
-      height: parseFloat((_b = config["pageHeight"]) != null ? _b : "0") / 25.4
+      width: parseFloat((_a = config["pageWidth"]) != null ? _a : "210") / 25.4,
+      height: parseFloat((_b = config["pageHeight"]) != null ? _b : "297") / 25.4
     };
   }
   let scale2 = (_c = config == null ? void 0 : config["scale"]) != null ? _c : 100;
@@ -20777,8 +20780,15 @@ ${px2mm(width)}\xD7${px2mm(height)}mm`;
     });
     this.generateForm(contentEl);
     const handleExport = async () => {
+      var _a2, _b2;
       this.plugin.settings.prevConfig = this.config;
       await this.plugin.saveSettings();
+      if (this.config["pageSize"] == "Custom") {
+        if (!isNumber((_a2 = this.config["pageWidth"]) != null ? _a2 : "") || !isNumber((_b2 = this.config["pageHeight"]) != null ? _b2 : "")) {
+          alert("When the page size is Custom, the Width/Height cannot be empty.");
+          return;
+        }
+      }
       if (this.multiplePdf) {
         const outputPath = await getOutputPath(title);
         console.log("output:", outputPath);

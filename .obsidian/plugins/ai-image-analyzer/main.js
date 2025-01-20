@@ -214,13 +214,131 @@ var require_eventemitter3 = __commonJS({
   }
 });
 
+// node_modules/canvas/lib/parse-font.js
+var require_parse_font = __commonJS({
+  "node_modules/canvas/lib/parse-font.js"(exports, module2) {
+    "use strict";
+    var weights = "bold|bolder|lighter|[1-9]00";
+    var styles = "italic|oblique";
+    var variants = "small-caps";
+    var stretches = "ultra-condensed|extra-condensed|condensed|semi-condensed|semi-expanded|expanded|extra-expanded|ultra-expanded";
+    var units = "px|pt|pc|in|cm|mm|%|em|ex|ch|rem|q";
+    var string = /'((\\'|[^'])+)'|"((\\"|[^"])+)"|[\w\s-]+/.source;
+    var weightRe = new RegExp(`(${weights}) +`, "i");
+    var styleRe = new RegExp(`(${styles}) +`, "i");
+    var variantRe = new RegExp(`(${variants}) +`, "i");
+    var stretchRe = new RegExp(`(${stretches}) +`, "i");
+    var familyRe = new RegExp(string, "g");
+    var unquoteRe = /^['"](.*)['"]$/;
+    var unescapeRe = /\\(['"])/g;
+    var sizeFamilyRe = new RegExp(
+      `([\\d\\.]+)(${units}) *((?:${string})( *, *(?:${string}))*)`
+    );
+    var cache = {};
+    var defaultHeight = 16;
+    module2.exports = (str) => {
+      if (cache[str]) return cache[str];
+      const sizeFamily = sizeFamilyRe.exec(str);
+      if (!sizeFamily) return;
+      const names = sizeFamily[3].match(familyRe).map((s) => s.trim().replace(unquoteRe, "$1").replace(unescapeRe, "$1")).filter((s) => !!s);
+      const font = {
+        weight: "normal",
+        style: "normal",
+        stretch: "normal",
+        variant: "normal",
+        size: parseFloat(sizeFamily[1]),
+        unit: sizeFamily[2],
+        family: names.join(",")
+      };
+      let weight, style, variant, stretch;
+      const substr = str.substring(0, sizeFamily.index);
+      if (weight = weightRe.exec(substr)) font.weight = weight[1];
+      if (style = styleRe.exec(substr)) font.style = style[1];
+      if (variant = variantRe.exec(substr)) font.variant = variant[1];
+      if (stretch = stretchRe.exec(substr)) font.stretch = stretch[1];
+      switch (font.unit) {
+        case "pt":
+          font.size /= 0.75;
+          break;
+        case "pc":
+          font.size *= 16;
+          break;
+        case "in":
+          font.size *= 96;
+          break;
+        case "cm":
+          font.size *= 96 / 2.54;
+          break;
+        case "mm":
+          font.size *= 96 / 25.4;
+          break;
+        case "%":
+          break;
+        case "em":
+        case "rem":
+          font.size *= defaultHeight / 0.75;
+          break;
+        case "q":
+          font.size *= 96 / 25.4 / 4;
+          break;
+      }
+      return cache[str] = font;
+    };
+  }
+});
+
+// node_modules/canvas/browser.js
+var require_browser = __commonJS({
+  "node_modules/canvas/browser.js"(exports) {
+    var parseFont = require_parse_font();
+    exports.parseFont = parseFont;
+    exports.createCanvas = function(width, height) {
+      return Object.assign(document.createElement("canvas"), { width, height });
+    };
+    exports.createImageData = function(array, width, height) {
+      switch (arguments.length) {
+        case 0:
+          return new ImageData();
+        case 1:
+          return new ImageData(array);
+        case 2:
+          return new ImageData(array, width);
+        default:
+          return new ImageData(array, width, height);
+      }
+    };
+    exports.loadImage = function(src, options) {
+      return new Promise(function(resolve2, reject) {
+        const image = Object.assign(document.createElement("img"), options);
+        function cleanup() {
+          image.onload = null;
+          image.onerror = null;
+        }
+        image.onload = function() {
+          cleanup();
+          resolve2(image);
+        };
+        image.onerror = function() {
+          cleanup();
+          reject(new Error('Failed to load the image "' + src + '"'));
+        };
+        image.src = src;
+      });
+    };
+  }
+});
+
 // src/main.ts
 var main_exports = {};
 __export(main_exports, {
   default: () => AIImageAnalyzerPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
+
+// node_modules/ollama/dist/index.mjs
+var import_fs = __toESM(require("fs"), 1);
+var import_path = require("path");
 
 // node_modules/whatwg-fetch/fetch.js
 var g = typeof globalThis !== "undefined" && globalThis || typeof self !== "undefined" && self || // eslint-disable-next-line no-undef
@@ -747,8 +865,8 @@ if (!g.fetch) {
   g.Response = Response;
 }
 
-// node_modules/ollama/dist/shared/ollama.cddbc85b.mjs
-var version = "0.5.11";
+// node_modules/ollama/dist/browser.mjs
+var version = "0.5.12";
 var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$1 = (obj, key, value) => {
@@ -846,13 +964,6 @@ var fetchWithHeaders = async (fetch3, url, options = {}) => {
 var get = async (fetch3, host, options) => {
   const response = await fetchWithHeaders(fetch3, host, {
     headers: options == null ? void 0 : options.headers
-  });
-  await checkOk(response);
-  return response;
-};
-var head = async (fetch3, host) => {
-  const response = await fetchWithHeaders(fetch3, host, {
-    method: "HEAD"
   });
   await checkOk(response);
   return response;
@@ -1008,10 +1119,10 @@ var Ollama$1 = class Ollama {
     return await response.json();
   }
   /**
-  * Encodes an image to base64 if it is a Uint8Array.
-  * @param image {Uint8Array | string} - The image to encode.
-  * @returns {Promise<string>} - The base64 encoded image.
-  */
+   * Encodes an image to base64 if it is a Uint8Array.
+   * @param image {Uint8Array | string} - The image to encode.
+   * @returns {Promise<string>} - The base64 encoded image.
+   */
   async encodeImage(image) {
     if (typeof image !== "string") {
       const uint8Array = new Uint8Array(image);
@@ -1063,10 +1174,7 @@ var Ollama$1 = class Ollama {
    */
   async create(request) {
     return this.processStreamableRequest("create", {
-      name: request.model,
-      stream: request.stream,
-      modelfile: request.modelfile,
-      quantize: request.quantize
+      ...request
     });
   }
   /**
@@ -1189,10 +1297,6 @@ var Ollama$1 = class Ollama {
 var browser = new Ollama$1();
 
 // node_modules/ollama/dist/index.mjs
-var import_fs = __toESM(require("fs"), 1);
-var import_path = require("path");
-var import_crypto = require("crypto");
-var import_os = require("os");
 var Ollama2 = class extends Ollama$1 {
   async encodeImage(image) {
     if (typeof image !== "string") {
@@ -1208,42 +1312,6 @@ var Ollama2 = class extends Ollama$1 {
     return image;
   }
   /**
-   * Parse the modelfile and replace the FROM and ADAPTER commands with the corresponding blob hashes.
-   * @param modelfile {string} - The modelfile content
-   * @param mfDir {string} - The directory of the modelfile
-   * @private @internal
-   */
-  async parseModelfile(modelfile, mfDir = process.cwd()) {
-    const out = [];
-    const lines = modelfile.split("\n");
-    for (const line of lines) {
-      const [command, args] = line.split(" ", 2);
-      if (["FROM", "ADAPTER"].includes(command.toUpperCase())) {
-        const path = this.resolvePath(args.trim(), mfDir);
-        if (await this.fileExists(path)) {
-          out.push(`${command} @${await this.createBlob(path)}`);
-        } else {
-          out.push(`${command} ${args}`);
-        }
-      } else {
-        out.push(line);
-      }
-    }
-    return out.join("\n");
-  }
-  /**
-   * Resolve the path to an absolute path.
-   * @param inputPath {string} - The input path
-   * @param mfDir {string} - The directory of the modelfile
-   * @private @internal
-   */
-  resolvePath(inputPath, mfDir) {
-    if (inputPath.startsWith("~")) {
-      return (0, import_path.join)((0, import_os.homedir)(), inputPath.slice(1));
-    }
-    return (0, import_path.resolve)(mfDir, inputPath);
-  }
-  /**
    * checks if a file exists
    * @param path {string} - The path to the file
    * @private @internal
@@ -1257,60 +1325,10 @@ var Ollama2 = class extends Ollama$1 {
       return false;
     }
   }
-  async createBlob(path) {
-    if (typeof ReadableStream === "undefined") {
-      throw new Error("Streaming uploads are not supported in this environment.");
-    }
-    const fileStream = (0, import_fs.createReadStream)(path);
-    const sha256sum = await new Promise((resolve2, reject) => {
-      const hash = (0, import_crypto.createHash)("sha256");
-      fileStream.on("data", (data) => hash.update(data));
-      fileStream.on("end", () => resolve2(hash.digest("hex")));
-      fileStream.on("error", reject);
-    });
-    const digest = `sha256:${sha256sum}`;
-    try {
-      await head(this.fetch, `${this.config.host}/api/blobs/${digest}`);
-    } catch (e) {
-      if (e instanceof Error && e.message.includes("404")) {
-        const readableStream = new ReadableStream({
-          start(controller) {
-            fileStream.on("data", (chunk) => {
-              controller.enqueue(chunk);
-            });
-            fileStream.on("end", () => {
-              controller.close();
-            });
-            fileStream.on("error", (err) => {
-              controller.error(err);
-            });
-          }
-        });
-        await post(
-          this.fetch,
-          `${this.config.host}/api/blobs/${digest}`,
-          readableStream
-        );
-      } else {
-        throw e;
-      }
-    }
-    return digest;
-  }
   async create(request) {
-    let modelfileContent = "";
-    if (request.path) {
-      modelfileContent = await import_fs.promises.readFile(request.path, { encoding: "utf8" });
-      modelfileContent = await this.parseModelfile(
-        modelfileContent,
-        (0, import_path.dirname)(request.path)
-      );
-    } else if (request.modelfile) {
-      modelfileContent = await this.parseModelfile(request.modelfile);
-    } else {
-      throw new Error("Must provide either path or modelfile to create a model");
+    if (request.from && await this.fileExists((0, import_path.resolve)(request.from))) {
+      throw Error("Creating with a local path is not currently supported from ollama-js");
     }
-    request.modelfile = modelfileContent;
     if (request.stream) {
       return super.create(request);
     } else {
@@ -1321,10 +1339,10 @@ var Ollama2 = class extends Ollama$1 {
 var index = new Ollama2();
 
 // src/cache.ts
-var import_crypto2 = require("crypto");
+var import_crypto = require("crypto");
 
 // package.json
-var version2 = "0.1.10";
+var version2 = "0.2.0";
 
 // node_modules/eventemitter3/index.mjs
 var import_index = __toESM(require_eventemitter3(), 1);
@@ -1356,6 +1374,7 @@ function pTimeout(promise, options) {
     customTimers = { setTimeout, clearTimeout }
   } = options;
   let timer;
+  let abortHandler;
   const wrappedPromise = new Promise((resolve2, reject) => {
     if (typeof milliseconds !== "number" || Math.sign(milliseconds) !== 1) {
       throw new TypeError(`Expected \`milliseconds\` to be a positive number, got \`${milliseconds}\``);
@@ -1365,9 +1384,10 @@ function pTimeout(promise, options) {
       if (signal.aborted) {
         reject(getAbortedReason(signal));
       }
-      signal.addEventListener("abort", () => {
+      abortHandler = () => {
         reject(getAbortedReason(signal));
-      });
+      };
+      signal.addEventListener("abort", abortHandler, { once: true });
     }
     if (milliseconds === Number.POSITIVE_INFINITY) {
       promise.then(resolve2, reject);
@@ -1405,6 +1425,9 @@ function pTimeout(promise, options) {
   });
   const cancelablePromise = wrappedPromise.finally(() => {
     cancelablePromise.clear();
+    if (abortHandler && options.signal) {
+      options.signal.removeEventListener("abort", abortHandler);
+    }
   });
   cancelablePromise.clear = () => {
     customTimers.clearTimeout.call(void 0, timer);
@@ -1794,7 +1817,7 @@ function getCacheBasePath() {
   return `${app.vault.configDir}/plugins/ai-image-analyzer/cache`;
 }
 function getCachePath(file) {
-  const hash = (0, import_crypto2.createHash)("md5").update(file.path).digest("hex");
+  const hash = (0, import_crypto.createHash)("md5").update(file.path).digest("hex");
   const folder = `${getCacheBasePath()}`;
   const filename = `${hash}.json`;
   return `${folder}/${filename}`;
@@ -1841,14 +1864,17 @@ async function clearCache() {
 }
 
 // src/ollamaManager.ts
+var import_obsidian3 = require("obsidian");
+
+// src/util.ts
 var import_obsidian2 = require("obsidian");
 
 // src/settings.ts
 var import_obsidian = require("obsidian");
 var DEFAULT_SETTINGS = {
   debug: false,
-  ollamaHost: "127.0.0.1",
-  ollamaPort: 11434,
+  ollamaURL: "http://127.0.0.1:11434",
+  ollamaToken: "",
   ollamaModel: possibleModels[0],
   prompt: "Describe the image. Just use Keywords. For example: cat, dog, tree. This must be Computer readable. The provided pictures are used in an notebook. Please provide at least 5 Keywords. It will be used to search for the image later.",
   autoClearCache: true
@@ -1858,7 +1884,12 @@ async function loadSettings(plugin) {
   settings = Object.assign({}, DEFAULT_SETTINGS, await plugin.loadData());
 }
 async function saveSettings(plugin) {
-  setOllama(new Ollama2({ host: `${settings.ollamaHost}:${settings.ollamaPort}` }));
+  setOllama(new Ollama2({
+    host: settings.ollamaURL,
+    headers: {
+      "Authorization": `Bearer ${settings.ollamaToken}`
+    }
+  }));
   await plugin.saveData(settings);
 }
 var AIImageAnalyzerSettingsTab = class extends import_obsidian.PluginSettingTab {
@@ -1889,19 +1920,18 @@ var AIImageAnalyzerSettingsTab = class extends import_obsidian.PluginSettingTab 
       await saveSettings(this.plugin);
     }));
     new import_obsidian.Setting(containerEl).setName("Ollama server").setHeading();
-    new import_obsidian.Setting(containerEl).setName("Ollama host").setDesc("Set the host for the Ollama server").addText((text) => text.setPlaceholder("Enter the host (127.0.0.1)").setValue(settings.ollamaHost).onChange(async (value) => {
+    new import_obsidian.Setting(containerEl).setName("Ollama URL").setDesc("Set the URL for the Ollama server").addText((text) => text.setPlaceholder("Enter the host (http://127.0.0.1:11434)").setValue(settings.ollamaURL).onChange(async (value) => {
       if (value.length === 0) {
-        value = DEFAULT_SETTINGS.ollamaHost;
+        value = DEFAULT_SETTINGS.ollamaURL;
       }
-      settings.ollamaHost = value;
+      settings.ollamaURL = value;
       await saveSettings(this.plugin);
     }));
-    new import_obsidian.Setting(containerEl).setName("Ollama port").setDesc("Set the port for the Ollama server").addText((text) => text.setPlaceholder("Enter the port (11434)").setValue(settings.ollamaPort.toString()).onChange(async (value) => {
-      let port = parseInt(value);
-      if (isNaN(port)) {
-        port = DEFAULT_SETTINGS.ollamaPort;
+    new import_obsidian.Setting(containerEl).setName("Ollama Token (Optional)").setDesc("Set the token for authentication with the Ollama server").addText((text) => text.setValue(settings.ollamaToken !== "" ? "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" : "").onChange(async (value) => {
+      if (value.contains("\u2022")) {
+        return;
       }
-      settings.ollamaPort = port;
+      settings.ollamaToken = value;
       await saveSettings(this.plugin);
     }));
     new import_obsidian.Setting(containerEl).setName("Advanced").setHeading();
@@ -1931,6 +1961,7 @@ var AIImageAnalyzerSettingsTab = class extends import_obsidian.PluginSettingTab 
 };
 
 // src/util.ts
+var import_canvas = __toESM(require_browser());
 function debugLog(message) {
   if (settings.debug) {
     console.log(message);
@@ -1938,7 +1969,25 @@ function debugLog(message) {
 }
 function isImageFile(file) {
   const path = file.path;
-  return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".webp");
+  return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".webp") || path.endsWith(".svg");
+}
+async function readFile(file) {
+  if (file.path.endsWith(".svg")) {
+    debugLog("Converting SVG to PNG");
+    try {
+      const svgData = await this.app.vault.adapter.read(file.path);
+      const canvas = (0, import_canvas.createCanvas)(1e3, 1e3);
+      const context = canvas.getContext("2d");
+      const svgImage = await (0, import_canvas.loadImage)(`data:image/svg+xml;base64,${Buffer.from(svgData).toString("base64")}`);
+      context.drawImage(svgImage, 0, 0, 1e3, 1e3);
+      return canvas.toDataURL("image/png").split(",")[1];
+    } catch (error) {
+      console.error("Error converting SVG to PNG:", error);
+      throw error;
+    }
+  } else {
+    return (0, import_obsidian2.arrayBufferToBase64)(await app.vault.readBinary(file));
+  }
 }
 
 // src/ollamaManager.ts
@@ -1972,7 +2021,7 @@ async function analyzeImageHandling(file) {
   }
   debugLog(file);
   try {
-    const data = (0, import_obsidian2.arrayBufferToBase64)(await app.vault.readBinary(file));
+    const data = await readFile(file);
     const response = await ollama.chat({
       model: settings.ollamaModel.model,
       //llava:13b or llava or llava-llama3
@@ -1989,15 +2038,15 @@ async function analyzeImageHandling(file) {
 }
 async function analyzeImageWithNotice(file) {
   try {
-    const notice = new import_obsidian2.Notice("Analyzing image", 0);
+    const notice = new import_obsidian3.Notice("Analyzing image", 0);
     const text = await analyzeImage(file);
     notice.hide();
-    new import_obsidian2.Notice("Image analyzed");
+    new import_obsidian3.Notice("Image analyzed");
     return text;
   } catch (e) {
     debugLog(e);
-    new import_obsidian2.Notice("Failed to analyze image");
-    new import_obsidian2.Notice(e.toString());
+    new import_obsidian3.Notice("Failed to analyze image");
+    new import_obsidian3.Notice(e.toString());
     return "";
   }
 }
@@ -2005,7 +2054,7 @@ async function analyzeToClipboard(file) {
   try {
     const text = await analyzeImageWithNotice(file);
     await activeWindow.navigator.clipboard.writeText(text);
-    new import_obsidian2.Notice("Text copied to clipboard");
+    new import_obsidian3.Notice("Text copied to clipboard");
   } catch (e) {
     debugLog(e);
   }
@@ -2013,9 +2062,9 @@ async function analyzeToClipboard(file) {
 async function pullImage() {
   let progressNotice;
   try {
-    new import_obsidian2.Notice(`Pulling ${settings.ollamaModel.name} model started, this may take a while...`);
+    new import_obsidian3.Notice(`Pulling ${settings.ollamaModel.name} model started, this may take a while...`);
     const response = await ollama.pull({ model: settings.ollamaModel.model, stream: true });
-    progressNotice = new import_obsidian2.Notice(`Pulling ${settings.ollamaModel.name} model 0%`, 0);
+    progressNotice = new import_obsidian3.Notice(`Pulling ${settings.ollamaModel.name} model 0%`, 0);
     for await (const part of response) {
       debugLog(part);
       if (part.total !== null && part.completed !== null) {
@@ -2029,12 +2078,12 @@ async function pullImage() {
       }
     }
     progressNotice.hide();
-    new import_obsidian2.Notice(`${settings.ollamaModel.name} model pulled successfully`);
+    new import_obsidian3.Notice(`${settings.ollamaModel.name} model pulled successfully`);
   } catch (e) {
     debugLog(e);
     progressNotice == null ? void 0 : progressNotice.hide();
-    new import_obsidian2.Notice(`Failed to pull ${settings.ollamaModel.name} model`);
-    new import_obsidian2.Notice(e.toString());
+    new import_obsidian3.Notice(`Failed to pull ${settings.ollamaModel.name} model`);
+    new import_obsidian3.Notice(e.toString());
   }
 }
 async function checkOllama() {
@@ -2042,12 +2091,12 @@ async function checkOllama() {
     const models = await ollama.list();
     debugLog(models);
     if (!models.models.some((model) => model.name === settings.ollamaModel.model)) {
-      new import_obsidian2.Notice(`No ${settings.ollamaModel.name} model found, please make sure you have pulled it (you can pull it over the settings tab or choose another model)`);
+      new import_obsidian3.Notice(`No ${settings.ollamaModel.name} model found, please make sure you have pulled it (you can pull it over the settings tab or choose another model)`);
     }
   } catch (e) {
     debugLog(e);
-    new import_obsidian2.Notice("Failed to connect to Ollama.");
-    new import_obsidian2.Notice(e.toString());
+    new import_obsidian3.Notice("Failed to connect to Ollama.");
+    new import_obsidian3.Notice(e.toString());
   }
 }
 function setOllama(ollamaInstance) {
@@ -2055,7 +2104,7 @@ function setOllama(ollamaInstance) {
 }
 
 // src/main.ts
-var AIImageAnalyzerPlugin = class extends import_obsidian3.Plugin {
+var AIImageAnalyzerPlugin = class extends import_obsidian4.Plugin {
   constructor() {
     super(...arguments);
     this.api = {
@@ -2067,7 +2116,12 @@ var AIImageAnalyzerPlugin = class extends import_obsidian3.Plugin {
   async onload() {
     debugLog("loading ai image analyzer plugin");
     await loadSettings(this);
-    setOllama(new Ollama2({ host: `${settings.ollamaHost}:${settings.ollamaPort}` }));
+    setOllama(new Ollama2({
+      host: settings.ollamaURL,
+      headers: {
+        "Authorization": `Bearer ${settings.ollamaToken}`
+      }
+    }));
     await checkOllama();
     this.addCommand({
       id: "analyze-image-to-clipboard",
@@ -2105,7 +2159,7 @@ var AIImageAnalyzerPlugin = class extends import_obsidian3.Plugin {
         if (file != null && isImageFile(file)) {
           if (!checking) {
             removeFromCache(file);
-            new import_obsidian3.Notice("Cache cleared");
+            new import_obsidian4.Notice("Cache cleared");
           }
           return true;
         }
@@ -2114,7 +2168,7 @@ var AIImageAnalyzerPlugin = class extends import_obsidian3.Plugin {
     });
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file, _source) => {
-        if (file instanceof import_obsidian3.TFile && isImageFile(file)) {
+        if (file instanceof import_obsidian4.TFile && isImageFile(file)) {
           menu.addItem((item) => {
             item.setTitle("AI analyze image");
             const submenu = item.setSubmenu();
@@ -2132,7 +2186,7 @@ var AIImageAnalyzerPlugin = class extends import_obsidian3.Plugin {
             submenu.addItem(
               (item2) => item2.setTitle("Clear cache").setIcon("trash").onClick(async () => {
                 await removeFromCache(file);
-                new import_obsidian3.Notice("Cache cleared");
+                new import_obsidian4.Notice("Cache cleared");
               })
             );
           });
