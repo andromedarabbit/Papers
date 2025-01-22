@@ -8,6 +8,9 @@ plugin-prettier: true
 from: [[{{fromTitle}}]]
 ---
 
-# `=this.file.name`
+<%*
+let title = tp.file.title;
+-%>
+# <%+ title %>
 
 {{content}}
