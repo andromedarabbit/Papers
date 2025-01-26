@@ -9,6 +9,9 @@ plugin-prettier: true
 
 <%*
 let title = tp.file.title;
+if (!title) {
+    title = "Untitled";
+}
 -%>
 # <% title %>
 
