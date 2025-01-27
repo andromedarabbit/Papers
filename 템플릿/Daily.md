@@ -45,7 +45,8 @@ events.forEach((e) => {
     mdArray.push(`${e.time} - ${e.summary}`.trim())
   }
 });
-dv.list(dv.array(mdArray).sort().filter((x, i, a) => !i || x != a[i-1]));
+// dv.list(dv.array(mdArray).sort().filter((x, i, a) => !i || x != a[i-1]));
+dv.list([...new Set(mdArray)]);
 ```
 
 ## ☕ Day Planner
