@@ -6374,7 +6374,7 @@ md5$1.exports;
 var md5Exports = md5$1.exports;
 var md5 = /*@__PURE__*/getDefaultExportFromCjs(md5Exports);
 
-const APP_TITLE = "Local Images Plus  0.16.1";
+const APP_TITLE = "Local Images Plus  0.16.3";
 //Option to enable debugging
 let VERBOSE = false;
 function setDebug(value = false) {
@@ -6624,10 +6624,12 @@ function getFileExt(content, link) {
             if (isSvg$1(buffer))
                 return "svg";
         }
-        if (fileExtByBuffer && fileExtByBuffer.length <= 5 && (fileExtByBuffer === null || fileExtByBuffer === void 0 ? void 0 : fileExtByBuffer.length) > 0) {
+        logError("fileExtByBuffer" + fileExtByBuffer);
+        if (fileExtByBuffer != undefined && fileExtByBuffer && fileExtByBuffer.length <= 5 && (fileExtByBuffer === null || fileExtByBuffer === void 0 ? void 0 : fileExtByBuffer.length) > 0) {
             return fileExtByBuffer;
         }
-        if (fileExtByLink && fileExtByLink.length <= 5 && (fileExtByBuffer === null || fileExtByBuffer === void 0 ? void 0 : fileExtByBuffer.length) > 0) {
+        logError("fileExtByLink  " + fileExtByLink);
+        if (fileExtByLink != undefined && fileExtByLink.length <= 5 && (fileExtByLink === null || fileExtByLink === void 0 ? void 0 : fileExtByLink.length) > 0) {
             return fileExtByLink;
         }
         return "unknown";
@@ -20714,7 +20716,7 @@ class LocalImagesPlugin extends obsidian.Plugin {
                     }
                     if (allAttachments) {
                         for (const attach of allAttachments) {
-                            if (!allAttachmentsLinks.includes(attach.name)) {
+                            if (!allAttachmentsLinks.includes(attach.name) && attach.children == undefined) {
                                 logError("orph: " + attach.basename);
                                 orphanedAttachments.push(attach);
                             }
@@ -20796,10 +20798,10 @@ class LocalImagesPlugin extends obsidian.Plugin {
                         }
                     }
                     for (const attach of allAttachments) {
-                        if (!allAttachmentsLinks.includes(attach.name)) {
+                        if (!allAttachmentsLinks.includes(attach.name) && attach.children == undefined) {
                             logError(allAttachmentsLinks);
                             logError(attach.name);
-                            logError("orph: " + attach.basename);
+                            logError("orph: " + attach.name);
                             orphanedAttachments.push(attach);
                         }
                     }

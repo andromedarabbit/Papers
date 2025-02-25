@@ -16,6 +16,8 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
+
 
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -75,22 +77,62 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         super(...arguments);
         this.isRenameInProgress = false;
     }
+    waitForTemplater() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const templaterEnabled = this.app.plugins.enabledPlugins.has('templater-obsidian');
+            if (!templaterEnabled) {
+                return;
+            }
+            const templaterEvents = [
+                'templater:new-note-from-template',
+                'templater:template-appended',
+                'templater:overwrite-file',
+            ];
+            return new Promise((resolve) => {
+                // Create one-time event handlers that clean themselves up
+                const handlers = templaterEvents.map((event) => {
+                    const handler = () => {
+                        // Remove all handlers when any event fires
+                        handlers.forEach((h) => this.app.workspace.off(h.event, h.fn));
+                        resolve(true);
+                    };
+                    return { event, fn: handler };
+                });
+                // Register all handlers
+                handlers.forEach((h) => this.app.workspace.on(h.event, () => {
+                    console.log(`[filename-heading-sync] templater event ${h.event} fired, cleaning up`);
+                    h.fn();
+                }));
+                // Timeout fallback that also cleans up
+                setTimeout(() => {
+                    handlers.forEach((h) => this.app.workspace.off(h.event, h.fn));
+                    resolve(true);
+                }, 100);
+            });
+        });
+    }
     onload() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.loadSettings();
             this.registerEvent(this.app.vault.on('rename', (file, oldPath) => {
                 if (this.settings.useFileSaveHook) {
-                    return this.handleSyncFilenameToHeading(file, oldPath);
+                    this.waitForTemplater().then(() => {
+                        return this.handleSyncFilenameToHeading(file, oldPath);
+                    });
                 }
             }));
             this.registerEvent(this.app.vault.on('modify', (file) => {
                 if (this.settings.useFileSaveHook) {
-                    return this.handleSyncHeadingToFile(file);
+                    this.waitForTemplater().then(() => {
+                        return this.handleSyncHeadingToFile(file);
+                    });
                 }
             }));
             this.registerEvent(this.app.workspace.on('file-open', (file) => {
                 if (this.settings.useFileOpenHook && file !== null) {
-                    return this.handleSyncFilenameToHeading(file, file.path);
+                    this.waitForTemplater().then(() => {
+                        return this.handleSyncFilenameToHeading(file, file.path);
+                    });
                 }
             }));
             this.addSettingTab(new FilenameHeadingSyncSettingTab(this.app, this));
@@ -169,7 +211,11 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         this.forceSyncHeadingToFilename(file);
     }
     forceSyncHeadingToFilename(file) {
+        if (file === null) {
+            return;
+        }
         this.app.vault.read(file).then((data) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const lines = data.split('\n');
             const start = this.findNoteStart(lines);
             const heading = this.findHeading(lines, start);
@@ -178,7 +224,7 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
             const sanitizedHeading = this.sanitizeHeading(heading.text);
             if (sanitizedHeading.length > 0 &&
                 this.sanitizeHeading(file.basename) !== sanitizedHeading) {
-                const newPath = `${file.parent.path}/${sanitizedHeading}.md`;
+                const newPath = `${(_a = file.parent) === null || _a === void 0 ? void 0 : _a.path}/${sanitizedHeading}.md`;
                 this.isRenameInProgress = true;
                 yield this.app.fileManager.renameFile(file, newPath);
                 this.isRenameInProgress = false;
@@ -221,6 +267,9 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         this.forceSyncFilenameToHeading(file);
     }
     forceSyncFilenameToHeading(file) {
+        if (file === null) {
+            return;
+        }
         const sanitizedHeading = this.sanitizeHeading(file.basename);
         this.app.vault.read(file).then((data) => {
             const lines = data.split('\n');
