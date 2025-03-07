@@ -6,7 +6,9 @@
       "compareType": "compareToLastTracked",
       "inboxNoteBaseContents": "",
       "inboxNoteContents": "",
-      "inboxFolderFiles": [],
+      "inboxFolderFiles": [
+        "Inbox.md"
+      ],
       "noticeDurationSeconds": null
     }
   ],

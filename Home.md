@@ -5,7 +5,7 @@ tags:
   - 2023-01-26
 plugin-prettier: true
 created: 2025-01-06T11:29
-updated: 2025-03-07T16:21
+updated: 2025-03-07T16:23
 ---
 
 # Home
@@ -74,15 +74,6 @@ group by folder
 shortmode
 ```
 
-### ✅ Done Today
-
-```tasks
-done on today
-hide done date
-hide recurrence rule
-hide backlink
-```
-
 ###  📔 Work
 
 ```dataview
@@ -94,6 +85,15 @@ group by file.folder
 sort due-date
 sort urgency
 sort priority
+```
+
+### ✅ Done Today
+
+```tasks
+done on today
+hide done date
+hide recurrence rule
+hide backlink
 ```
 
 ## 🎁 Wishlist

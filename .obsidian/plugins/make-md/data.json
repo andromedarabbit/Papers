@@ -35,7 +35,13 @@
   "showRibbon": true,
   "deleteFileOption": "trash",
   "expandedSpaces": [
-    "/"
+    "/",
+    "//초안",
+    "//초안/초안/첨부파일",
+    "//초안/초안/업무",
+    "//Inbox",
+    "//업무",
+    "//코드 스니펫"
   ],
   "expandFolderOnClick": true,
   "spacesFolder": "Tags",

@@ -1,13 +1,23 @@
 ---
 creation date: 2023-10-11 20:48
 modification date: 수요일 11일 10월 2023 20:48:09
-aliases: ["10월 11일, 2023","10월 11, 2023","10월 11, 2023","10월. 11, 2023","10/11/2023","10-11-2023","2023-10-11","10.11.2023",]
+aliases:
+  - 10월 11일, 2023
+  - 10월 11, 2023
+  - 10월 11, 2023
+  - 10월. 11, 2023
+  - 10/11/2023
+  - 10-11-2023
+  - 2023-10-11
+  - 10.11.2023
 tags:
-- '2023-10-11'
+  - 2023-10-11
 plugin-prettier: true
+created: 2025-01-03T21:03
+updated: 2025-03-07T16:26
 ---
 
-![[2025-01-04]]%%embed%%
+![[2025-03-07]]%%embed%%
 %%
 참고: [Dynamic (Embedded) Link for today's Daily Note - Help - Obsidian Forum](https://forum.obsidian.md/t/dynamic-embedded-link-for-todays-daily-note/68314)
 %%
