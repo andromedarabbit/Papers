@@ -5,7 +5,7 @@ tags:
   - 2023-01-26
 plugin-prettier: true
 created: 2025-01-06T11:29
-updated: 2025-01-08T14:19
+updated: 2025-03-07T16:21
 ---
 
 # Home
@@ -72,6 +72,15 @@ sort by priority
 group by folder
 # Uncomment the following line to enable short mode:
 shortmode
+```
+
+### ✅ Done Today
+
+```tasks
+done on today
+hide done date
+hide recurrence rule
+hide backlink
 ```
 
 ###  📔 Work
@@ -189,14 +198,6 @@ AND !contains(file.frontmatter.tags, "done")
 AND !contains(file.frontmatter.tags, "notodo")
 AND !contains(file.frontmatter.tags, "notask")
 AND contains(file.path, "Archive/") = false
-
-### ✅ Done Today
-
-```tasks
-done on today
-hide done date
-hide recurrence rule
-hide backlink
 ```
 
 ## 🕖 Recent Activity
