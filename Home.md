@@ -87,15 +87,6 @@ sort urgency
 sort priority
 ```
 
-### 🆕 New Today
-
-```tasks
-done on today
-hide done date
-hide recurrence rule
-hide backlink
-```
-
 ## 🎁 Wishlist
 
 ```dataview
@@ -198,6 +189,14 @@ AND !contains(file.frontmatter.tags, "done")
 AND !contains(file.frontmatter.tags, "notodo")
 AND !contains(file.frontmatter.tags, "notask")
 AND contains(file.path, "Archive/") = false
+
+### ✅ Done Today
+
+```tasks
+done on today
+hide done date
+hide recurrence rule
+hide backlink
 ```
 
 ## 🕖 Recent Activity
