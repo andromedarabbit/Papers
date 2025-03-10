@@ -3,7 +3,7 @@
     "📆"
   ],
   "ignoredFiles": {},
-  "ignoreRegex": "템플릿/.*|README\\.md",
+  "ignoreRegex": "템플릿/.*|README\\.md|Daily Notes/\\d{4}/\\d{4}-\\d{2}-\\d{2}.md",
   "useFileOpenHook": false,
   "useFileSaveHook": true,
   "newHeadingStyle": "Prefix",
