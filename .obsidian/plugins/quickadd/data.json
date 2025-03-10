@@ -25,7 +25,7 @@
         "createIfNotFound": true,
         "createIfNotFoundLocation": "top"
       },
-      "prepend": false,
+      "prepend": true,
       "task": true,
       "openFileInNewTab": {
         "enabled": false,
