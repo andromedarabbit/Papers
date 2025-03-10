@@ -1,6 +1,41 @@
 {
   "choices": [
     {
+      "id": "c57d9b55-3183-4666-a9f6-8c1da280ab44",
+      "name": "New Task",
+      "type": "Capture",
+      "command": false,
+      "appendLink": false,
+      "captureTo": "Daily Notes/{{DATE:yyyy}}/{{DATE:yyyy-MM-DD}}.md",
+      "captureToActiveFile": true,
+      "createFileIfItDoesntExist": {
+        "enabled": true,
+        "createWithTemplate": true,
+        "template": "템플릿/Daily.md"
+      },
+      "format": {
+        "enabled": true,
+        "format": "{{VALUE}} #task 🔼 ➕ {{DATE:}}"
+      },
+      "insertAfter": {
+        "enabled": false,
+        "after": "### 🆕 New Today",
+        "insertAtEnd": false,
+        "considerSubsections": true,
+        "createIfNotFound": true,
+        "createIfNotFoundLocation": "top"
+      },
+      "prepend": false,
+      "task": true,
+      "openFileInNewTab": {
+        "enabled": false,
+        "direction": "vertical",
+        "focus": true
+      },
+      "openFile": true,
+      "openFileInMode": "default"
+    },
+    {
       "id": "12cc4df1-1007-4faa-b051-ddf980798ce6",
       "name": "Daily Note",
       "type": "Multi",
