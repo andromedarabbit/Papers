@@ -14,10 +14,10 @@ tags:
   - 2023-10-11
 plugin-prettier: true
 created: 2025-01-03T21:03
-updated: 2025-03-07T16:26
+updated: 2025-03-08T15:01
 ---
 
-![[2025-03-07]]%%embed%%
+![[2025-03-08]]%%embed%%
 %%
 참고: [Dynamic (Embedded) Link for today's Daily Note - Help - Obsidian Forum](https://forum.obsidian.md/t/dynamic-embedded-link-for-todays-daily-note/68314)
 %%

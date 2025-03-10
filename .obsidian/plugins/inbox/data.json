@@ -7,7 +7,7 @@
       "inboxNoteBaseContents": "",
       "inboxNoteContents": "",
       "inboxFolderFiles": [
-        "Inbox.md"
+        "Inbox/Inbox.md"
       ],
       "noticeDurationSeconds": null
     }

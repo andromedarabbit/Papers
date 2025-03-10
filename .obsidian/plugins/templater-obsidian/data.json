@@ -15,7 +15,23 @@
   "enable_folder_templates": true,
   "folder_templates": [
     {
+      "folder": "Daily Notes",
+      "template": "템플릿/Daily.md"
+    },
+    {
       "folder": "초안",
+      "template": "템플릿/Default.md"
+    },
+    {
+      "folder": "아이디어",
+      "template": "템플릿/Default.md"
+    },
+    {
+      "folder": "중요",
+      "template": "템플릿/Default.md"
+    },
+    {
+      "folder": "투자",
       "template": "템플릿/Default.md"
     },
     {
@@ -23,8 +39,16 @@
       "template": "템플릿/Work.md"
     },
     {
+      "folder": "업무/채용",
+      "template": "템플릿/면접 리뷰.md"
+    },
+    {
       "folder": "초안/업무",
       "template": "템플릿/Work.md"
+    },
+    {
+      "folder": "Slides",
+      "template": "템플릿/Slides.md"
     },
     {
       "folder": "코드 스니펫",
@@ -48,6 +72,7 @@
     ""
   ],
   "startup_templates": [
-    ""
-  ]
+    "템플릿/Templater Startup.md"
+  ],
+  "enable_ribbon_icon": true
 }
