@@ -86,7 +86,7 @@
   "MomentsIcon": "https://images.pexels.com/photos/256514/pexels-photo-256514.jpeg",
   "MomentsQuote": "Share your thino with the world",
   "DefaultThemeForThino": "modern",
-  "LastUpdatedVersion": "2.4.59",
+  "LastUpdatedVersion": "2.5.1",
   "ShareToThinoWithText": false,
   "ShareToThinoWithTextAppend": "",
   "ShareToThinoWithTextPrepend": "",
@@ -116,5 +116,8 @@
   "FilterByMetadata": false,
   "ShowSourcePath": false,
   "ShowUpdateMessage": true,
-  "SyncManually": false
+  "SyncManually": false,
+  "MemoFixedPrefix": "",
+  "MemoFixedSuffix": "",
+  "UseMemoFixedStrings": false
 }

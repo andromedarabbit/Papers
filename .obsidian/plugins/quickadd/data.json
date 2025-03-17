@@ -268,7 +268,7 @@
   "devMode": false,
   "templateFolderPath": "템플릿",
   "announceUpdates": true,
-  "version": "1.11.5",
+  "version": "1.13.1",
   "disableOnlineFeatures": true,
   "enableRibbonIcon": true,
   "ai": {

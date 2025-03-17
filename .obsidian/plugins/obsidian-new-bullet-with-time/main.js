@@ -28,84 +28,117 @@ __export(newBulletWithTimeIndex_exports, {
 });
 module.exports = __toCommonJS(newBulletWithTimeIndex_exports);
 var import_obsidian = require("obsidian");
-var import_view = require("@codemirror/view");
 var import_state = require("@codemirror/state");
 var import_obsidian2 = require("obsidian");
 var DEFAULT_SETTINGS = {
   timeFormat: "HH:mm",
   timePrefixFormat: "",
   timeSuffixFormat: "",
-  regexForTime: "\\d{2}:\\d{2}"
+  regexForTime: "\\d{2}:\\d{2}",
+  timeZone: "local"
+};
+var TIMEZONE_MAP = {
+  local: "Local Time",
+  UTC: "UTC+0",
+  "Africa/Abidjan": "UTC+0",
+  "Africa/Accra": "UTC+0",
+  "Africa/Algiers": "UTC+1",
+  "Africa/Cairo": "UTC+2",
+  "Africa/Casablanca": "UTC+1",
+  "Africa/Johannesburg": "UTC+2",
+  "Africa/Lagos": "UTC+1",
+  "Africa/Nairobi": "UTC+3",
+  "Africa/Tunis": "UTC+1",
+  "America/Anchorage": "UTC-9",
+  "America/Bogota": "UTC-5",
+  "America/Buenos_Aires": "UTC-3",
+  "America/Caracas": "UTC-4",
+  "America/Chicago": "UTC-6",
+  "America/Denver": "UTC-7",
+  "America/Halifax": "UTC-4",
+  "America/Los_Angeles": "UTC-8",
+  "America/Mexico_City": "UTC-6",
+  "America/New_York": "UTC-5",
+  "America/Phoenix": "UTC-7",
+  "America/Santiago": "UTC-4",
+  "America/Sao_Paulo": "UTC-3",
+  "America/Toronto": "UTC-5",
+  "America/Vancouver": "UTC-8",
+  "Asia/Baghdad": "UTC+3",
+  "Asia/Bangkok": "UTC+7",
+  "Asia/Dhaka": "UTC+6",
+  "Asia/Dubai": "UTC+4",
+  "Asia/Hong_Kong": "UTC+8",
+  "Asia/Jakarta": "UTC+7",
+  "Asia/Jerusalem": "UTC+2",
+  "Asia/Karachi": "UTC+5",
+  "Asia/Kolkata": "UTC+5:30",
+  "Asia/Kuwait": "UTC+3",
+  "Asia/Manila": "UTC+8",
+  "Asia/Riyadh": "UTC+3",
+  "Asia/Seoul": "UTC+9",
+  "Asia/Shanghai": "UTC+8",
+  "Asia/Singapore": "UTC+8",
+  "Asia/Taipei": "UTC+8",
+  "Asia/Tehran": "UTC+3:30",
+  "Asia/Tokyo": "UTC+9",
+  "Australia/Adelaide": "UTC+9:30",
+  "Australia/Brisbane": "UTC+10",
+  "Australia/Melbourne": "UTC+10",
+  "Australia/Perth": "UTC+8",
+  "Australia/Sydney": "UTC+10",
+  "Europe/Amsterdam": "UTC+1",
+  "Europe/Athens": "UTC+2",
+  "Europe/Berlin": "UTC+1",
+  "Europe/Brussels": "UTC+1",
+  "Europe/Budapest": "UTC+1",
+  "Europe/Copenhagen": "UTC+1",
+  "Europe/Dublin": "UTC+0",
+  "Europe/Helsinki": "UTC+2",
+  "Europe/Istanbul": "UTC+3",
+  "Europe/Lisbon": "UTC+0",
+  "Europe/London": "UTC+0",
+  "Europe/Madrid": "UTC+1",
+  "Europe/Moscow": "UTC+3",
+  "Europe/Oslo": "UTC+1",
+  "Europe/Paris": "UTC+1",
+  "Europe/Prague": "UTC+1",
+  "Europe/Rome": "UTC+1",
+  "Europe/Stockholm": "UTC+1",
+  "Europe/Vienna": "UTC+1",
+  "Europe/Warsaw": "UTC+1",
+  "Europe/Zurich": "UTC+1",
+  "Pacific/Auckland": "UTC+12",
+  "Pacific/Fiji": "UTC+12",
+  "Pacific/Honolulu": "UTC-10",
+  "Pacific/Midway": "UTC-11",
+  "Pacific/Tahiti": "UTC-10"
 };
 var NewBulletWithTimePlugin = class extends import_obsidian.Plugin {
   constructor() {
     super(...arguments);
-    this.handleKeydownBeforeNewLine = (view, e) => {
-      const s = view.state.selection;
-      const pos = s.main.to;
-      const currentLine = view.state.doc.lineAt(pos);
-      const blankBulletRegex = new RegExp("([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s*$");
-      if (blankBulletRegex.test(currentLine.text))
-        return true;
-      const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
-      const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
-      const timeRegex = new RegExp("(([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s)" + prefixRegex + this.settings.regexForTime + suffixRegex + "(\\s*)$");
-      if (!timeRegex.test(currentLine.text))
-        return false;
-      const matchText = currentLine.text.match(timeRegex);
-      if (matchText === null)
-        return false;
-      e.stopPropagation();
-      e.preventDefault();
-      const toggledString = this.settings.timePrefixFormat + (0, import_obsidian2.moment)().format(this.settings.timeFormat) + this.settings.timeSuffixFormat + matchText[5];
-      const transaction = view.state.update({
-        changes: {
-          from: pos - toggledString.length,
-          to: pos,
-          insert: ""
-        }
-      });
-      view.dispatch(transaction);
-      return true;
-    };
-    this.handleKeydown = (view) => {
-      const s = view.state.selection;
-      const pos = s.main.to;
-      const currentLine = view.state.doc.lineAt(pos);
-      const headingLine = view.state.doc.line(currentLine.number - 1);
-      const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
-      const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
-      const timeRegex = new RegExp("([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s" + prefixRegex + this.settings.regexForTime + suffixRegex);
-      if (!timeRegex.test(headingLine.text))
-        return;
-      const toggledString = this.settings.timePrefixFormat + (0, import_obsidian2.moment)().format(this.settings.timeFormat) + this.settings.timeSuffixFormat + " ";
-      const transaction = view.state.update({
-        changes: {
-          from: pos,
-          to: pos,
-          insert: toggledString
-        },
-        selection: {
-          anchor: pos + toggledString.length
-        }
-      });
-      view.dispatch(transaction);
+    this.handleTransaction = (tr) => {
+      if (!tr.docChanged || !tr.isUserEvent("input.type")) {
+        return tr;
+      }
+      const isEnterKeyPress = this.isEnterKeyTransaction(tr);
+      if (!isEnterKeyPress) {
+        return tr;
+      }
+      if (this.shouldSkipTimeInsertion(tr)) {
+        return tr;
+      }
+      if (this.shouldRemoveTime(tr)) {
+        return this.processTimeRemoval(tr) || tr;
+      }
+      const timeSpec = this.processTimeInsertion(tr);
+      return timeSpec || tr;
     };
   }
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new NewBulletWithTimeSettingTab(this.app, this));
-    this.registerEditorExtension(import_state.Prec.highest(import_view.EditorView.domEventHandlers({
-      keydown: (e, view) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          if (!this.handleKeydownBeforeNewLine(view, e)) {
-            setTimeout(() => {
-              this.handleKeydown(view);
-            }, 0);
-          }
-        }
-      }
-    })));
+    this.registerEditorExtension(import_state.EditorState.transactionFilter.of((tr) => this.handleTransaction(tr)));
     this.addCommand({
       id: "add-time-to-the-start",
       name: "Add time to the start",
@@ -135,33 +168,250 @@ var NewBulletWithTimePlugin = class extends import_obsidian.Plugin {
   }
   addTime(editor, view, position) {
     const { state } = view;
-    const { from, to } = state.selection.main;
+    const { from } = state.selection.main;
     const line = state.doc.lineAt(from);
     const text = state.doc.sliceString(line.from, line.to);
-    const timeStringAtBeginning = this.settings.timePrefixFormat + (0, import_obsidian2.moment)().format(this.settings.timeFormat) + this.settings.timeSuffixFormat;
+    const timeString = this.getFormattedTimeString();
+    const timePatterns = this.createTimePatterns();
     if (position === "Start") {
-      const bulletRegex = new RegExp("^\\s*(([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s)");
-      if (bulletRegex.test(text)) {
-        const matches = text.match(bulletRegex);
-        if (matches) {
-          editor.replaceRange(timeStringAtBeginning + " ", editor.offsetToPos(line.from + matches[0].length), editor.offsetToPos(line.from + matches[0].length));
-          return;
-        }
-      }
-      const headingRegex = new RegExp("^#{1,6}\\s");
-      if (headingRegex.test(text)) {
-        const matches = text.match(headingRegex);
-        if (matches) {
-          editor.replaceRange(timeStringAtBeginning + " ", editor.offsetToPos(line.from + matches[0].length), editor.offsetToPos(line.from + matches[0].length));
-          return;
-        }
-      }
-      editor.replaceRange(timeStringAtBeginning + " ", editor.offsetToPos(line.from), editor.offsetToPos(line.from));
+      this.handleStartPosition(editor, line, text, timeString, timePatterns);
     } else if (position === "End") {
-      const timeString = " " + (0, import_obsidian2.moment)().format(this.settings.timeFormat);
-      editor.replaceRange(timeString, editor.offsetToPos(line.to), editor.offsetToPos(line.to));
-      editor.setCursor(editor.offsetToPos(line.to + timeString.length));
+      this.handleEndPosition(editor, line, text, timeString, timePatterns);
     }
+  }
+  getFormattedTimeString() {
+    const currentTime = this.getTimeWithTimezone();
+    return this.settings.timePrefixFormat + currentTime.format(this.settings.timeFormat) + this.settings.timeSuffixFormat;
+  }
+  createTimePatterns() {
+    const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
+    const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
+    const quotePrefix = "(?:^\\s*(?:>\\s*)+)?";
+    return {
+      timeRegex: new RegExp(prefixRegex + this.settings.regexForTime + suffixRegex),
+      endTimeRegex: new RegExp(prefixRegex + this.settings.regexForTime + suffixRegex + "\\s*$"),
+      bulletRegex: new RegExp(quotePrefix + "\\s*(([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s)"),
+      headingRegex: new RegExp(quotePrefix + "#{1,6}\\s"),
+      quoteRegex: new RegExp("^\\s*(?:>\\s*)+")
+    };
+  }
+  handleStartPosition(editor, line, text, timeString, patterns) {
+    if (this.handleMarkdownElement(editor, line, text, timeString, patterns.bulletRegex, patterns.timeRegex)) {
+      return;
+    }
+    if (this.handleMarkdownElement(editor, line, text, timeString, patterns.headingRegex, patterns.timeRegex)) {
+      return;
+    }
+    this.handlePlainTextStart(editor, line, text, timeString, patterns.timeRegex);
+  }
+  handleMarkdownElement(editor, line, text, timeString, elementRegex, timeRegex) {
+    if (!elementRegex.test(text)) {
+      return false;
+    }
+    const matches = text.match(elementRegex);
+    if (!matches) {
+      return false;
+    }
+    const timePatterns = this.createTimePatterns();
+    const quoteMatch = text.match(timePatterns.quoteRegex);
+    const quotePrefix = quoteMatch ? quoteMatch[0] : "";
+    const afterElementText = text.substring(matches[0].length);
+    const timeMatch = afterElementText.match(timeRegex);
+    const insertPosition = line.from + matches[0].length;
+    if (timeMatch && timeMatch.index === 0) {
+      this.updateExistingTime(editor, insertPosition, insertPosition + timeMatch[0].length, timeString);
+      editor.setCursor(editor.offsetToPos(line.to));
+    } else {
+      this.insertNewTime(editor, insertPosition, insertPosition, timeString + " ");
+      editor.setCursor(editor.offsetToPos(insertPosition + timeString.length + 1));
+    }
+    return true;
+  }
+  handlePlainTextStart(editor, line, text, timeString, timeRegex) {
+    const timePatterns = this.createTimePatterns();
+    const quoteMatch = text.match(timePatterns.quoteRegex);
+    if (quoteMatch) {
+      const afterQuoteText = text.substring(quoteMatch[0].length);
+      const timeMatch = afterQuoteText.match(timeRegex);
+      const insertPosition = line.from + quoteMatch[0].length;
+      if (timeMatch && timeMatch.index === 0) {
+        this.updateExistingTime(editor, insertPosition, insertPosition + timeMatch[0].length, timeString);
+      } else {
+        this.insertNewTime(editor, insertPosition, insertPosition, timeString + " ");
+      }
+      editor.setCursor(editor.offsetToPos(insertPosition + timeString.length + 1));
+    } else {
+      const timeMatch = text.match(timeRegex);
+      if (timeMatch && timeMatch.index === 0) {
+        this.updateExistingTime(editor, line.from, line.from + timeMatch[0].length, timeString);
+      } else {
+        this.insertNewTime(editor, line.from, line.from, timeString + " ");
+      }
+      editor.setCursor(editor.offsetToPos(line.from + timeString.length + 1));
+    }
+  }
+  handleEndPosition(editor, line, text, timeString, patterns) {
+    const endTimeMatch = text.match(patterns.endTimeRegex);
+    if (endTimeMatch) {
+      const startPos = line.from + text.lastIndexOf(endTimeMatch[0]);
+      this.updateExistingTime(editor, startPos, line.to, timeString);
+    } else {
+      this.insertNewTime(editor, line.to, line.to, " " + timeString);
+    }
+    editor.setCursor(editor.offsetToPos(line.to + timeString.length));
+  }
+  updateExistingTime(editor, fromPos, toPos, timeString) {
+    editor.transaction({
+      changes: [
+        {
+          text: timeString,
+          from: editor.offsetToPos(fromPos),
+          to: editor.offsetToPos(toPos)
+        }
+      ]
+    });
+  }
+  insertNewTime(editor, fromPos, toPos, timeString) {
+    editor.transaction({
+      changes: [
+        {
+          text: timeString,
+          from: editor.offsetToPos(fromPos),
+          to: editor.offsetToPos(toPos)
+        }
+      ]
+    });
+  }
+  getTimeWithTimezone() {
+    if (this.settings.timeZone === "local") {
+      return (0, import_obsidian2.moment)();
+    }
+    const now = (0, import_obsidian2.moment)().utc();
+    const timezoneInfo = TIMEZONE_MAP[this.settings.timeZone] || "UTC+0";
+    const offsetMatch = timezoneInfo.match(/UTC([+-])(\d+)(?::(\d+))?/);
+    if (offsetMatch) {
+      const sign = offsetMatch[1] === "+" ? 1 : -1;
+      const hours = parseInt(offsetMatch[2], 10) * sign;
+      const minutes = offsetMatch[3] ? parseInt(offsetMatch[3], 10) * sign : 0;
+      return now.add(hours, "hours").add(minutes, "minutes");
+    }
+    return now;
+  }
+  isEnterKeyTransaction(tr) {
+    let hasNewline = false;
+    tr.changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+      if (inserted.toString().includes("\n")) {
+        hasNewline = true;
+      }
+    });
+    return hasNewline;
+  }
+  shouldSkipTimeInsertion(tr) {
+    const pos = tr.startState.selection.main.to || 0;
+    const { state } = tr;
+    const prevLineNumber = state.doc.lineAt(pos).number;
+    if (prevLineNumber <= 0)
+      return false;
+    const prevLine = state.doc.line(prevLineNumber);
+    const prevLineText = prevLine.text;
+    const timePatterns = this.createTimePatterns();
+    if (!timePatterns.bulletRegex.test(prevLineText))
+      return true;
+    const quoteMatch = prevLineText.match(timePatterns.quoteRegex);
+    const quotePrefix = quoteMatch ? quoteMatch[0] : "";
+    const blankBulletRegex = new RegExp(quotePrefix + "\\s*([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s*$");
+    return blankBulletRegex.test(prevLineText);
+  }
+  shouldRemoveTime(tr) {
+    const pos = tr.state.selection.main.to || 0;
+    const { state } = tr;
+    const currentLine = state.doc.lineAt(pos);
+    if (currentLine.number <= 1)
+      return false;
+    const prevLineNumber = currentLine.number - 1;
+    const prevLine = state.doc.line(prevLineNumber);
+    const prevLineText = prevLine.text;
+    const timePatterns = this.createTimePatterns();
+    const quoteMatch = prevLineText.match(timePatterns.quoteRegex);
+    const quotePrefix = quoteMatch ? quoteMatch[0] : "";
+    const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
+    const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
+    const bulletWithTimeRegex = new RegExp(quotePrefix + "\\s*([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s+" + prefixRegex + this.settings.regexForTime + suffixRegex + "\\s*$");
+    return bulletWithTimeRegex.test(prevLineText);
+  }
+  processTimeInsertion(tr) {
+    const pos = tr.state.selection.main.to || 0;
+    const startPos = tr.startState.selection.main.to || 0;
+    const { state } = tr;
+    const currentLine = state.doc.lineAt(pos);
+    if (currentLine.number <= 1)
+      return null;
+    const prevLineNumber = currentLine.number - 1;
+    const prevLine = state.doc.line(prevLineNumber);
+    const prevLineText = prevLine.text;
+    const timePatterns = this.createTimePatterns();
+    const quoteMatch = prevLineText.match(timePatterns.quoteRegex);
+    const quotePrefix = quoteMatch ? quoteMatch[0] : "";
+    const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
+    const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
+    const timeRegex = new RegExp(quotePrefix + "\\s*([-*+]|\\d+\\.)(\\s\\[(.)\\])?\\s" + prefixRegex + this.settings.regexForTime + suffixRegex);
+    if (!timeRegex.test(prevLineText))
+      return null;
+    const currentTime = this.getTimeWithTimezone();
+    const timeString = this.settings.timePrefixFormat + currentTime.format(this.settings.timeFormat) + this.settings.timeSuffixFormat + " ";
+    return {
+      changes: [
+        tr.changes,
+        {
+          from: startPos,
+          to: startPos,
+          insert: timeString
+        }
+      ],
+      selection: {
+        anchor: currentLine.to + timeString.length
+      }
+    };
+  }
+  processTimeRemoval(tr) {
+    const pos = tr.state.selection.main.to || 0;
+    const { state } = tr;
+    const currentLine = state.doc.lineAt(pos);
+    if (currentLine.number <= 0)
+      return null;
+    const prevLineNumber = currentLine.number - 1;
+    const prevLine = state.doc.line(prevLineNumber);
+    const prevLineText = prevLine.text;
+    const timePatterns = this.createTimePatterns();
+    const quoteMatch = prevLineText.match(timePatterns.quoteRegex);
+    const prefixRegex = this.escapeRegExp(this.settings.timePrefixFormat);
+    const suffixRegex = this.escapeRegExp(this.settings.timeSuffixFormat);
+    const timePattern = new RegExp(prefixRegex + this.settings.regexForTime + suffixRegex + "\\s*");
+    let match;
+    let timeStartPos;
+    if (quoteMatch) {
+      const afterQuoteText = prevLineText.substring(quoteMatch[0].length);
+      match = afterQuoteText.match(timePattern);
+      if (!match)
+        return null;
+      timeStartPos = prevLine.from + quoteMatch[0].length + afterQuoteText.indexOf(match[0]);
+    } else {
+      match = prevLineText.match(timePattern);
+      if (!match)
+        return null;
+      timeStartPos = prevLine.from + prevLineText.indexOf(match[0]);
+    }
+    const timeEndPos = timeStartPos + match[0].length;
+    return {
+      changes: {
+        from: timeStartPos,
+        to: timeEndPos,
+        insert: ""
+      },
+      selection: {
+        anchor: timeStartPos
+      }
+    };
   }
   escapeRegExp(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -187,7 +437,6 @@ var NewBulletWithTimeSettingTab = class extends import_obsidian.PluginSettingTab
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Settings for my awesome plugin." });
     new import_obsidian.Setting(containerEl).setName("Time format").setDesc("Use time format like HH:mm to insert into newly created bullet item.").addText((text) => text.setPlaceholder("Set your time format").setValue(this.plugin.settings.timeFormat).onChange(async (value) => {
       this.plugin.settings.timeFormat = value;
       this.applySettingsUpdate();
@@ -204,7 +453,16 @@ var NewBulletWithTimeSettingTab = class extends import_obsidian.PluginSettingTab
       this.plugin.settings.regexForTime = value;
       this.applySettingsUpdate();
     }));
-    this.containerEl.createEl("h2", { text: "Say Thank You" });
+    new import_obsidian.Setting(containerEl).setName("Time zone").setDesc("Set your time zone. Default is your local time.").addDropdown((dropdown) => {
+      Object.keys(TIMEZONE_MAP).forEach((timezone) => {
+        dropdown.addOption(timezone, `${timezone} (${TIMEZONE_MAP[timezone]})`);
+      });
+      dropdown.setValue(this.plugin.settings.timeZone);
+      dropdown.onChange(async (value) => {
+        this.plugin.settings.timeZone = value;
+        this.applySettingsUpdate();
+      });
+    });
     new import_obsidian.Setting(containerEl).setName("Donate").setDesc("If you like this plugin, consider donating to support continued development:").addButton((bt) => {
       this.addImageToButton(bt, "https://cdn.jsdelivr.net/gh/Quorafind/.github@main/IMAGE/%E5%BE%AE%E4%BF%A1%E4%BB%98%E6%AC%BE%E7%A0%81.jpg", "wechat");
     }).addButton((bt) => {
@@ -220,10 +478,10 @@ var NewBulletWithTimeSettingTab = class extends import_obsidian.PluginSettingTab
     button.buttonEl.addClass("dbl-donate-button");
     switch (imageType) {
       case "alipay":
-        (0, import_obsidian.setIcon)(aTagEL, "alipay", 16);
+        (0, import_obsidian.setIcon)(aTagEL, "alipay");
         break;
       case "wechat":
-        (0, import_obsidian.setIcon)(aTagEL, "wechat", 16);
+        (0, import_obsidian.setIcon)(aTagEL, "wechat");
         break;
       case "bmc":
         const favicon = document.createElement("img");
