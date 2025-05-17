@@ -86,7 +86,7 @@
   "MomentsIcon": "https://images.pexels.com/photos/256514/pexels-photo-256514.jpeg",
   "MomentsQuote": "Share your thino with the world",
   "DefaultThemeForThino": "modern",
-  "LastUpdatedVersion": "2.5.1",
+  "LastUpdatedVersion": "2.7.9",
   "ShareToThinoWithText": false,
   "ShareToThinoWithTextAppend": "",
   "ShareToThinoWithTextPrepend": "",
@@ -119,5 +119,16 @@
   "SyncManually": false,
   "MemoFixedPrefix": "",
   "MemoFixedSuffix": "",
-  "UseMemoFixedStrings": false
+  "UseMemoFixedStrings": false,
+  "enableWordCount": false,
+  "maxWordCount": 0,
+  "enableReferenceLinksGroup": false,
+  "doubleClickBehavior": "edit-thino",
+  "useMobileViewDefaultHeader": false,
+  "IgnoreFolderForMultiType": [],
+  "UseBlockLinkWhenDragging": false,
+  "ShowScrollToTopButton": true,
+  "ZoomImageWhenViewing": false,
+  "ViewArchiveInRandomReview": false,
+  "DraggingBehavior": "block-link"
 }

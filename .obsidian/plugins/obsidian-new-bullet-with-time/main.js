@@ -35,7 +35,8 @@ var DEFAULT_SETTINGS = {
   timePrefixFormat: "",
   timeSuffixFormat: "",
   regexForTime: "\\d{2}:\\d{2}",
-  timeZone: "local"
+  timeZone: "local",
+  respectDaylightSavings: true
 };
 var TIMEZONE_MAP = {
   local: "Local Time",
@@ -286,16 +287,34 @@ var NewBulletWithTimePlugin = class extends import_obsidian.Plugin {
     if (this.settings.timeZone === "local") {
       return (0, import_obsidian2.moment)();
     }
+    if (this.settings.timeZone === "UTC") {
+      return (0, import_obsidian2.moment)().utc();
+    }
+    if (this.settings.respectDaylightSavings) {
+      const now = new Date();
+      const timezone = this.settings.timeZone;
+      const targetDate = new Date(now.toLocaleString("en-US", { timeZone: timezone }));
+      if (isNaN(targetDate.getTime())) {
+        return this.getTimeByOffset();
+      }
+      return (0, import_obsidian2.moment)(targetDate);
+    }
+    return this.getTimeByOffset();
+  }
+  getTimeByOffset() {
     const now = (0, import_obsidian2.moment)().utc();
-    const timezoneInfo = TIMEZONE_MAP[this.settings.timeZone] || "UTC+0";
+    return now.utcOffset(this.getTimezoneOffset(this.settings.timeZone));
+  }
+  getTimezoneOffset(timezone) {
+    const timezoneInfo = TIMEZONE_MAP[timezone] || "UTC+0";
     const offsetMatch = timezoneInfo.match(/UTC([+-])(\d+)(?::(\d+))?/);
     if (offsetMatch) {
       const sign = offsetMatch[1] === "+" ? 1 : -1;
-      const hours = parseInt(offsetMatch[2], 10) * sign;
-      const minutes = offsetMatch[3] ? parseInt(offsetMatch[3], 10) * sign : 0;
-      return now.add(hours, "hours").add(minutes, "minutes");
+      const hours = parseInt(offsetMatch[2], 10);
+      const minutes = offsetMatch[3] ? parseInt(offsetMatch[3], 10) : 0;
+      return sign * (hours * 60 + minutes);
     }
-    return now;
+    return 0;
   }
   isEnterKeyTransaction(tr) {
     let hasNewline = false;
@@ -460,6 +479,13 @@ var NewBulletWithTimeSettingTab = class extends import_obsidian.PluginSettingTab
       dropdown.setValue(this.plugin.settings.timeZone);
       dropdown.onChange(async (value) => {
         this.plugin.settings.timeZone = value;
+        this.applySettingsUpdate();
+      });
+    });
+    new import_obsidian.Setting(containerEl).setName("Respect Daylight Savings").setDesc("Enable to adjust times for daylight savings changes when using named timezones.").addToggle((toggle) => {
+      toggle.setValue(this.plugin.settings.respectDaylightSavings);
+      toggle.onChange(async (value) => {
+        this.plugin.settings.respectDaylightSavings = value;
         this.applySettingsUpdate();
       });
     });
