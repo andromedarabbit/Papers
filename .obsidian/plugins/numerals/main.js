@@ -25,12 +25,16 @@ var __copyProps = (to2, from, except, desc) => {
   }
   return to2;
 };
-var __toESM = (mod3, isNodeMode, target) => (target = mod3 != null ? __create(__getProtoOf(mod3)) : {}, __copyProps(isNodeMode || !mod3 || !mod3.__esModule ? __defProp(target, "default", { value: mod3, enumerable: true }) : target, mod3));
+var __toESM = (mod3, isNodeMode, target) => (target = mod3 != null ? __create(__getProtoOf(mod3)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod3 || !mod3.__esModule ? __defProp(target, "default", { value: mod3, enumerable: true }) : target,
+  mod3
+));
 var __toCommonJS = (mod3) => __copyProps(__defProp({}, "__esModule", { value: true }), mod3);
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // node_modules/typed-function/lib/umd/typed-function.js
 var require_typed_function = __commonJS({
@@ -146,6 +150,7 @@ var require_typed_function = __commonJS({
               isAny: types[i2].isAny,
               index: beforeIndex + i2,
               conversionsTo: []
+              // Newly added type can't have any conversions to it
             });
           }
           const affectedTypes = typeList.slice(beforeIndex);
@@ -225,8 +230,7 @@ var require_typed_function = __commonJS({
               filteredSignatures.push(possibility);
             }
             remainingSignatures = filteredSignatures;
-            if (remainingSignatures.length === 0)
-              break;
+            if (remainingSignatures.length === 0) break;
           }
           let candidate;
           for (candidate of remainingSignatures) {
@@ -281,6 +285,7 @@ var require_typed_function = __commonJS({
           return {
             types: exactTypes,
             name: paramName.slice(0, -1),
+            // remove trailing '|' from above
             hasAny,
             hasConversion: false,
             restParam
@@ -587,18 +592,14 @@ var require_typed_function = __commonJS({
           let conv1 = 0;
           let par;
           for (par of pars1) {
-            if (par.hasAny)
-              ++any1;
-            if (par.hasConversion)
-              ++conv1;
+            if (par.hasAny) ++any1;
+            if (par.hasConversion) ++conv1;
           }
           let any2 = 0;
           let conv2 = 0;
           for (par of pars2) {
-            if (par.hasAny)
-              ++any2;
-            if (par.hasConversion)
-              ++conv2;
+            if (par.hasAny) ++any2;
+            if (par.hasConversion) ++conv2;
           }
           if (any1 !== any2) {
             return any1 - any2;
@@ -837,8 +838,7 @@ var require_typed_function = __commonJS({
             leftUnresolved = false;
             let nothingResolved = true;
             for (let i2 = 0; i2 < resolvedFunctions.length; ++i2) {
-              if (isResolved[i2])
-                continue;
+              if (isResolved[i2]) continue;
               const fn = resolvedFunctions[i2];
               if (isReferToSelf(fn)) {
                 resolvedFunctions[i2] = fn.referToSelf.callback(self2);
@@ -890,8 +890,7 @@ var require_typed_function = __commonJS({
               continue;
             }
             const params = parseSignature(signature);
-            if (!params)
-              continue;
+            if (!params) continue;
             parsedParams.forEach(function(pp) {
               if (conflicting(pp, params)) {
                 throw new TypeError('Conflicting signatures "' + stringifyParams(pp) + '" and "' + stringifyParams(params) + '".');
@@ -1240,617 +1239,13 @@ var require_typed_function = __commonJS({
   }
 });
 
-// node_modules/complex.js/complex.js
-var require_complex = __commonJS({
-  "node_modules/complex.js/complex.js"(exports, module2) {
-    (function(root) {
-      "use strict";
-      var cosh4 = Math.cosh || function(x) {
-        return Math.abs(x) < 1e-9 ? 1 - x : (Math.exp(x) + Math.exp(-x)) * 0.5;
-      };
-      var sinh4 = Math.sinh || function(x) {
-        return Math.abs(x) < 1e-9 ? x : (Math.exp(x) - Math.exp(-x)) * 0.5;
-      };
-      var cosm1 = function(x) {
-        var b = Math.PI / 4;
-        if (-b > x || x > b) {
-          return Math.cos(x) - 1;
-        }
-        var xx = x * x;
-        return xx * (xx * (xx * (xx * (xx * (xx * (xx * (xx / 20922789888e3 - 1 / 87178291200) + 1 / 479001600) - 1 / 3628800) + 1 / 40320) - 1 / 720) + 1 / 24) - 1 / 2);
-      };
-      var hypot3 = function(x, y) {
-        var a = Math.abs(x);
-        var b = Math.abs(y);
-        if (a < 3e3 && b < 3e3) {
-          return Math.sqrt(a * a + b * b);
-        }
-        if (a < b) {
-          a = b;
-          b = x / y;
-        } else {
-          b = y / x;
-        }
-        return a * Math.sqrt(1 + b * b);
-      };
-      var parser_exit = function() {
-        throw SyntaxError("Invalid Param");
-      };
-      function logHypot(a, b) {
-        var _a = Math.abs(a);
-        var _b = Math.abs(b);
-        if (a === 0) {
-          return Math.log(_b);
-        }
-        if (b === 0) {
-          return Math.log(_a);
-        }
-        if (_a < 3e3 && _b < 3e3) {
-          return Math.log(a * a + b * b) * 0.5;
-        }
-        a = a / 2;
-        b = b / 2;
-        return 0.5 * Math.log(a * a + b * b) + Math.LN2;
-      }
-      var parse2 = function(a, b) {
-        var z = { "re": 0, "im": 0 };
-        if (a === void 0 || a === null) {
-          z["re"] = z["im"] = 0;
-        } else if (b !== void 0) {
-          z["re"] = a;
-          z["im"] = b;
-        } else
-          switch (typeof a) {
-            case "object":
-              if ("im" in a && "re" in a) {
-                z["re"] = a["re"];
-                z["im"] = a["im"];
-              } else if ("abs" in a && "arg" in a) {
-                if (!Number.isFinite(a["abs"]) && Number.isFinite(a["arg"])) {
-                  return Complex3["INFINITY"];
-                }
-                z["re"] = a["abs"] * Math.cos(a["arg"]);
-                z["im"] = a["abs"] * Math.sin(a["arg"]);
-              } else if ("r" in a && "phi" in a) {
-                if (!Number.isFinite(a["r"]) && Number.isFinite(a["phi"])) {
-                  return Complex3["INFINITY"];
-                }
-                z["re"] = a["r"] * Math.cos(a["phi"]);
-                z["im"] = a["r"] * Math.sin(a["phi"]);
-              } else if (a.length === 2) {
-                z["re"] = a[0];
-                z["im"] = a[1];
-              } else {
-                parser_exit();
-              }
-              break;
-            case "string":
-              z["im"] = z["re"] = 0;
-              var tokens = a.match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
-              var plus = 1;
-              var minus = 0;
-              if (tokens === null) {
-                parser_exit();
-              }
-              for (var i2 = 0; i2 < tokens.length; i2++) {
-                var c = tokens[i2];
-                if (c === " " || c === "	" || c === "\n") {
-                } else if (c === "+") {
-                  plus++;
-                } else if (c === "-") {
-                  minus++;
-                } else if (c === "i" || c === "I") {
-                  if (plus + minus === 0) {
-                    parser_exit();
-                  }
-                  if (tokens[i2 + 1] !== " " && !isNaN(tokens[i2 + 1])) {
-                    z["im"] += parseFloat((minus % 2 ? "-" : "") + tokens[i2 + 1]);
-                    i2++;
-                  } else {
-                    z["im"] += parseFloat((minus % 2 ? "-" : "") + "1");
-                  }
-                  plus = minus = 0;
-                } else {
-                  if (plus + minus === 0 || isNaN(c)) {
-                    parser_exit();
-                  }
-                  if (tokens[i2 + 1] === "i" || tokens[i2 + 1] === "I") {
-                    z["im"] += parseFloat((minus % 2 ? "-" : "") + c);
-                    i2++;
-                  } else {
-                    z["re"] += parseFloat((minus % 2 ? "-" : "") + c);
-                  }
-                  plus = minus = 0;
-                }
-              }
-              if (plus + minus > 0) {
-                parser_exit();
-              }
-              break;
-            case "number":
-              z["im"] = 0;
-              z["re"] = a;
-              break;
-            default:
-              parser_exit();
-          }
-        if (isNaN(z["re"]) || isNaN(z["im"])) {
-        }
-        return z;
-      };
-      function Complex3(a, b) {
-        if (!(this instanceof Complex3)) {
-          return new Complex3(a, b);
-        }
-        var z = parse2(a, b);
-        this["re"] = z["re"];
-        this["im"] = z["im"];
-      }
-      Complex3.prototype = {
-        "re": 0,
-        "im": 0,
-        "sign": function() {
-          var abs3 = this["abs"]();
-          return new Complex3(this["re"] / abs3, this["im"] / abs3);
-        },
-        "add": function(a, b) {
-          var z = new Complex3(a, b);
-          if (this["isInfinite"]() && z["isInfinite"]()) {
-            return Complex3["NAN"];
-          }
-          if (this["isInfinite"]() || z["isInfinite"]()) {
-            return Complex3["INFINITY"];
-          }
-          return new Complex3(this["re"] + z["re"], this["im"] + z["im"]);
-        },
-        "sub": function(a, b) {
-          var z = new Complex3(a, b);
-          if (this["isInfinite"]() && z["isInfinite"]()) {
-            return Complex3["NAN"];
-          }
-          if (this["isInfinite"]() || z["isInfinite"]()) {
-            return Complex3["INFINITY"];
-          }
-          return new Complex3(this["re"] - z["re"], this["im"] - z["im"]);
-        },
-        "mul": function(a, b) {
-          var z = new Complex3(a, b);
-          if (this["isInfinite"]() && z["isZero"]() || this["isZero"]() && z["isInfinite"]()) {
-            return Complex3["NAN"];
-          }
-          if (this["isInfinite"]() || z["isInfinite"]()) {
-            return Complex3["INFINITY"];
-          }
-          if (z["im"] === 0 && this["im"] === 0) {
-            return new Complex3(this["re"] * z["re"], 0);
-          }
-          return new Complex3(this["re"] * z["re"] - this["im"] * z["im"], this["re"] * z["im"] + this["im"] * z["re"]);
-        },
-        "div": function(a, b) {
-          var z = new Complex3(a, b);
-          if (this["isZero"]() && z["isZero"]() || this["isInfinite"]() && z["isInfinite"]()) {
-            return Complex3["NAN"];
-          }
-          if (this["isInfinite"]() || z["isZero"]()) {
-            return Complex3["INFINITY"];
-          }
-          if (this["isZero"]() || z["isInfinite"]()) {
-            return Complex3["ZERO"];
-          }
-          a = this["re"];
-          b = this["im"];
-          var c = z["re"];
-          var d = z["im"];
-          var t, x;
-          if (d === 0) {
-            return new Complex3(a / c, b / c);
-          }
-          if (Math.abs(c) < Math.abs(d)) {
-            x = c / d;
-            t = c * x + d;
-            return new Complex3((a * x + b) / t, (b * x - a) / t);
-          } else {
-            x = d / c;
-            t = d * x + c;
-            return new Complex3((a + b * x) / t, (b - a * x) / t);
-          }
-        },
-        "pow": function(a, b) {
-          var z = new Complex3(a, b);
-          a = this["re"];
-          b = this["im"];
-          if (z["isZero"]()) {
-            return Complex3["ONE"];
-          }
-          if (z["im"] === 0) {
-            if (b === 0 && a > 0) {
-              return new Complex3(Math.pow(a, z["re"]), 0);
-            } else if (a === 0) {
-              switch ((z["re"] % 4 + 4) % 4) {
-                case 0:
-                  return new Complex3(Math.pow(b, z["re"]), 0);
-                case 1:
-                  return new Complex3(0, Math.pow(b, z["re"]));
-                case 2:
-                  return new Complex3(-Math.pow(b, z["re"]), 0);
-                case 3:
-                  return new Complex3(0, -Math.pow(b, z["re"]));
-              }
-            }
-          }
-          if (a === 0 && b === 0 && z["re"] > 0 && z["im"] >= 0) {
-            return Complex3["ZERO"];
-          }
-          var arg2 = Math.atan2(b, a);
-          var loh = logHypot(a, b);
-          a = Math.exp(z["re"] * loh - z["im"] * arg2);
-          b = z["im"] * loh + z["re"] * arg2;
-          return new Complex3(a * Math.cos(b), a * Math.sin(b));
-        },
-        "sqrt": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var r = this["abs"]();
-          var re2, im2;
-          if (a >= 0) {
-            if (b === 0) {
-              return new Complex3(Math.sqrt(a), 0);
-            }
-            re2 = 0.5 * Math.sqrt(2 * (r + a));
-          } else {
-            re2 = Math.abs(b) / Math.sqrt(2 * (r - a));
-          }
-          if (a <= 0) {
-            im2 = 0.5 * Math.sqrt(2 * (r - a));
-          } else {
-            im2 = Math.abs(b) / Math.sqrt(2 * (r + a));
-          }
-          return new Complex3(re2, b < 0 ? -im2 : im2);
-        },
-        "exp": function() {
-          var tmp = Math.exp(this["re"]);
-          if (this["im"] === 0) {
-          }
-          return new Complex3(tmp * Math.cos(this["im"]), tmp * Math.sin(this["im"]));
-        },
-        "expm1": function() {
-          var a = this["re"];
-          var b = this["im"];
-          return new Complex3(Math.expm1(a) * Math.cos(b) + cosm1(b), Math.exp(a) * Math.sin(b));
-        },
-        "log": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (b === 0 && a > 0) {
-          }
-          return new Complex3(logHypot(a, b), Math.atan2(b, a));
-        },
-        "abs": function() {
-          return hypot3(this["re"], this["im"]);
-        },
-        "arg": function() {
-          return Math.atan2(this["im"], this["re"]);
-        },
-        "sin": function() {
-          var a = this["re"];
-          var b = this["im"];
-          return new Complex3(Math.sin(a) * cosh4(b), Math.cos(a) * sinh4(b));
-        },
-        "cos": function() {
-          var a = this["re"];
-          var b = this["im"];
-          return new Complex3(Math.cos(a) * cosh4(b), -Math.sin(a) * sinh4(b));
-        },
-        "tan": function() {
-          var a = 2 * this["re"];
-          var b = 2 * this["im"];
-          var d = Math.cos(a) + cosh4(b);
-          return new Complex3(Math.sin(a) / d, sinh4(b) / d);
-        },
-        "cot": function() {
-          var a = 2 * this["re"];
-          var b = 2 * this["im"];
-          var d = Math.cos(a) - cosh4(b);
-          return new Complex3(-Math.sin(a) / d, sinh4(b) / d);
-        },
-        "sec": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var d = 0.5 * cosh4(2 * b) + 0.5 * Math.cos(2 * a);
-          return new Complex3(Math.cos(a) * cosh4(b) / d, Math.sin(a) * sinh4(b) / d);
-        },
-        "csc": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var d = 0.5 * cosh4(2 * b) - 0.5 * Math.cos(2 * a);
-          return new Complex3(Math.sin(a) * cosh4(b) / d, -Math.cos(a) * sinh4(b) / d);
-        },
-        "asin": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var t1 = new Complex3(b * b - a * a + 1, -2 * a * b)["sqrt"]();
-          var t2 = new Complex3(t1["re"] - b, t1["im"] + a)["log"]();
-          return new Complex3(t2["im"], -t2["re"]);
-        },
-        "acos": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var t1 = new Complex3(b * b - a * a + 1, -2 * a * b)["sqrt"]();
-          var t2 = new Complex3(t1["re"] - b, t1["im"] + a)["log"]();
-          return new Complex3(Math.PI / 2 - t2["im"], t2["re"]);
-        },
-        "atan": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (a === 0) {
-            if (b === 1) {
-              return new Complex3(0, Infinity);
-            }
-            if (b === -1) {
-              return new Complex3(0, -Infinity);
-            }
-          }
-          var d = a * a + (1 - b) * (1 - b);
-          var t1 = new Complex3((1 - b * b - a * a) / d, -2 * a / d).log();
-          return new Complex3(-0.5 * t1["im"], 0.5 * t1["re"]);
-        },
-        "acot": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (b === 0) {
-            return new Complex3(Math.atan2(1, a), 0);
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).atan() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).atan();
-        },
-        "asec": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (a === 0 && b === 0) {
-            return new Complex3(0, Infinity);
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).acos() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).acos();
-        },
-        "acsc": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (a === 0 && b === 0) {
-            return new Complex3(Math.PI / 2, Infinity);
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).asin() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).asin();
-        },
-        "sinh": function() {
-          var a = this["re"];
-          var b = this["im"];
-          return new Complex3(sinh4(a) * Math.cos(b), cosh4(a) * Math.sin(b));
-        },
-        "cosh": function() {
-          var a = this["re"];
-          var b = this["im"];
-          return new Complex3(cosh4(a) * Math.cos(b), sinh4(a) * Math.sin(b));
-        },
-        "tanh": function() {
-          var a = 2 * this["re"];
-          var b = 2 * this["im"];
-          var d = cosh4(a) + Math.cos(b);
-          return new Complex3(sinh4(a) / d, Math.sin(b) / d);
-        },
-        "coth": function() {
-          var a = 2 * this["re"];
-          var b = 2 * this["im"];
-          var d = cosh4(a) - Math.cos(b);
-          return new Complex3(sinh4(a) / d, -Math.sin(b) / d);
-        },
-        "csch": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var d = Math.cos(2 * b) - cosh4(2 * a);
-          return new Complex3(-2 * sinh4(a) * Math.cos(b) / d, 2 * cosh4(a) * Math.sin(b) / d);
-        },
-        "sech": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var d = Math.cos(2 * b) + cosh4(2 * a);
-          return new Complex3(2 * cosh4(a) * Math.cos(b) / d, -2 * sinh4(a) * Math.sin(b) / d);
-        },
-        "asinh": function() {
-          var tmp = this["im"];
-          this["im"] = -this["re"];
-          this["re"] = tmp;
-          var res = this["asin"]();
-          this["re"] = -this["im"];
-          this["im"] = tmp;
-          tmp = res["re"];
-          res["re"] = -res["im"];
-          res["im"] = tmp;
-          return res;
-        },
-        "acosh": function() {
-          var res = this["acos"]();
-          if (res["im"] <= 0) {
-            var tmp = res["re"];
-            res["re"] = -res["im"];
-            res["im"] = tmp;
-          } else {
-            var tmp = res["im"];
-            res["im"] = -res["re"];
-            res["re"] = tmp;
-          }
-          return res;
-        },
-        "atanh": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var noIM = a > 1 && b === 0;
-          var oneMinus = 1 - a;
-          var onePlus = 1 + a;
-          var d = oneMinus * oneMinus + b * b;
-          var x = d !== 0 ? new Complex3((onePlus * oneMinus - b * b) / d, (b * oneMinus + onePlus * b) / d) : new Complex3(a !== -1 ? a / 0 : 0, b !== 0 ? b / 0 : 0);
-          var temp = x["re"];
-          x["re"] = logHypot(x["re"], x["im"]) / 2;
-          x["im"] = Math.atan2(x["im"], temp) / 2;
-          if (noIM) {
-            x["im"] = -x["im"];
-          }
-          return x;
-        },
-        "acoth": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (a === 0 && b === 0) {
-            return new Complex3(0, Math.PI / 2);
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).atanh() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).atanh();
-        },
-        "acsch": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (b === 0) {
-            return new Complex3(a !== 0 ? Math.log(a + Math.sqrt(a * a + 1)) : Infinity, 0);
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).asinh() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).asinh();
-        },
-        "asech": function() {
-          var a = this["re"];
-          var b = this["im"];
-          if (this["isZero"]()) {
-            return Complex3["INFINITY"];
-          }
-          var d = a * a + b * b;
-          return d !== 0 ? new Complex3(a / d, -b / d).acosh() : new Complex3(a !== 0 ? a / 0 : 0, b !== 0 ? -b / 0 : 0).acosh();
-        },
-        "inverse": function() {
-          if (this["isZero"]()) {
-            return Complex3["INFINITY"];
-          }
-          if (this["isInfinite"]()) {
-            return Complex3["ZERO"];
-          }
-          var a = this["re"];
-          var b = this["im"];
-          var d = a * a + b * b;
-          return new Complex3(a / d, -b / d);
-        },
-        "conjugate": function() {
-          return new Complex3(this["re"], -this["im"]);
-        },
-        "neg": function() {
-          return new Complex3(-this["re"], -this["im"]);
-        },
-        "ceil": function(places) {
-          places = Math.pow(10, places || 0);
-          return new Complex3(Math.ceil(this["re"] * places) / places, Math.ceil(this["im"] * places) / places);
-        },
-        "floor": function(places) {
-          places = Math.pow(10, places || 0);
-          return new Complex3(Math.floor(this["re"] * places) / places, Math.floor(this["im"] * places) / places);
-        },
-        "round": function(places) {
-          places = Math.pow(10, places || 0);
-          return new Complex3(Math.round(this["re"] * places) / places, Math.round(this["im"] * places) / places);
-        },
-        "equals": function(a, b) {
-          var z = new Complex3(a, b);
-          return Math.abs(z["re"] - this["re"]) <= Complex3["EPSILON"] && Math.abs(z["im"] - this["im"]) <= Complex3["EPSILON"];
-        },
-        "clone": function() {
-          return new Complex3(this["re"], this["im"]);
-        },
-        "toString": function() {
-          var a = this["re"];
-          var b = this["im"];
-          var ret = "";
-          if (this["isNaN"]()) {
-            return "NaN";
-          }
-          if (this["isInfinite"]()) {
-            return "Infinity";
-          }
-          if (Math.abs(a) < Complex3["EPSILON"]) {
-            a = 0;
-          }
-          if (Math.abs(b) < Complex3["EPSILON"]) {
-            b = 0;
-          }
-          if (b === 0) {
-            return ret + a;
-          }
-          if (a !== 0) {
-            ret += a;
-            ret += " ";
-            if (b < 0) {
-              b = -b;
-              ret += "-";
-            } else {
-              ret += "+";
-            }
-            ret += " ";
-          } else if (b < 0) {
-            b = -b;
-            ret += "-";
-          }
-          if (b !== 1) {
-            ret += b;
-          }
-          return ret + "i";
-        },
-        "toVector": function() {
-          return [this["re"], this["im"]];
-        },
-        "valueOf": function() {
-          if (this["im"] === 0) {
-            return this["re"];
-          }
-          return null;
-        },
-        "isNaN": function() {
-          return isNaN(this["re"]) || isNaN(this["im"]);
-        },
-        "isZero": function() {
-          return this["im"] === 0 && this["re"] === 0;
-        },
-        "isFinite": function() {
-          return isFinite(this["re"]) && isFinite(this["im"]);
-        },
-        "isInfinite": function() {
-          return !(this["isNaN"]() || this["isFinite"]());
-        }
-      };
-      Complex3["ZERO"] = new Complex3(0, 0);
-      Complex3["ONE"] = new Complex3(1, 0);
-      Complex3["I"] = new Complex3(0, 1);
-      Complex3["PI"] = new Complex3(Math.PI, 0);
-      Complex3["E"] = new Complex3(Math.E, 0);
-      Complex3["INFINITY"] = new Complex3(Infinity, Infinity);
-      Complex3["NAN"] = new Complex3(NaN, NaN);
-      Complex3["EPSILON"] = 1e-15;
-      if (typeof define === "function" && define["amd"]) {
-        define([], function() {
-          return Complex3;
-        });
-      } else if (typeof exports === "object") {
-        Object.defineProperty(Complex3, "__esModule", { "value": true });
-        Complex3["default"] = Complex3;
-        Complex3["Complex"] = Complex3;
-        module2["exports"] = Complex3;
-      } else {
-        root["Complex"] = Complex3;
-      }
-    })(exports);
-  }
-});
-
 // node_modules/fraction.js/fraction.js
 var require_fraction = __commonJS({
   "node_modules/fraction.js/fraction.js"(exports, module2) {
     (function(root) {
       "use strict";
       var MAX_CYCLE_LEN = 2e3;
-      var P3 = {
+      var P4 = {
         "s": 1,
         "n": 0,
         "d": 1
@@ -1893,7 +1288,7 @@ var require_fraction = __commonJS({
         }
         return factors;
       }
-      var parse2 = function(p1, p2) {
+      var parse3 = function(p1, p2) {
         var n = 0, d = 1, s = 1;
         var v = 0, w = 0, x = 0, y = 1, z = 1;
         var A = 0, B = 1;
@@ -2014,7 +1409,8 @@ var require_fraction = __commonJS({
               }
               if (B.length <= A) {
                 d = y * z;
-                s = n = x + d * v + z * w;
+                s = /* void */
+                n = x + d * v + z * w;
                 break;
               }
             }
@@ -2024,9 +1420,9 @@ var require_fraction = __commonJS({
         if (d === 0) {
           throw DivisionByZero();
         }
-        P3["s"] = s < 0 ? -1 : 1;
-        P3["n"] = Math.abs(n);
-        P3["d"] = Math.abs(d);
+        P4["s"] = s < 0 ? -1 : 1;
+        P4["n"] = Math.abs(n);
+        P4["d"] = Math.abs(d);
       };
       function modpow(b, e3, m) {
         var r = 1;
@@ -2080,14 +1476,14 @@ var require_fraction = __commonJS({
       }
       ;
       function Fraction3(a, b) {
-        parse2(a, b);
+        parse3(a, b);
         if (this instanceof Fraction3) {
-          a = gcd2(P3["d"], P3["n"]);
-          this["s"] = P3["s"];
-          this["n"] = P3["n"] / a;
-          this["d"] = P3["d"] / a;
+          a = gcd2(P4["d"], P4["n"]);
+          this["s"] = P4["s"];
+          this["n"] = P4["n"] / a;
+          this["d"] = P4["d"] / a;
         } else {
-          return newFraction(P3["s"] * P3["n"], P3["d"]);
+          return newFraction(P4["s"] * P4["n"], P4["d"]);
         }
       }
       var DivisionByZero = function() {
@@ -2103,31 +1499,83 @@ var require_fraction = __commonJS({
         "s": 1,
         "n": 0,
         "d": 1,
+        /**
+         * Calculates the absolute value
+         *
+         * Ex: new Fraction(-4).abs() => 4
+         **/
         "abs": function() {
           return newFraction(this["n"], this["d"]);
         },
+        /**
+         * Inverts the sign of the current fraction
+         *
+         * Ex: new Fraction(-4).neg() => 4
+         **/
         "neg": function() {
           return newFraction(-this["s"] * this["n"], this["d"]);
         },
+        /**
+         * Adds two rational numbers
+         *
+         * Ex: new Fraction({n: 2, d: 3}).add("14.9") => 467 / 30
+         **/
         "add": function(a, b) {
-          parse2(a, b);
-          return newFraction(this["s"] * this["n"] * P3["d"] + P3["s"] * this["d"] * P3["n"], this["d"] * P3["d"]);
+          parse3(a, b);
+          return newFraction(
+            this["s"] * this["n"] * P4["d"] + P4["s"] * this["d"] * P4["n"],
+            this["d"] * P4["d"]
+          );
         },
+        /**
+         * Subtracts two rational numbers
+         *
+         * Ex: new Fraction({n: 2, d: 3}).add("14.9") => -427 / 30
+         **/
         "sub": function(a, b) {
-          parse2(a, b);
-          return newFraction(this["s"] * this["n"] * P3["d"] - P3["s"] * this["d"] * P3["n"], this["d"] * P3["d"]);
+          parse3(a, b);
+          return newFraction(
+            this["s"] * this["n"] * P4["d"] - P4["s"] * this["d"] * P4["n"],
+            this["d"] * P4["d"]
+          );
         },
+        /**
+         * Multiplies two rational numbers
+         *
+         * Ex: new Fraction("-17.(345)").mul(3) => 5776 / 111
+         **/
         "mul": function(a, b) {
-          parse2(a, b);
-          return newFraction(this["s"] * P3["s"] * this["n"] * P3["n"], this["d"] * P3["d"]);
+          parse3(a, b);
+          return newFraction(
+            this["s"] * P4["s"] * this["n"] * P4["n"],
+            this["d"] * P4["d"]
+          );
         },
+        /**
+         * Divides two rational numbers
+         *
+         * Ex: new Fraction("-17.(345)").inverse().div(3)
+         **/
         "div": function(a, b) {
-          parse2(a, b);
-          return newFraction(this["s"] * P3["s"] * this["n"] * P3["d"], this["d"] * P3["n"]);
+          parse3(a, b);
+          return newFraction(
+            this["s"] * P4["s"] * this["n"] * P4["d"],
+            this["d"] * P4["n"]
+          );
         },
+        /**
+         * Clones the actual object
+         *
+         * Ex: new Fraction("-17.(345)").clone()
+         **/
         "clone": function() {
           return newFraction(this["s"] * this["n"], this["d"]);
         },
+        /**
+         * Calculates the modulo of two rational numbers - a more precise fmod
+         *
+         * Ex: new Fraction('4.(3)').mod([7, 8]) => (13/3) % (7/8) = (5/6)
+         **/
         "mod": function(a, b) {
           if (isNaN(this["n"]) || isNaN(this["d"])) {
             return new Fraction3(NaN);
@@ -2135,23 +1583,41 @@ var require_fraction = __commonJS({
           if (a === void 0) {
             return newFraction(this["s"] * this["n"] % this["d"], 1);
           }
-          parse2(a, b);
-          if (P3["n"] === 0 && this["d"] === 0) {
+          parse3(a, b);
+          if (0 === P4["n"] && 0 === this["d"]) {
             throw DivisionByZero();
           }
-          return newFraction(this["s"] * (P3["d"] * this["n"]) % (P3["n"] * this["d"]), P3["d"] * this["d"]);
+          return newFraction(
+            this["s"] * (P4["d"] * this["n"]) % (P4["n"] * this["d"]),
+            P4["d"] * this["d"]
+          );
         },
+        /**
+         * Calculates the fractional gcd of two rational numbers
+         *
+         * Ex: new Fraction(5,8).gcd(3,7) => 1/56
+         */
         "gcd": function(a, b) {
-          parse2(a, b);
-          return newFraction(gcd2(P3["n"], this["n"]) * gcd2(P3["d"], this["d"]), P3["d"] * this["d"]);
+          parse3(a, b);
+          return newFraction(gcd2(P4["n"], this["n"]) * gcd2(P4["d"], this["d"]), P4["d"] * this["d"]);
         },
+        /**
+         * Calculates the fractional lcm of two rational numbers
+         *
+         * Ex: new Fraction(5,8).lcm(3,7) => 15
+         */
         "lcm": function(a, b) {
-          parse2(a, b);
-          if (P3["n"] === 0 && this["n"] === 0) {
+          parse3(a, b);
+          if (P4["n"] === 0 && this["n"] === 0) {
             return newFraction(0, 1);
           }
-          return newFraction(P3["n"] * this["n"], gcd2(P3["n"], this["n"]) * gcd2(P3["d"], this["d"]));
+          return newFraction(P4["n"] * this["n"], gcd2(P4["n"], this["n"]) * gcd2(P4["d"], this["d"]));
         },
+        /**
+         * Calculates the ceil of a rational number
+         *
+         * Ex: new Fraction('4.(3)').ceil() => (5 / 1)
+         **/
         "ceil": function(places) {
           places = Math.pow(10, places || 0);
           if (isNaN(this["n"]) || isNaN(this["d"])) {
@@ -2159,6 +1625,11 @@ var require_fraction = __commonJS({
           }
           return newFraction(Math.ceil(places * this["s"] * this["n"] / this["d"]), places);
         },
+        /**
+         * Calculates the floor of a rational number
+         *
+         * Ex: new Fraction('4.(3)').floor() => (4 / 1)
+         **/
         "floor": function(places) {
           places = Math.pow(10, places || 0);
           if (isNaN(this["n"]) || isNaN(this["d"])) {
@@ -2166,6 +1637,11 @@ var require_fraction = __commonJS({
           }
           return newFraction(Math.floor(places * this["s"] * this["n"] / this["d"]), places);
         },
+        /**
+         * Rounds a rational numbers
+         *
+         * Ex: new Fraction('4.(3)').round() => (4 / 1)
+         **/
         "round": function(places) {
           places = Math.pow(10, places || 0);
           if (isNaN(this["n"]) || isNaN(this["d"])) {
@@ -2173,60 +1649,75 @@ var require_fraction = __commonJS({
           }
           return newFraction(Math.round(places * this["s"] * this["n"] / this["d"]), places);
         },
+        /**
+         * Gets the inverse of the fraction, means numerator and denominator are exchanged
+         *
+         * Ex: new Fraction([-3, 4]).inverse() => -4 / 3
+         **/
         "inverse": function() {
           return newFraction(this["s"] * this["d"], this["n"]);
         },
+        /**
+         * Calculates the fraction to some rational exponent, if possible
+         *
+         * Ex: new Fraction(-1,2).pow(-3) => -8
+         */
         "pow": function(a, b) {
-          parse2(a, b);
-          if (P3["d"] === 1) {
-            if (P3["s"] < 0) {
-              return newFraction(Math.pow(this["s"] * this["d"], P3["n"]), Math.pow(this["n"], P3["n"]));
+          parse3(a, b);
+          if (P4["d"] === 1) {
+            if (P4["s"] < 0) {
+              return newFraction(Math.pow(this["s"] * this["d"], P4["n"]), Math.pow(this["n"], P4["n"]));
             } else {
-              return newFraction(Math.pow(this["s"] * this["n"], P3["n"]), Math.pow(this["d"], P3["n"]));
+              return newFraction(Math.pow(this["s"] * this["n"], P4["n"]), Math.pow(this["d"], P4["n"]));
             }
           }
-          if (this["s"] < 0)
-            return null;
+          if (this["s"] < 0) return null;
           var N = factorize(this["n"]);
           var D = factorize(this["d"]);
           var n = 1;
           var d = 1;
           for (var k in N) {
-            if (k === "1")
-              continue;
+            if (k === "1") continue;
             if (k === "0") {
               n = 0;
               break;
             }
-            N[k] *= P3["n"];
-            if (N[k] % P3["d"] === 0) {
-              N[k] /= P3["d"];
-            } else
-              return null;
+            N[k] *= P4["n"];
+            if (N[k] % P4["d"] === 0) {
+              N[k] /= P4["d"];
+            } else return null;
             n *= Math.pow(k, N[k]);
           }
           for (var k in D) {
-            if (k === "1")
-              continue;
-            D[k] *= P3["n"];
-            if (D[k] % P3["d"] === 0) {
-              D[k] /= P3["d"];
-            } else
-              return null;
+            if (k === "1") continue;
+            D[k] *= P4["n"];
+            if (D[k] % P4["d"] === 0) {
+              D[k] /= P4["d"];
+            } else return null;
             d *= Math.pow(k, D[k]);
           }
-          if (P3["s"] < 0) {
+          if (P4["s"] < 0) {
             return newFraction(d, n);
           }
           return newFraction(n, d);
         },
+        /**
+         * Check if two rational numbers are the same
+         *
+         * Ex: new Fraction(19.6).equals([98, 5]);
+         **/
         "equals": function(a, b) {
-          parse2(a, b);
-          return this["s"] * this["n"] * P3["d"] === P3["s"] * P3["n"] * this["d"];
+          parse3(a, b);
+          return this["s"] * this["n"] * P4["d"] === P4["s"] * P4["n"] * this["d"];
         },
+        /**
+         * Check if two rational numbers are the same
+         *
+         * Ex: new Fraction(19.6).equals([98, 5]);
+         **/
         "compare": function(a, b) {
-          parse2(a, b);
-          var t = this["s"] * this["n"] * P3["d"] - P3["s"] * P3["n"] * this["d"];
+          parse3(a, b);
+          var t = this["s"] * this["n"] * P4["d"] - P4["s"] * P4["n"] * this["d"];
           return (0 < t) - (t < 0);
         },
         "simplify": function(eps) {
@@ -2247,13 +1738,28 @@ var require_fraction = __commonJS({
           }
           return this;
         },
+        /**
+         * Check if two rational numbers are divisible
+         *
+         * Ex: new Fraction(19.6).divisible(1.5);
+         */
         "divisible": function(a, b) {
-          parse2(a, b);
-          return !(!(P3["n"] * this["d"]) || this["n"] * P3["d"] % (P3["n"] * this["d"]));
+          parse3(a, b);
+          return !(!(P4["n"] * this["d"]) || this["n"] * P4["d"] % (P4["n"] * this["d"]));
         },
+        /**
+         * Returns a decimal representation of the fraction
+         *
+         * Ex: new Fraction("100.'91823'").valueOf() => 100.91823918239183
+         **/
         "valueOf": function() {
           return this["s"] * this["n"] / this["d"];
         },
+        /**
+         * Returns a string-fraction representation of a Fraction object
+         *
+         * Ex: new Fraction("1.'3'").toFraction(true) => "4 1/3"
+         **/
         "toFraction": function(excludeWhole) {
           var whole, str = "";
           var n = this["n"];
@@ -2275,6 +1781,11 @@ var require_fraction = __commonJS({
           }
           return str;
         },
+        /**
+         * Returns a latex representation of a Fraction object
+         *
+         * Ex: new Fraction("1.'3'").toLatex() => "\frac{4}{3}"
+         **/
         "toLatex": function(excludeWhole) {
           var whole, str = "";
           var n = this["n"];
@@ -2297,6 +1808,11 @@ var require_fraction = __commonJS({
           }
           return str;
         },
+        /**
+         * Returns an array of continued fraction elements
+         *
+         * Ex: new Fraction("7/8").toContinued() => [0,1,7]
+         */
         "toContinued": function() {
           var t;
           var a = this["n"];
@@ -2313,6 +1829,11 @@ var require_fraction = __commonJS({
           } while (a !== 1);
           return res;
         },
+        /**
+         * Creates a string representation of a fraction with all digits
+         *
+         * Ex: new Fraction("100.'91823'").toString() => "100.(91823)"
+         **/
         "toString": function(dec) {
           var N = this["n"];
           var D = this["d"];
@@ -2515,8 +2036,7 @@ var require_alea = __commonJS({
         };
         prng.quick = prng;
         if (state) {
-          if (typeof state == "object")
-            copy(state, xg);
+          if (typeof state == "object") copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2550,7 +2070,13 @@ var require_alea = __commonJS({
       } else {
         this.alea = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2601,8 +2127,7 @@ var require_xor128 = __commonJS({
         prng.int32 = xg.next;
         prng.quick = prng;
         if (state) {
-          if (typeof state == "object")
-            copy(state, xg);
+          if (typeof state == "object") copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2618,7 +2143,13 @@ var require_xor128 = __commonJS({
       } else {
         this.xor128 = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2676,8 +2207,7 @@ var require_xorwow = __commonJS({
         prng.int32 = xg.next;
         prng.quick = prng;
         if (state) {
-          if (typeof state == "object")
-            copy(state, xg);
+          if (typeof state == "object") copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2693,7 +2223,13 @@ var require_xorwow = __commonJS({
       } else {
         this.xorwow = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2731,14 +2267,10 @@ var require_xorshift7 = __commonJS({
               X[j & 7] = X[j & 7] << 15 ^ seed2.charCodeAt(j) + X[j + 1 & 7] << 13;
             }
           }
-          while (X.length < 8)
-            X.push(0);
-          for (j = 0; j < 8 && X[j] === 0; ++j)
-            ;
-          if (j == 8)
-            w = X[7] = -1;
-          else
-            w = X[j];
+          while (X.length < 8) X.push(0);
+          for (j = 0; j < 8 && X[j] === 0; ++j) ;
+          if (j == 8) w = X[7] = -1;
+          else w = X[j];
           me2.x = X;
           me2.i = 0;
           for (j = 256; j > 0; --j) {
@@ -2753,8 +2285,7 @@ var require_xorshift7 = __commonJS({
         return t;
       }
       function impl(seed, opts) {
-        if (seed == null)
-          seed = +new Date();
+        if (seed == null) seed = +/* @__PURE__ */ new Date();
         var xg = new XorGen(seed), state = opts && opts.state, prng = function() {
           return (xg.next() >>> 0) / 4294967296;
         };
@@ -2767,8 +2298,7 @@ var require_xorshift7 = __commonJS({
         prng.int32 = xg.next;
         prng.quick = prng;
         if (state) {
-          if (state.x)
-            copy(state, xg);
+          if (state.x) copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2784,7 +2314,13 @@ var require_xorshift7 = __commonJS({
       } else {
         this.xorshift7 = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2818,10 +2354,8 @@ var require_xor4096 = __commonJS({
             limit = Math.max(limit, seed2.length);
           }
           for (i2 = 0, j = -32; j < limit; ++j) {
-            if (seed2)
-              v ^= seed2.charCodeAt((j + 32) % seed2.length);
-            if (j === 0)
-              w = v;
+            if (seed2) v ^= seed2.charCodeAt((j + 32) % seed2.length);
+            if (j === 0) w = v;
             v ^= v << 10;
             v ^= v >>> 15;
             v ^= v << 4;
@@ -2829,7 +2363,7 @@ var require_xor4096 = __commonJS({
             if (j >= 0) {
               w = w + 1640531527 | 0;
               t = X[j & 127] ^= v + w;
-              i2 = t == 0 ? i2 + 1 : 0;
+              i2 = 0 == t ? i2 + 1 : 0;
             }
           }
           if (i2 >= 128) {
@@ -2859,8 +2393,7 @@ var require_xor4096 = __commonJS({
       }
       ;
       function impl(seed, opts) {
-        if (seed == null)
-          seed = +new Date();
+        if (seed == null) seed = +/* @__PURE__ */ new Date();
         var xg = new XorGen(seed), state = opts && opts.state, prng = function() {
           return (xg.next() >>> 0) / 4294967296;
         };
@@ -2873,8 +2406,7 @@ var require_xor4096 = __commonJS({
         prng.int32 = xg.next;
         prng.quick = prng;
         if (state) {
-          if (state.X)
-            copy(state, xg);
+          if (state.X) copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2890,7 +2422,14 @@ var require_xor4096 = __commonJS({
       } else {
         this.xor4096 = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      // window object or global
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2947,8 +2486,7 @@ var require_tychei = __commonJS({
         prng.int32 = xg.next;
         prng.quick = prng;
         if (state) {
-          if (typeof state == "object")
-            copy(state, xg);
+          if (typeof state == "object") copy(state, xg);
           prng.state = function() {
             return copy(xg, {});
           };
@@ -2964,7 +2502,13 @@ var require_tychei = __commonJS({
       } else {
         this.tychei = impl;
       }
-    })(exports, typeof module2 == "object" && module2, typeof define == "function" && define);
+    })(
+      exports,
+      typeof module2 == "object" && module2,
+      // present in node.js
+      typeof define == "function" && define
+      // present with an AMD loader
+    );
   }
 });
 
@@ -2976,7 +2520,10 @@ var require_seedrandom = __commonJS({
       function seedrandom2(seed, options, callback) {
         var key = [];
         options = options == true ? { entropy: true } : options || {};
-        var shortseed = mixkey(flatten3(options.entropy ? [seed, tostring(pool)] : seed == null ? autoseed() : seed, 3), key);
+        var shortseed = mixkey(flatten3(
+          options.entropy ? [seed, tostring(pool)] : seed == null ? autoseed() : seed,
+          3
+        ), key);
         var arc4 = new ARC4(key);
         var prng = function() {
           var n = arc4.g(chunks), d = startdenom, x = 0;
@@ -3012,9 +2559,13 @@ var require_seedrandom = __commonJS({
           if (is_math_call) {
             math2[rngname] = prng2;
             return seed2;
-          } else
-            return prng2;
-        })(prng, shortseed, "global" in options ? options.global : this == math2, options.state);
+          } else return prng2;
+        })(
+          prng,
+          shortseed,
+          "global" in options ? options.global : this == math2,
+          options.state
+        );
       }
       function ARC4(key) {
         var t, keylen = key.length, me = this, i2 = 0, j = me.i = me.j = 0, s = me.S = [];
@@ -3077,7 +2628,7 @@ var require_seedrandom = __commonJS({
           return tostring(out);
         } catch (e3) {
           var browser = global2.navigator, plugins = browser && browser.plugins;
-          return [+new Date(), global2, plugins, global2.screen, tostring(pool)];
+          return [+/* @__PURE__ */ new Date(), global2, plugins, global2.screen, tostring(pool)];
         }
       }
       function tostring(a) {
@@ -3097,7 +2648,15 @@ var require_seedrandom = __commonJS({
       } else {
         math2["seed" + rngname] = seedrandom2;
       }
-    })(typeof self !== "undefined" ? self : exports, [], Math);
+    })(
+      // global: `self` in browsers (including strict mode and web workers),
+      // otherwise `this` in Node and other environments
+      typeof self !== "undefined" ? self : exports,
+      [],
+      // pool: entropy pool starts empty
+      Math
+      // math: package containing random, pow, and seedrandom
+    );
   }
 });
 
@@ -3362,63 +2921,124 @@ var require_lib = __commonJS({
       timeZoneName: l
     };
     var Zone = class {
+      /**
+       * The type of zone
+       * @abstract
+       * @type {string}
+       */
       get type() {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * The name of this zone.
+       * @abstract
+       * @type {string}
+       */
       get name() {
         throw new ZoneIsAbstractError();
       }
       get ianaName() {
         return this.name;
       }
+      /**
+       * Returns whether the offset is known to be fixed for the whole year.
+       * @abstract
+       * @type {boolean}
+       */
       get isUniversal() {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * Returns the offset's common name (such as EST) at the specified timestamp
+       * @abstract
+       * @param {number} ts - Epoch milliseconds for which to get the name
+       * @param {Object} opts - Options to affect the format
+       * @param {string} opts.format - What style of offset to return. Accepts 'long' or 'short'.
+       * @param {string} opts.locale - What locale to return the offset name in.
+       * @return {string}
+       */
       offsetName(ts, opts) {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * Returns the offset's value as a string
+       * @abstract
+       * @param {number} ts - Epoch milliseconds for which to get the offset
+       * @param {string} format - What style of offset to return.
+       *                          Accepts 'narrow', 'short', or 'techie'. Returning '+6', '+06:00', or '+0600' respectively
+       * @return {string}
+       */
       formatOffset(ts, format5) {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * Return the offset in minutes for this zone at the specified timestamp.
+       * @abstract
+       * @param {number} ts - Epoch milliseconds for which to compute the offset
+       * @return {number}
+       */
       offset(ts) {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * Return whether this Zone is equal to another zone
+       * @abstract
+       * @param {Zone} otherZone - the zone to compare
+       * @return {boolean}
+       */
       equals(otherZone) {
         throw new ZoneIsAbstractError();
       }
+      /**
+       * Return whether this Zone is valid.
+       * @abstract
+       * @type {boolean}
+       */
       get isValid() {
         throw new ZoneIsAbstractError();
       }
     };
     var singleton$1 = null;
-    var SystemZone = class extends Zone {
+    var SystemZone = class _SystemZone extends Zone {
+      /**
+       * Get a singleton instance of the local zone
+       * @return {SystemZone}
+       */
       static get instance() {
         if (singleton$1 === null) {
-          singleton$1 = new SystemZone();
+          singleton$1 = new _SystemZone();
         }
         return singleton$1;
       }
+      /** @override **/
       get type() {
         return "system";
       }
+      /** @override **/
       get name() {
         return new Intl.DateTimeFormat().resolvedOptions().timeZone;
       }
+      /** @override **/
       get isUniversal() {
         return false;
       }
+      /** @override **/
       offsetName(ts, { format: format5, locale }) {
         return parseZoneInfo(ts, format5, locale);
       }
+      /** @override **/
       formatOffset(ts, format5) {
         return formatOffset(this.offset(ts), format5);
       }
+      /** @override **/
       offset(ts) {
         return -new Date(ts).getTimezoneOffset();
       }
+      /** @override **/
       equals(otherZone) {
         return otherZone.type === "system";
       }
+      /** @override **/
       get isValid() {
         return true;
       }
@@ -3468,20 +3088,44 @@ var require_lib = __commonJS({
       return filled;
     }
     var ianaZoneCache = {};
-    var IANAZone = class extends Zone {
+    var IANAZone = class _IANAZone extends Zone {
+      /**
+       * @param {string} name - Zone name
+       * @return {IANAZone}
+       */
       static create(name310) {
         if (!ianaZoneCache[name310]) {
-          ianaZoneCache[name310] = new IANAZone(name310);
+          ianaZoneCache[name310] = new _IANAZone(name310);
         }
         return ianaZoneCache[name310];
       }
+      /**
+       * Reset local caches. Should only be necessary in testing scenarios.
+       * @return {void}
+       */
       static resetCache() {
         ianaZoneCache = {};
         dtfCache = {};
       }
+      /**
+       * Returns whether the provided string is a valid specifier. This only checks the string's format, not that the specifier identifies a known zone; see isValidZone for that.
+       * @param {string} s - The string to check validity on
+       * @example IANAZone.isValidSpecifier("America/New_York") //=> true
+       * @example IANAZone.isValidSpecifier("Sport~~blorp") //=> false
+       * @deprecated This method returns false for some valid IANA names. Use isValidZone instead.
+       * @return {boolean}
+       */
       static isValidSpecifier(s2) {
         return this.isValidZone(s2);
       }
+      /**
+       * Returns whether the provided string identifies a real zone
+       * @param {string} zone - The string to check
+       * @example IANAZone.isValidZone("America/New_York") //=> true
+       * @example IANAZone.isValidZone("Fantasia/Castle") //=> false
+       * @example IANAZone.isValidZone("Sport~~blorp") //=> false
+       * @return {boolean}
+       */
       static isValidZone(zone) {
         if (!zone) {
           return false;
@@ -3496,27 +3140,32 @@ var require_lib = __commonJS({
       constructor(name310) {
         super();
         this.zoneName = name310;
-        this.valid = IANAZone.isValidZone(name310);
+        this.valid = _IANAZone.isValidZone(name310);
       }
+      /** @override **/
       get type() {
         return "iana";
       }
+      /** @override **/
       get name() {
         return this.zoneName;
       }
+      /** @override **/
       get isUniversal() {
         return false;
       }
+      /** @override **/
       offsetName(ts, { format: format5, locale }) {
         return parseZoneInfo(ts, format5, locale, this.name);
       }
+      /** @override **/
       formatOffset(ts, format5) {
         return formatOffset(this.offset(ts), format5);
       }
+      /** @override **/
       offset(ts) {
         const date = new Date(ts);
-        if (isNaN(date))
-          return NaN;
+        if (isNaN(date)) return NaN;
         const dtf = makeDTF(this.name);
         let [year, month, day, adOrBc, hour, minute, second] = dtf.formatToParts ? partsOffset(dtf, date) : hackyOffset(dtf, date);
         if (adOrBc === "BC") {
@@ -3537,9 +3186,11 @@ var require_lib = __commonJS({
         asTS -= over >= 0 ? over : 1e3 + over;
         return (asUTC - asTS) / (60 * 1e3);
       }
+      /** @override **/
       equals(otherZone) {
         return otherZone.type === "iana" && otherZone.name === this.name;
       }
+      /** @override **/
       get isValid() {
         return this.valid;
       }
@@ -3673,8 +3324,7 @@ var require_lib = __commonJS({
         const { padTo, floor: floor3, ...otherOpts } = opts;
         if (!forceSimple || Object.keys(otherOpts).length > 0) {
           const intlOpts = { useGrouping: false, ...opts };
-          if (opts.padTo > 0)
-            intlOpts.minimumIntegerDigits = opts.padTo;
+          if (opts.padTo > 0) intlOpts.minimumIntegerDigits = opts.padTo;
           this.inf = getCachedINF(intl, intlOpts);
         }
       }
@@ -3772,16 +3422,16 @@ var require_lib = __commonJS({
         }
       }
     };
-    var Locale = class {
+    var Locale = class _Locale {
       static fromOpts(opts) {
-        return Locale.create(opts.locale, opts.numberingSystem, opts.outputCalendar, opts.defaultToEN);
+        return _Locale.create(opts.locale, opts.numberingSystem, opts.outputCalendar, opts.defaultToEN);
       }
       static create(locale, numberingSystem, outputCalendar, defaultToEN = false) {
         const specifiedLocale = locale || Settings.defaultLocale;
         const localeR = specifiedLocale || (defaultToEN ? "en-US" : systemLocale());
         const numberingSystemR = numberingSystem || Settings.defaultNumberingSystem;
         const outputCalendarR = outputCalendar || Settings.defaultOutputCalendar;
-        return new Locale(localeR, numberingSystemR, outputCalendarR, specifiedLocale);
+        return new _Locale(localeR, numberingSystemR, outputCalendarR, specifiedLocale);
       }
       static resetCache() {
         sysLocaleCache = null;
@@ -3790,7 +3440,7 @@ var require_lib = __commonJS({
         intlRelCache = {};
       }
       static fromObject({ locale, numberingSystem, outputCalendar } = {}) {
-        return Locale.create(locale, numberingSystem, outputCalendar);
+        return _Locale.create(locale, numberingSystem, outputCalendar);
       }
       constructor(locale, numbering, outputCalendar, specifiedLocale) {
         const [parsedLocale, parsedNumberingSystem, parsedOutputCalendar] = parseLocaleString(locale);
@@ -3820,7 +3470,12 @@ var require_lib = __commonJS({
         if (!alts || Object.getOwnPropertyNames(alts).length === 0) {
           return this;
         } else {
-          return Locale.create(alts.locale || this.specifiedLocale, alts.numberingSystem || this.numberingSystem, alts.outputCalendar || this.outputCalendar, alts.defaultToEN || false);
+          return _Locale.create(
+            alts.locale || this.specifiedLocale,
+            alts.numberingSystem || this.numberingSystem,
+            alts.outputCalendar || this.outputCalendar,
+            alts.defaultToEN || false
+          );
         }
       }
       redefaultToEN(alts = {}) {
@@ -3842,25 +3497,36 @@ var require_lib = __commonJS({
         return listStuff(this, length, weekdays, () => {
           const intl = format5 ? { weekday: length, year: "numeric", month: "long", day: "numeric" } : { weekday: length }, formatStr = format5 ? "format" : "standalone";
           if (!this.weekdaysCache[formatStr][length]) {
-            this.weekdaysCache[formatStr][length] = mapWeekdays((dt) => this.extract(dt, intl, "weekday"));
+            this.weekdaysCache[formatStr][length] = mapWeekdays(
+              (dt) => this.extract(dt, intl, "weekday")
+            );
           }
           return this.weekdaysCache[formatStr][length];
         });
       }
       meridiems() {
-        return listStuff(this, void 0, () => meridiems, () => {
-          if (!this.meridiemCache) {
-            const intl = { hour: "numeric", hourCycle: "h12" };
-            this.meridiemCache = [DateTime.utc(2016, 11, 13, 9), DateTime.utc(2016, 11, 13, 19)].map((dt) => this.extract(dt, intl, "dayperiod"));
+        return listStuff(
+          this,
+          void 0,
+          () => meridiems,
+          () => {
+            if (!this.meridiemCache) {
+              const intl = { hour: "numeric", hourCycle: "h12" };
+              this.meridiemCache = [DateTime.utc(2016, 11, 13, 9), DateTime.utc(2016, 11, 13, 19)].map(
+                (dt) => this.extract(dt, intl, "dayperiod")
+              );
+            }
+            return this.meridiemCache;
           }
-          return this.meridiemCache;
-        });
+        );
       }
       eras(length) {
         return listStuff(this, length, eras, () => {
           const intl = { era: length };
           if (!this.eraCache[length]) {
-            this.eraCache[length] = [DateTime.utc(-40, 1, 1), DateTime.utc(2017, 1, 1)].map((dt) => this.extract(dt, intl, "era"));
+            this.eraCache[length] = [DateTime.utc(-40, 1, 1), DateTime.utc(2017, 1, 1)].map(
+              (dt) => this.extract(dt, intl, "era")
+            );
           }
           return this.eraCache[length];
         });
@@ -3889,21 +3555,38 @@ var require_lib = __commonJS({
       }
     };
     var singleton = null;
-    var FixedOffsetZone = class extends Zone {
+    var FixedOffsetZone = class _FixedOffsetZone extends Zone {
+      /**
+       * Get a singleton instance of UTC
+       * @return {FixedOffsetZone}
+       */
       static get utcInstance() {
         if (singleton === null) {
-          singleton = new FixedOffsetZone(0);
+          singleton = new _FixedOffsetZone(0);
         }
         return singleton;
       }
+      /**
+       * Get an instance with a specified offset
+       * @param {number} offset - The offset in minutes
+       * @return {FixedOffsetZone}
+       */
       static instance(offset2) {
-        return offset2 === 0 ? FixedOffsetZone.utcInstance : new FixedOffsetZone(offset2);
+        return offset2 === 0 ? _FixedOffsetZone.utcInstance : new _FixedOffsetZone(offset2);
       }
+      /**
+       * Get an instance of FixedOffsetZone from a UTC offset string, like "UTC+6"
+       * @param {string} s - The offset string to parse
+       * @example FixedOffsetZone.parseSpecifier("UTC+6")
+       * @example FixedOffsetZone.parseSpecifier("UTC+06")
+       * @example FixedOffsetZone.parseSpecifier("UTC-6:00")
+       * @return {FixedOffsetZone}
+       */
       static parseSpecifier(s2) {
         if (s2) {
           const r = s2.match(/^utc(?:([+-]\d{1,2})(?::(\d{2}))?)?$/i);
           if (r) {
-            return new FixedOffsetZone(signedOffset(r[1], r[2]));
+            return new _FixedOffsetZone(signedOffset(r[1], r[2]));
           }
         }
         return null;
@@ -3912,9 +3595,11 @@ var require_lib = __commonJS({
         super();
         this.fixed = offset2;
       }
+      /** @override **/
       get type() {
         return "fixed";
       }
+      /** @override **/
       get name() {
         return this.fixed === 0 ? "UTC" : `UTC${formatOffset(this.fixed, "narrow")}`;
       }
@@ -3925,21 +3610,27 @@ var require_lib = __commonJS({
           return `Etc/GMT${formatOffset(-this.fixed, "narrow")}`;
         }
       }
+      /** @override **/
       offsetName() {
         return this.name;
       }
+      /** @override **/
       formatOffset(ts, format5) {
         return formatOffset(this.fixed, format5);
       }
+      /** @override **/
       get isUniversal() {
         return true;
       }
+      /** @override **/
       offset() {
         return this.fixed;
       }
+      /** @override **/
       equals(otherZone) {
         return otherZone.type === "fixed" && otherZone.fixed === this.fixed;
       }
+      /** @override **/
       get isValid() {
         return true;
       }
@@ -3949,27 +3640,35 @@ var require_lib = __commonJS({
         super();
         this.zoneName = zoneName;
       }
+      /** @override **/
       get type() {
         return "invalid";
       }
+      /** @override **/
       get name() {
         return this.zoneName;
       }
+      /** @override **/
       get isUniversal() {
         return false;
       }
+      /** @override **/
       offsetName() {
         return null;
       }
+      /** @override **/
       formatOffset() {
         return "";
       }
+      /** @override **/
       offset() {
         return NaN;
       }
+      /** @override **/
       equals() {
         return false;
       }
+      /** @override **/
       get isValid() {
         return false;
       }
@@ -3981,14 +3680,10 @@ var require_lib = __commonJS({
         return input;
       } else if (isString2(input)) {
         const lowered = input.toLowerCase();
-        if (lowered === "default")
-          return defaultZone2;
-        else if (lowered === "local" || lowered === "system")
-          return SystemZone.instance;
-        else if (lowered === "utc" || lowered === "gmt")
-          return FixedOffsetZone.utcInstance;
-        else
-          return FixedOffsetZone.parseSpecifier(lowered) || IANAZone.create(input);
+        if (lowered === "default") return defaultZone2;
+        else if (lowered === "local" || lowered === "system") return SystemZone.instance;
+        else if (lowered === "utc" || lowered === "gmt") return FixedOffsetZone.utcInstance;
+        else return FixedOffsetZone.parseSpecifier(lowered) || IANAZone.create(input);
       } else if (isNumber2(input)) {
         return FixedOffsetZone.instance(input);
       } else if (typeof input === "object" && "offset" in input && typeof input.offset === "function") {
@@ -4005,48 +3700,117 @@ var require_lib = __commonJS({
     var twoDigitCutoffYear = 60;
     var throwOnInvalid;
     var Settings = class {
+      /**
+       * Get the callback for returning the current timestamp.
+       * @type {function}
+       */
       static get now() {
         return now;
       }
+      /**
+       * Set the callback for returning the current timestamp.
+       * The function should return a number, which will be interpreted as an Epoch millisecond count
+       * @type {function}
+       * @example Settings.now = () => Date.now() + 3000 // pretend it is 3 seconds in the future
+       * @example Settings.now = () => 0 // always pretend it's Jan 1, 1970 at midnight in UTC time
+       */
       static set now(n3) {
         now = n3;
       }
+      /**
+       * Set the default time zone to create DateTimes in. Does not affect existing instances.
+       * Use the value "system" to reset this value to the system's time zone.
+       * @type {string}
+       */
       static set defaultZone(zone) {
         defaultZone = zone;
       }
+      /**
+       * Get the default time zone object currently used to create DateTimes. Does not affect existing instances.
+       * The default value is the system's time zone (the one set on the machine that runs this code).
+       * @type {Zone}
+       */
       static get defaultZone() {
         return normalizeZone(defaultZone, SystemZone.instance);
       }
+      /**
+       * Get the default locale to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static get defaultLocale() {
         return defaultLocale;
       }
+      /**
+       * Set the default locale to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static set defaultLocale(locale) {
         defaultLocale = locale;
       }
+      /**
+       * Get the default numbering system to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static get defaultNumberingSystem() {
         return defaultNumberingSystem;
       }
+      /**
+       * Set the default numbering system to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static set defaultNumberingSystem(numberingSystem) {
         defaultNumberingSystem = numberingSystem;
       }
+      /**
+       * Get the default output calendar to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static get defaultOutputCalendar() {
         return defaultOutputCalendar;
       }
+      /**
+       * Set the default output calendar to create DateTimes with. Does not affect existing instances.
+       * @type {string}
+       */
       static set defaultOutputCalendar(outputCalendar) {
         defaultOutputCalendar = outputCalendar;
       }
+      /**
+       * Get the cutoff year after which a string encoding a year as two digits is interpreted to occur in the current century.
+       * @type {number}
+       */
       static get twoDigitCutoffYear() {
         return twoDigitCutoffYear;
       }
+      /**
+       * Set the cutoff year after which a string encoding a year as two digits is interpreted to occur in the current century.
+       * @type {number}
+       * @example Settings.twoDigitCutoffYear = 0 // cut-off year is 0, so all 'yy' are interpreted as current century
+       * @example Settings.twoDigitCutoffYear = 50 // '49' -> 1949; '50' -> 2050
+       * @example Settings.twoDigitCutoffYear = 1950 // interpreted as 50
+       * @example Settings.twoDigitCutoffYear = 2050 // ALSO interpreted as 50
+       */
       static set twoDigitCutoffYear(cutoffYear) {
         twoDigitCutoffYear = cutoffYear % 100;
       }
+      /**
+       * Get whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
+       * @type {boolean}
+       */
       static get throwOnInvalid() {
         return throwOnInvalid;
       }
+      /**
+       * Set whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
+       * @type {boolean}
+       */
       static set throwOnInvalid(t) {
         throwOnInvalid = t;
       }
+      /**
+       * Reset Luxon's global caches. Should only be necessary in testing scenarios.
+       * @return {void}
+       */
       static resetCaches() {
         Locale.resetCache();
         IANAZone.resetCache();
@@ -4158,7 +3922,15 @@ var require_lib = __commonJS({
       }
     }
     function objToLocalTS(obj) {
-      let d = Date.UTC(obj.year, obj.month - 1, obj.day, obj.hour, obj.minute, obj.second, obj.millisecond);
+      let d = Date.UTC(
+        obj.year,
+        obj.month - 1,
+        obj.day,
+        obj.hour,
+        obj.minute,
+        obj.second,
+        obj.millisecond
+      );
       if (obj.year < 100 && obj.year >= 0) {
         d = new Date(d);
         d.setUTCFullYear(obj.year, obj.month - 1, obj.day);
@@ -4172,8 +3944,7 @@ var require_lib = __commonJS({
     function untruncateYear(year) {
       if (year > 99) {
         return year;
-      } else
-        return year > Settings.twoDigitCutoffYear ? 1900 + year : 2e3 + year;
+      } else return year > Settings.twoDigitCutoffYear ? 1900 + year : 2e3 + year;
     }
     function parseZoneInfo(ts, offsetFormat, locale, timeZone = null) {
       const date = new Date(ts), intlOpts = {
@@ -4210,8 +3981,7 @@ var require_lib = __commonJS({
       for (const u in obj) {
         if (hasOwnProperty2(obj, u)) {
           const v = obj[u];
-          if (v === void 0 || v === null)
-            continue;
+          if (v === void 0 || v === null) continue;
           normalized[normalizer(u)] = asNumber(v);
         }
       }
@@ -4390,9 +4160,9 @@ var require_lib = __commonJS({
       FFF: DATETIME_FULL_WITH_SECONDS,
       FFFF: DATETIME_HUGE_WITH_SECONDS
     };
-    var Formatter = class {
+    var Formatter = class _Formatter {
       static create(locale, opts = {}) {
-        return new Formatter(locale, opts);
+        return new _Formatter(locale, opts);
       }
       static parseFormat(fmt) {
         let current = null, currentFull = "", bracketed = false;
@@ -4470,8 +4240,11 @@ var require_lib = __commonJS({
             return "Z";
           }
           return dt.isValid ? dt.zone.formatOffset(dt.ts, opts.format) : "";
-        }, meridiem = () => knownEnglish ? meridiemForDateTime(dt) : string2({ hour: "numeric", hourCycle: "h12" }, "dayperiod"), month = (length, standalone) => knownEnglish ? monthForDateTime(dt, length) : string2(standalone ? { month: length } : { month: length, day: "numeric" }, "month"), weekday = (length, standalone) => knownEnglish ? weekdayForDateTime(dt, length) : string2(standalone ? { weekday: length } : { weekday: length, month: "long", day: "numeric" }, "weekday"), maybeMacro = (token) => {
-          const formatOpts = Formatter.macroTokenToFormatOpts(token);
+        }, meridiem = () => knownEnglish ? meridiemForDateTime(dt) : string2({ hour: "numeric", hourCycle: "h12" }, "dayperiod"), month = (length, standalone) => knownEnglish ? monthForDateTime(dt, length) : string2(standalone ? { month: length } : { month: length, day: "numeric" }, "month"), weekday = (length, standalone) => knownEnglish ? weekdayForDateTime(dt, length) : string2(
+          standalone ? { weekday: length } : { weekday: length, month: "long", day: "numeric" },
+          "weekday"
+        ), maybeMacro = (token) => {
+          const formatOpts = _Formatter.macroTokenToFormatOpts(token);
           if (formatOpts) {
             return this.formatWithSystemDefault(dt, formatOpts);
           } else {
@@ -4479,23 +4252,29 @@ var require_lib = __commonJS({
           }
         }, era = (length) => knownEnglish ? eraForDateTime(dt, length) : string2({ era: length }, "era"), tokenToString = (token) => {
           switch (token) {
+            // ms
             case "S":
               return this.num(dt.millisecond);
             case "u":
+            // falls through
             case "SSS":
               return this.num(dt.millisecond, 3);
+            // seconds
             case "s":
               return this.num(dt.second);
             case "ss":
               return this.num(dt.second, 2);
+            // fractional seconds
             case "uu":
               return this.num(Math.floor(dt.millisecond / 10), 2);
             case "uuu":
               return this.num(Math.floor(dt.millisecond / 100));
+            // minutes
             case "m":
               return this.num(dt.minute);
             case "mm":
               return this.num(dt.minute, 2);
+            // hours
             case "h":
               return this.num(dt.hour % 12 === 0 ? 12 : dt.hour % 12);
             case "hh":
@@ -4504,6 +4283,7 @@ var require_lib = __commonJS({
               return this.num(dt.hour);
             case "HH":
               return this.num(dt.hour, 2);
+            // offset
             case "Z":
               return formatOffset2({ format: "narrow", allowZ: this.opts.allowZ });
             case "ZZ":
@@ -4514,14 +4294,18 @@ var require_lib = __commonJS({
               return dt.zone.offsetName(dt.ts, { format: "short", locale: this.loc.locale });
             case "ZZZZZ":
               return dt.zone.offsetName(dt.ts, { format: "long", locale: this.loc.locale });
+            // zone
             case "z":
               return dt.zoneName;
+            // meridiems
             case "a":
               return meridiem();
+            // dates
             case "d":
               return useDateTimeFormatter ? string2({ day: "numeric" }, "day") : this.num(dt.day);
             case "dd":
               return useDateTimeFormatter ? string2({ day: "2-digit" }, "day") : this.num(dt.day, 2);
+            // weekdays - standalone
             case "c":
               return this.num(dt.weekday);
             case "ccc":
@@ -4530,6 +4314,7 @@ var require_lib = __commonJS({
               return weekday("long", true);
             case "ccccc":
               return weekday("narrow", true);
+            // weekdays - format
             case "E":
               return this.num(dt.weekday);
             case "EEE":
@@ -4538,6 +4323,7 @@ var require_lib = __commonJS({
               return weekday("long", false);
             case "EEEEE":
               return weekday("narrow", false);
+            // months - standalone
             case "L":
               return useDateTimeFormatter ? string2({ month: "numeric", day: "numeric" }, "month") : this.num(dt.month);
             case "LL":
@@ -4548,6 +4334,7 @@ var require_lib = __commonJS({
               return month("long", true);
             case "LLLLL":
               return month("narrow", true);
+            // months - format
             case "M":
               return useDateTimeFormatter ? string2({ month: "numeric" }, "month") : this.num(dt.month);
             case "MM":
@@ -4558,6 +4345,7 @@ var require_lib = __commonJS({
               return month("long", false);
             case "MMMMM":
               return month("narrow", false);
+            // years
             case "y":
               return useDateTimeFormatter ? string2({ year: "numeric" }, "year") : this.num(dt.year);
             case "yy":
@@ -4566,6 +4354,7 @@ var require_lib = __commonJS({
               return useDateTimeFormatter ? string2({ year: "numeric" }, "year") : this.num(dt.year, 4);
             case "yyyyyy":
               return useDateTimeFormatter ? string2({ year: "numeric" }, "year") : this.num(dt.year, 6);
+            // eras
             case "G":
               return era("short");
             case "GG":
@@ -4596,7 +4385,7 @@ var require_lib = __commonJS({
               return maybeMacro(token);
           }
         };
-        return stringifyTokens(Formatter.parseFormat(fmt), tokenToString);
+        return stringifyTokens(_Formatter.parseFormat(fmt), tokenToString);
       }
       formatDurationFromString(dur, fmt) {
         const tokenToField = (token) => {
@@ -4627,7 +4416,10 @@ var require_lib = __commonJS({
           } else {
             return token;
           }
-        }, tokens = Formatter.parseFormat(fmt), realTokens = tokens.reduce((found, { literal, val }) => literal ? found : found.concat(val), []), collapsed = dur.shiftTo(...realTokens.map(tokenToField).filter((t) => t));
+        }, tokens = _Formatter.parseFormat(fmt), realTokens = tokens.reduce(
+          (found, { literal, val }) => literal ? found : found.concat(val),
+          []
+        ), collapsed = dur.shiftTo(...realTokens.map(tokenToField).filter((t) => t));
         return stringifyTokens(tokens, tokenToString(collapsed));
       }
     };
@@ -4650,12 +4442,15 @@ var require_lib = __commonJS({
       return RegExp(`^${full}$`);
     }
     function combineExtractors(...extractors) {
-      return (m) => extractors.reduce(([mergedVals, mergedZone, cursor], ex) => {
-        const [val, zone, next] = ex(m, cursor);
-        return [{ ...mergedVals, ...val }, zone || mergedZone, next];
-      }, [{}, null, 1]).slice(0, 2);
+      return (m) => extractors.reduce(
+        ([mergedVals, mergedZone, cursor], ex) => {
+          const [val, zone, next] = ex(m, cursor);
+          return [{ ...mergedVals, ...val }, zone || mergedZone, next];
+        },
+        [{}, null, 1]
+      ).slice(0, 2);
     }
-    function parse2(s2, ...patterns) {
+    function parse3(s2, ...patterns) {
       if (s2 == null) {
         return [null, null];
       }
@@ -4688,7 +4483,9 @@ var require_lib = __commonJS({
     var extractISOWeekData = simpleParse("weekYear", "weekNumber", "weekDay");
     var extractISOOrdinalData = simpleParse("year", "ordinal");
     var sqlYmdRegex = /(\d{4})-(\d\d)-(\d\d)/;
-    var sqlTimeRegex = RegExp(`${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`);
+    var sqlTimeRegex = RegExp(
+      `${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`
+    );
     var sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
     function int(match2, pos, fallback) {
       const m = match2[pos];
@@ -4758,8 +4555,7 @@ var require_lib = __commonJS({
         hour: parseInteger(hourStr),
         minute: parseInteger(minuteStr)
       };
-      if (secondStr)
-        result.second = parseInteger(secondStr);
+      if (secondStr) result.second = parseInteger(secondStr);
       if (weekdayStr) {
         result.weekday = weekdayStr.length > 3 ? weekdaysLong.indexOf(weekdayStr) + 1 : weekdaysShort.indexOf(weekdayStr) + 1;
       }
@@ -4809,31 +4605,69 @@ var require_lib = __commonJS({
     var isoWeekWithTimeExtensionRegex = combineRegexes(isoWeekRegex, isoTimeExtensionRegex);
     var isoOrdinalWithTimeExtensionRegex = combineRegexes(isoOrdinalRegex, isoTimeExtensionRegex);
     var isoTimeCombinedRegex = combineRegexes(isoTimeRegex);
-    var extractISOYmdTimeAndOffset = combineExtractors(extractISOYmd, extractISOTime, extractISOOffset, extractIANAZone);
-    var extractISOWeekTimeAndOffset = combineExtractors(extractISOWeekData, extractISOTime, extractISOOffset, extractIANAZone);
-    var extractISOOrdinalDateAndTime = combineExtractors(extractISOOrdinalData, extractISOTime, extractISOOffset, extractIANAZone);
-    var extractISOTimeAndOffset = combineExtractors(extractISOTime, extractISOOffset, extractIANAZone);
+    var extractISOYmdTimeAndOffset = combineExtractors(
+      extractISOYmd,
+      extractISOTime,
+      extractISOOffset,
+      extractIANAZone
+    );
+    var extractISOWeekTimeAndOffset = combineExtractors(
+      extractISOWeekData,
+      extractISOTime,
+      extractISOOffset,
+      extractIANAZone
+    );
+    var extractISOOrdinalDateAndTime = combineExtractors(
+      extractISOOrdinalData,
+      extractISOTime,
+      extractISOOffset,
+      extractIANAZone
+    );
+    var extractISOTimeAndOffset = combineExtractors(
+      extractISOTime,
+      extractISOOffset,
+      extractIANAZone
+    );
     function parseISODate(s2) {
-      return parse2(s2, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
+      return parse3(
+        s2,
+        [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset],
+        [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset],
+        [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime],
+        [isoTimeCombinedRegex, extractISOTimeAndOffset]
+      );
     }
     function parseRFC2822Date(s2) {
-      return parse2(preprocessRFC2822(s2), [rfc2822, extractRFC2822]);
+      return parse3(preprocessRFC2822(s2), [rfc2822, extractRFC2822]);
     }
     function parseHTTPDate(s2) {
-      return parse2(s2, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
+      return parse3(
+        s2,
+        [rfc1123, extractRFC1123Or850],
+        [rfc850, extractRFC1123Or850],
+        [ascii, extractASCII]
+      );
     }
     function parseISODuration(s2) {
-      return parse2(s2, [isoDuration, extractISODuration]);
+      return parse3(s2, [isoDuration, extractISODuration]);
     }
     var extractISOTimeOnly = combineExtractors(extractISOTime);
     function parseISOTimeOnly(s2) {
-      return parse2(s2, [isoTimeOnly, extractISOTimeOnly]);
+      return parse3(s2, [isoTimeOnly, extractISOTimeOnly]);
     }
     var sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
     var sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
-    var extractISOTimeOffsetAndIANAZone = combineExtractors(extractISOTime, extractISOOffset, extractIANAZone);
+    var extractISOTimeOffsetAndIANAZone = combineExtractors(
+      extractISOTime,
+      extractISOOffset,
+      extractIANAZone
+    );
     function parseSQL(s2) {
-      return parse2(s2, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
+      return parse3(
+        s2,
+        [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset],
+        [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]
+      );
     }
     var INVALID$2 = "Invalid Duration";
     var lowOrderMatrix = {
@@ -4985,7 +4819,10 @@ var require_lib = __commonJS({
       }
       return newVals;
     }
-    var Duration = class {
+    var Duration = class _Duration {
+      /**
+       * @private
+       */
       constructor(config4) {
         const accurate = config4.conversionAccuracy === "longterm" || false;
         let matrix2 = accurate ? accurateMatrix : casualMatrix;
@@ -4999,47 +4836,126 @@ var require_lib = __commonJS({
         this.matrix = matrix2;
         this.isLuxonDuration = true;
       }
+      /**
+       * Create Duration from a number of milliseconds.
+       * @param {number} count of milliseconds
+       * @param {Object} opts - options for parsing
+       * @param {string} [opts.locale='en-US'] - the locale to use
+       * @param {string} opts.numberingSystem - the numbering system to use
+       * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
+       * @return {Duration}
+       */
       static fromMillis(count2, opts) {
-        return Duration.fromObject({ milliseconds: count2 }, opts);
+        return _Duration.fromObject({ milliseconds: count2 }, opts);
       }
+      /**
+       * Create a Duration from a JavaScript object with keys like 'years' and 'hours'.
+       * If this object is empty then a zero milliseconds duration is returned.
+       * @param {Object} obj - the object to create the DateTime from
+       * @param {number} obj.years
+       * @param {number} obj.quarters
+       * @param {number} obj.months
+       * @param {number} obj.weeks
+       * @param {number} obj.days
+       * @param {number} obj.hours
+       * @param {number} obj.minutes
+       * @param {number} obj.seconds
+       * @param {number} obj.milliseconds
+       * @param {Object} [opts=[]] - options for creating this Duration
+       * @param {string} [opts.locale='en-US'] - the locale to use
+       * @param {string} opts.numberingSystem - the numbering system to use
+       * @param {string} [opts.conversionAccuracy='casual'] - the preset conversion system to use
+       * @param {string} [opts.matrix=Object] - the custom conversion system to use
+       * @return {Duration}
+       */
       static fromObject(obj, opts = {}) {
         if (obj == null || typeof obj !== "object") {
-          throw new InvalidArgumentError(`Duration.fromObject: argument expected to be an object, got ${obj === null ? "null" : typeof obj}`);
+          throw new InvalidArgumentError(
+            `Duration.fromObject: argument expected to be an object, got ${obj === null ? "null" : typeof obj}`
+          );
         }
-        return new Duration({
-          values: normalizeObject(obj, Duration.normalizeUnit),
+        return new _Duration({
+          values: normalizeObject(obj, _Duration.normalizeUnit),
           loc: Locale.fromObject(opts),
           conversionAccuracy: opts.conversionAccuracy,
           matrix: opts.matrix
         });
       }
+      /**
+       * Create a Duration from DurationLike.
+       *
+       * @param {Object | number | Duration} durationLike
+       * One of:
+       * - object with keys like 'years' and 'hours'.
+       * - number representing milliseconds
+       * - Duration instance
+       * @return {Duration}
+       */
       static fromDurationLike(durationLike) {
         if (isNumber2(durationLike)) {
-          return Duration.fromMillis(durationLike);
-        } else if (Duration.isDuration(durationLike)) {
+          return _Duration.fromMillis(durationLike);
+        } else if (_Duration.isDuration(durationLike)) {
           return durationLike;
         } else if (typeof durationLike === "object") {
-          return Duration.fromObject(durationLike);
+          return _Duration.fromObject(durationLike);
         } else {
-          throw new InvalidArgumentError(`Unknown duration argument ${durationLike} of type ${typeof durationLike}`);
+          throw new InvalidArgumentError(
+            `Unknown duration argument ${durationLike} of type ${typeof durationLike}`
+          );
         }
       }
+      /**
+       * Create a Duration from an ISO 8601 duration string.
+       * @param {string} text - text to parse
+       * @param {Object} opts - options for parsing
+       * @param {string} [opts.locale='en-US'] - the locale to use
+       * @param {string} opts.numberingSystem - the numbering system to use
+       * @param {string} [opts.conversionAccuracy='casual'] - the preset conversion system to use
+       * @param {string} [opts.matrix=Object] - the preset conversion system to use
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Durations
+       * @example Duration.fromISO('P3Y6M1W4DT12H30M5S').toObject() //=> { years: 3, months: 6, weeks: 1, days: 4, hours: 12, minutes: 30, seconds: 5 }
+       * @example Duration.fromISO('PT23H').toObject() //=> { hours: 23 }
+       * @example Duration.fromISO('P5Y3M').toObject() //=> { years: 5, months: 3 }
+       * @return {Duration}
+       */
       static fromISO(text, opts) {
         const [parsed] = parseISODuration(text);
         if (parsed) {
-          return Duration.fromObject(parsed, opts);
+          return _Duration.fromObject(parsed, opts);
         } else {
-          return Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+          return _Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
         }
       }
+      /**
+       * Create a Duration from an ISO 8601 time string.
+       * @param {string} text - text to parse
+       * @param {Object} opts - options for parsing
+       * @param {string} [opts.locale='en-US'] - the locale to use
+       * @param {string} opts.numberingSystem - the numbering system to use
+       * @param {string} [opts.conversionAccuracy='casual'] - the preset conversion system to use
+       * @param {string} [opts.matrix=Object] - the conversion system to use
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Times
+       * @example Duration.fromISOTime('11:22:33.444').toObject() //=> { hours: 11, minutes: 22, seconds: 33, milliseconds: 444 }
+       * @example Duration.fromISOTime('11:00').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+       * @example Duration.fromISOTime('T11:00').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+       * @example Duration.fromISOTime('1100').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+       * @example Duration.fromISOTime('T1100').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+       * @return {Duration}
+       */
       static fromISOTime(text, opts) {
         const [parsed] = parseISOTimeOnly(text);
         if (parsed) {
-          return Duration.fromObject(parsed, opts);
+          return _Duration.fromObject(parsed, opts);
         } else {
-          return Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+          return _Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
         }
       }
+      /**
+       * Create an invalid Duration.
+       * @param {string} reason - simple string of why this datetime is invalid. Should not contain parameters or anything else data-dependent
+       * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
+       * @return {Duration}
+       */
       static invalid(reason, explanation = null) {
         if (!reason) {
           throw new InvalidArgumentError("need to specify a reason the Duration is invalid");
@@ -5048,9 +4964,12 @@ var require_lib = __commonJS({
         if (Settings.throwOnInvalid) {
           throw new InvalidDurationError(invalid);
         } else {
-          return new Duration({ invalid });
+          return new _Duration({ invalid });
         }
       }
+      /**
+       * @private
+       */
       static normalizeUnit(unit2) {
         const normalized = {
           year: "years",
@@ -5072,19 +4991,54 @@ var require_lib = __commonJS({
           millisecond: "milliseconds",
           milliseconds: "milliseconds"
         }[unit2 ? unit2.toLowerCase() : unit2];
-        if (!normalized)
-          throw new InvalidUnitError(unit2);
+        if (!normalized) throw new InvalidUnitError(unit2);
         return normalized;
       }
+      /**
+       * Check if an object is a Duration. Works across context boundaries
+       * @param {object} o
+       * @return {boolean}
+       */
       static isDuration(o) {
         return o && o.isLuxonDuration || false;
       }
+      /**
+       * Get  the locale of a Duration, such 'en-GB'
+       * @type {string}
+       */
       get locale() {
         return this.isValid ? this.loc.locale : null;
       }
+      /**
+       * Get the numbering system of a Duration, such 'beng'. The numbering system is used when formatting the Duration
+       *
+       * @type {string}
+       */
       get numberingSystem() {
         return this.isValid ? this.loc.numberingSystem : null;
       }
+      /**
+       * Returns a string representation of this Duration formatted according to the specified format string. You may use these tokens:
+       * * `S` for milliseconds
+       * * `s` for seconds
+       * * `m` for minutes
+       * * `h` for hours
+       * * `d` for days
+       * * `w` for weeks
+       * * `M` for months
+       * * `y` for years
+       * Notes:
+       * * Add padding by repeating the token, e.g. "yy" pads the years to two digits, "hhhh" pads the hours out to four digits
+       * * Tokens can be escaped by wrapping with single quotes.
+       * * The duration will be converted to the set of units in the format string using {@link Duration#shiftTo} and the Durations's conversion accuracy setting.
+       * @param {string} fmt - the format string
+       * @param {Object} opts - options
+       * @param {boolean} [opts.floor=true] - floor numerical values
+       * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toFormat("y d s") //=> "1 6 2"
+       * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toFormat("yy dd sss") //=> "01 06 002"
+       * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toFormat("M S") //=> "12 518402000"
+       * @return {string}
+       */
       toFormat(fmt, opts = {}) {
         const fmtOpts = {
           ...opts,
@@ -5092,9 +5046,21 @@ var require_lib = __commonJS({
         };
         return this.isValid ? Formatter.create(this.loc, fmtOpts).formatDurationFromString(this, fmt) : INVALID$2;
       }
+      /**
+       * Returns a string representation of a Duration with all units included.
+       * To modify its behavior use the `listStyle` and any Intl.NumberFormat option, though `unitDisplay` is especially relevant.
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
+       * @param opts - On option object to override the formatting. Accepts the same keys as the options parameter of the native `Int.NumberFormat` constructor, as well as `listStyle`.
+       * @example
+       * ```js
+       * var dur = Duration.fromObject({ days: 1, hours: 5, minutes: 6 })
+       * dur.toHuman() //=> '1 day, 5 hours, 6 minutes'
+       * dur.toHuman({ listStyle: "long" }) //=> '1 day, 5 hours, and 6 minutes'
+       * dur.toHuman({ unitDisplay: "short" }) //=> '1 day, 5 hr, 6 min'
+       * ```
+       */
       toHuman(opts = {}) {
-        if (!this.isValid)
-          return INVALID$2;
+        if (!this.isValid) return INVALID$2;
         const l2 = orderedUnits$1.map((unit2) => {
           const val = this.values[unit2];
           if (isUndefined2(val)) {
@@ -5104,41 +5070,61 @@ var require_lib = __commonJS({
         }).filter((n3) => n3);
         return this.loc.listFormatter({ type: "conjunction", style: opts.listStyle || "narrow", ...opts }).format(l2);
       }
+      /**
+       * Returns a JavaScript object with this Duration's values.
+       * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toObject() //=> { years: 1, days: 6, seconds: 2 }
+       * @return {Object}
+       */
       toObject() {
-        if (!this.isValid)
-          return {};
+        if (!this.isValid) return {};
         return { ...this.values };
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this Duration.
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Durations
+       * @example Duration.fromObject({ years: 3, seconds: 45 }).toISO() //=> 'P3YT45S'
+       * @example Duration.fromObject({ months: 4, seconds: 45 }).toISO() //=> 'P4MT45S'
+       * @example Duration.fromObject({ months: 5 }).toISO() //=> 'P5M'
+       * @example Duration.fromObject({ minutes: 5 }).toISO() //=> 'PT5M'
+       * @example Duration.fromObject({ milliseconds: 6 }).toISO() //=> 'PT0.006S'
+       * @return {string}
+       */
       toISO() {
-        if (!this.isValid)
-          return null;
+        if (!this.isValid) return null;
         let s2 = "P";
-        if (this.years !== 0)
-          s2 += this.years + "Y";
-        if (this.months !== 0 || this.quarters !== 0)
-          s2 += this.months + this.quarters * 3 + "M";
-        if (this.weeks !== 0)
-          s2 += this.weeks + "W";
-        if (this.days !== 0)
-          s2 += this.days + "D";
+        if (this.years !== 0) s2 += this.years + "Y";
+        if (this.months !== 0 || this.quarters !== 0) s2 += this.months + this.quarters * 3 + "M";
+        if (this.weeks !== 0) s2 += this.weeks + "W";
+        if (this.days !== 0) s2 += this.days + "D";
         if (this.hours !== 0 || this.minutes !== 0 || this.seconds !== 0 || this.milliseconds !== 0)
           s2 += "T";
-        if (this.hours !== 0)
-          s2 += this.hours + "H";
-        if (this.minutes !== 0)
-          s2 += this.minutes + "M";
+        if (this.hours !== 0) s2 += this.hours + "H";
+        if (this.minutes !== 0) s2 += this.minutes + "M";
         if (this.seconds !== 0 || this.milliseconds !== 0)
           s2 += roundTo(this.seconds + this.milliseconds / 1e3, 3) + "S";
-        if (s2 === "P")
-          s2 += "T0S";
+        if (s2 === "P") s2 += "T0S";
         return s2;
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this Duration, formatted as a time of day.
+       * Note that this will return null if the duration is invalid, negative, or equal to or greater than 24 hours.
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Times
+       * @param {Object} opts - options
+       * @param {boolean} [opts.suppressMilliseconds=false] - exclude milliseconds from the format if they're 0
+       * @param {boolean} [opts.suppressSeconds=false] - exclude seconds from the format if they're 0
+       * @param {boolean} [opts.includePrefix=false] - include the `T` prefix
+       * @param {string} [opts.format='extended'] - choose between the basic and extended format
+       * @example Duration.fromObject({ hours: 11 }).toISOTime() //=> '11:00:00.000'
+       * @example Duration.fromObject({ hours: 11 }).toISOTime({ suppressMilliseconds: true }) //=> '11:00:00'
+       * @example Duration.fromObject({ hours: 11 }).toISOTime({ suppressSeconds: true }) //=> '11:00'
+       * @example Duration.fromObject({ hours: 11 }).toISOTime({ includePrefix: true }) //=> 'T11:00:00.000'
+       * @example Duration.fromObject({ hours: 11 }).toISOTime({ format: 'basic' }) //=> '110000.000'
+       * @return {string}
+       */
       toISOTime(opts = {}) {
-        if (!this.isValid)
-          return null;
+        if (!this.isValid) return null;
         const millis = this.toMillis();
-        if (millis < 0 || millis >= 864e5)
-          return null;
+        if (millis < 0 || millis >= 864e5) return null;
         opts = {
           suppressMilliseconds: false,
           suppressSeconds: false,
@@ -5150,24 +5136,43 @@ var require_lib = __commonJS({
         const dateTime = DateTime.fromMillis(millis, { zone: "UTC" });
         return dateTime.toISOTime(opts);
       }
+      /**
+       * Returns an ISO 8601 representation of this Duration appropriate for use in JSON.
+       * @return {string}
+       */
       toJSON() {
         return this.toISO();
       }
+      /**
+       * Returns an ISO 8601 representation of this Duration appropriate for use in debugging.
+       * @return {string}
+       */
       toString() {
         return this.toISO();
       }
+      /**
+       * Returns an milliseconds value of this Duration.
+       * @return {number}
+       */
       toMillis() {
-        if (!this.isValid)
-          return NaN;
+        if (!this.isValid) return NaN;
         return durationToMillis(this.matrix, this.values);
       }
+      /**
+       * Returns an milliseconds value of this Duration. Alias of {@link toMillis}
+       * @return {number}
+       */
       valueOf() {
         return this.toMillis();
       }
+      /**
+       * Make this Duration longer by the specified amount. Return a newly-constructed Duration.
+       * @param {Duration|Object|number} duration - The amount to add. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
+       * @return {Duration}
+       */
       plus(duration) {
-        if (!this.isValid)
-          return this;
-        const dur = Duration.fromDurationLike(duration), result = {};
+        if (!this.isValid) return this;
+        const dur = _Duration.fromDurationLike(duration), result = {};
         for (const k of orderedUnits$1) {
           if (hasOwnProperty2(dur.values, k) || hasOwnProperty2(this.values, k)) {
             result[k] = dur.get(k) + this.get(k);
@@ -5175,58 +5180,117 @@ var require_lib = __commonJS({
         }
         return clone$1(this, { values: result }, true);
       }
+      /**
+       * Make this Duration shorter by the specified amount. Return a newly-constructed Duration.
+       * @param {Duration|Object|number} duration - The amount to subtract. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
+       * @return {Duration}
+       */
       minus(duration) {
-        if (!this.isValid)
-          return this;
-        const dur = Duration.fromDurationLike(duration);
+        if (!this.isValid) return this;
+        const dur = _Duration.fromDurationLike(duration);
         return this.plus(dur.negate());
       }
+      /**
+       * Scale this Duration by the specified amount. Return a newly-constructed Duration.
+       * @param {function} fn - The function to apply to each unit. Arity is 1 or 2: the value of the unit and, optionally, the unit name. Must return a number.
+       * @example Duration.fromObject({ hours: 1, minutes: 30 }).mapUnits(x => x * 2) //=> { hours: 2, minutes: 60 }
+       * @example Duration.fromObject({ hours: 1, minutes: 30 }).mapUnits((x, u) => u === "hours" ? x * 2 : x) //=> { hours: 2, minutes: 30 }
+       * @return {Duration}
+       */
       mapUnits(fn) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const result = {};
         for (const k of Object.keys(this.values)) {
           result[k] = asNumber(fn(this.values[k], k));
         }
         return clone$1(this, { values: result }, true);
       }
+      /**
+       * Get the value of unit.
+       * @param {string} unit - a unit such as 'minute' or 'day'
+       * @example Duration.fromObject({years: 2, days: 3}).get('years') //=> 2
+       * @example Duration.fromObject({years: 2, days: 3}).get('months') //=> 0
+       * @example Duration.fromObject({years: 2, days: 3}).get('days') //=> 3
+       * @return {number}
+       */
       get(unit2) {
-        return this[Duration.normalizeUnit(unit2)];
+        return this[_Duration.normalizeUnit(unit2)];
       }
+      /**
+       * "Set" the values of specified units. Return a newly-constructed Duration.
+       * @param {Object} values - a mapping of units to numbers
+       * @example dur.set({ years: 2017 })
+       * @example dur.set({ hours: 8, minutes: 30 })
+       * @return {Duration}
+       */
       set(values2) {
-        if (!this.isValid)
-          return this;
-        const mixed = { ...this.values, ...normalizeObject(values2, Duration.normalizeUnit) };
+        if (!this.isValid) return this;
+        const mixed = { ...this.values, ...normalizeObject(values2, _Duration.normalizeUnit) };
         return clone$1(this, { values: mixed });
       }
+      /**
+       * "Set" the locale and/or numberingSystem.  Returns a newly-constructed Duration.
+       * @example dur.reconfigure({ locale: 'en-GB' })
+       * @return {Duration}
+       */
       reconfigure({ locale, numberingSystem, conversionAccuracy, matrix: matrix2 } = {}) {
         const loc = this.loc.clone({ locale, numberingSystem });
         const opts = { loc, matrix: matrix2, conversionAccuracy };
         return clone$1(this, opts);
       }
+      /**
+       * Return the length of the duration in the specified unit.
+       * @param {string} unit - a unit such as 'minutes' or 'days'
+       * @example Duration.fromObject({years: 1}).as('days') //=> 365
+       * @example Duration.fromObject({years: 1}).as('months') //=> 12
+       * @example Duration.fromObject({hours: 60}).as('days') //=> 2.5
+       * @return {number}
+       */
       as(unit2) {
         return this.isValid ? this.shiftTo(unit2).get(unit2) : NaN;
       }
+      /**
+       * Reduce this Duration to its canonical representation in its current units.
+       * Assuming the overall value of the Duration is positive, this means:
+       * - excessive values for lower-order units are converted to higher-order units (if possible, see first and second example)
+       * - negative lower-order units are converted to higher order units (there must be such a higher order unit, otherwise
+       *   the overall value would be negative, see second example)
+       * - fractional values for higher-order units are converted to lower-order units (if possible, see fourth example)
+       *
+       * If the overall value is negative, the result of this method is equivalent to `this.negate().normalize().negate()`.
+       * @example Duration.fromObject({ years: 2, days: 5000 }).normalize().toObject() //=> { years: 15, days: 255 }
+       * @example Duration.fromObject({ days: 5000 }).normalize().toObject() //=> { days: 5000 }
+       * @example Duration.fromObject({ hours: 12, minutes: -45 }).normalize().toObject() //=> { hours: 11, minutes: 15 }
+       * @example Duration.fromObject({ years: 2.5, days: 0, hours: 0 }).normalize().toObject() //=> { years: 2, days: 182, hours: 12 }
+       * @return {Duration}
+       */
       normalize() {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const vals = this.toObject();
         normalizeValues(this.matrix, vals);
         return clone$1(this, { values: vals }, true);
       }
+      /**
+       * Rescale units to its largest representation
+       * @example Duration.fromObject({ milliseconds: 90000 }).rescale().toObject() //=> { minutes: 1, seconds: 30 }
+       * @return {Duration}
+       */
       rescale() {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const vals = removeZeroes(this.normalize().shiftToAll().toObject());
         return clone$1(this, { values: vals }, true);
       }
+      /**
+       * Convert this Duration into its representation in a different set of units.
+       * @example Duration.fromObject({ hours: 1, seconds: 30 }).shiftTo('minutes', 'milliseconds').toObject() //=> { minutes: 60, milliseconds: 30000 }
+       * @return {Duration}
+       */
       shiftTo(...units) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         if (units.length === 0) {
           return this;
         }
-        units = units.map((u) => Duration.normalizeUnit(u));
+        units = units.map((u) => _Duration.normalizeUnit(u));
         const built = {}, accumulated = {}, vals = this.toObject();
         let lastUnit;
         for (const k of orderedUnits$1) {
@@ -5255,56 +5319,128 @@ var require_lib = __commonJS({
         normalizeValues(this.matrix, built);
         return clone$1(this, { values: built }, true);
       }
+      /**
+       * Shift this Duration to all available units.
+       * Same as shiftTo("years", "months", "weeks", "days", "hours", "minutes", "seconds", "milliseconds")
+       * @return {Duration}
+       */
       shiftToAll() {
-        if (!this.isValid)
-          return this;
-        return this.shiftTo("years", "months", "weeks", "days", "hours", "minutes", "seconds", "milliseconds");
+        if (!this.isValid) return this;
+        return this.shiftTo(
+          "years",
+          "months",
+          "weeks",
+          "days",
+          "hours",
+          "minutes",
+          "seconds",
+          "milliseconds"
+        );
       }
+      /**
+       * Return the negative of this Duration.
+       * @example Duration.fromObject({ hours: 1, seconds: 30 }).negate().toObject() //=> { hours: -1, seconds: -30 }
+       * @return {Duration}
+       */
       negate() {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const negated = {};
         for (const k of Object.keys(this.values)) {
           negated[k] = this.values[k] === 0 ? 0 : -this.values[k];
         }
         return clone$1(this, { values: negated }, true);
       }
+      /**
+       * Get the years.
+       * @type {number}
+       */
       get years() {
         return this.isValid ? this.values.years || 0 : NaN;
       }
+      /**
+       * Get the quarters.
+       * @type {number}
+       */
       get quarters() {
         return this.isValid ? this.values.quarters || 0 : NaN;
       }
+      /**
+       * Get the months.
+       * @type {number}
+       */
       get months() {
         return this.isValid ? this.values.months || 0 : NaN;
       }
+      /**
+       * Get the weeks
+       * @type {number}
+       */
       get weeks() {
         return this.isValid ? this.values.weeks || 0 : NaN;
       }
+      /**
+       * Get the days.
+       * @type {number}
+       */
       get days() {
         return this.isValid ? this.values.days || 0 : NaN;
       }
+      /**
+       * Get the hours.
+       * @type {number}
+       */
       get hours() {
         return this.isValid ? this.values.hours || 0 : NaN;
       }
+      /**
+       * Get the minutes.
+       * @type {number}
+       */
       get minutes() {
         return this.isValid ? this.values.minutes || 0 : NaN;
       }
+      /**
+       * Get the seconds.
+       * @return {number}
+       */
       get seconds() {
         return this.isValid ? this.values.seconds || 0 : NaN;
       }
+      /**
+       * Get the milliseconds.
+       * @return {number}
+       */
       get milliseconds() {
         return this.isValid ? this.values.milliseconds || 0 : NaN;
       }
+      /**
+       * Returns whether the Duration is invalid. Invalid durations are returned by diff operations
+       * on invalid DateTimes or Intervals.
+       * @return {boolean}
+       */
       get isValid() {
         return this.invalid === null;
       }
+      /**
+       * Returns an error code if this Duration became invalid, or null if the Duration is valid
+       * @return {string}
+       */
       get invalidReason() {
         return this.invalid ? this.invalid.reason : null;
       }
+      /**
+       * Returns an explanation of why this Duration became invalid, or null if the Duration is valid
+       * @type {string}
+       */
       get invalidExplanation() {
         return this.invalid ? this.invalid.explanation : null;
       }
+      /**
+       * Equality check
+       * Two Durations are equal iff they have the same units and the same values for each unit.
+       * @param {Duration} other
+       * @return {boolean}
+       */
       equals(other) {
         if (!this.isValid || !other.isValid) {
           return false;
@@ -5313,8 +5449,7 @@ var require_lib = __commonJS({
           return false;
         }
         function eq(v1, v2) {
-          if (v1 === void 0 || v1 === 0)
-            return v2 === void 0 || v2 === 0;
+          if (v1 === void 0 || v1 === 0) return v2 === void 0 || v2 === 0;
           return v1 === v2;
         }
         for (const u of orderedUnits$1) {
@@ -5332,18 +5467,30 @@ var require_lib = __commonJS({
       } else if (!end || !end.isValid) {
         return Interval.invalid("missing or invalid end");
       } else if (end < start) {
-        return Interval.invalid("end before start", `The end of an interval must be after its start, but you had start=${start.toISO()} and end=${end.toISO()}`);
+        return Interval.invalid(
+          "end before start",
+          `The end of an interval must be after its start, but you had start=${start.toISO()} and end=${end.toISO()}`
+        );
       } else {
         return null;
       }
     }
-    var Interval = class {
+    var Interval = class _Interval {
+      /**
+       * @private
+       */
       constructor(config4) {
         this.s = config4.start;
         this.e = config4.end;
         this.invalid = config4.invalid || null;
         this.isLuxonInterval = true;
       }
+      /**
+       * Create an invalid Interval.
+       * @param {string} reason - simple string of why this Interval is invalid. Should not contain parameters or anything else data-dependent
+       * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
+       * @return {Interval}
+       */
       static invalid(reason, explanation = null) {
         if (!reason) {
           throw new InvalidArgumentError("need to specify a reason the Interval is invalid");
@@ -5352,14 +5499,20 @@ var require_lib = __commonJS({
         if (Settings.throwOnInvalid) {
           throw new InvalidIntervalError(invalid);
         } else {
-          return new Interval({ invalid });
+          return new _Interval({ invalid });
         }
       }
+      /**
+       * Create an Interval from a start DateTime and an end DateTime. Inclusive of the start but not the end.
+       * @param {DateTime|Date|Object} start
+       * @param {DateTime|Date|Object} end
+       * @return {Interval}
+       */
       static fromDateTimes(start, end) {
         const builtStart = friendlyDateTime(start), builtEnd = friendlyDateTime(end);
         const validateError = validateStartEnd(builtStart, builtEnd);
         if (validateError == null) {
-          return new Interval({
+          return new _Interval({
             start: builtStart,
             end: builtEnd
           });
@@ -5367,14 +5520,34 @@ var require_lib = __commonJS({
           return validateError;
         }
       }
+      /**
+       * Create an Interval from a start DateTime and a Duration to extend to.
+       * @param {DateTime|Date|Object} start
+       * @param {Duration|Object|number} duration - the length of the Interval.
+       * @return {Interval}
+       */
       static after(start, duration) {
         const dur = Duration.fromDurationLike(duration), dt = friendlyDateTime(start);
-        return Interval.fromDateTimes(dt, dt.plus(dur));
+        return _Interval.fromDateTimes(dt, dt.plus(dur));
       }
+      /**
+       * Create an Interval from an end DateTime and a Duration to extend backwards to.
+       * @param {DateTime|Date|Object} end
+       * @param {Duration|Object|number} duration - the length of the Interval.
+       * @return {Interval}
+       */
       static before(end, duration) {
         const dur = Duration.fromDurationLike(duration), dt = friendlyDateTime(end);
-        return Interval.fromDateTimes(dt.minus(dur), dt);
+        return _Interval.fromDateTimes(dt.minus(dur), dt);
       }
+      /**
+       * Create an Interval from an ISO 8601 string.
+       * Accepts `<start>/<end>`, `<start>/<duration>`, and `<duration>/<end>` formats.
+       * @param {string} text - the ISO string to parse
+       * @param {Object} [opts] - options to pass {@link DateTime#fromISO} and optionally {@link Duration#fromISO}
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+       * @return {Interval}
+       */
       static fromISO(text, opts) {
         const [s2, e3] = (text || "").split("/", 2);
         if (s2 && e3) {
@@ -5393,88 +5566,161 @@ var require_lib = __commonJS({
             endIsValid = false;
           }
           if (startIsValid && endIsValid) {
-            return Interval.fromDateTimes(start, end);
+            return _Interval.fromDateTimes(start, end);
           }
           if (startIsValid) {
             const dur = Duration.fromISO(e3, opts);
             if (dur.isValid) {
-              return Interval.after(start, dur);
+              return _Interval.after(start, dur);
             }
           } else if (endIsValid) {
             const dur = Duration.fromISO(s2, opts);
             if (dur.isValid) {
-              return Interval.before(end, dur);
+              return _Interval.before(end, dur);
             }
           }
         }
-        return Interval.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+        return _Interval.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
       }
+      /**
+       * Check if an object is an Interval. Works across context boundaries
+       * @param {object} o
+       * @return {boolean}
+       */
       static isInterval(o) {
         return o && o.isLuxonInterval || false;
       }
+      /**
+       * Returns the start of the Interval
+       * @type {DateTime}
+       */
       get start() {
         return this.isValid ? this.s : null;
       }
+      /**
+       * Returns the end of the Interval
+       * @type {DateTime}
+       */
       get end() {
         return this.isValid ? this.e : null;
       }
+      /**
+       * Returns whether this Interval's end is at least its start, meaning that the Interval isn't 'backwards'.
+       * @type {boolean}
+       */
       get isValid() {
         return this.invalidReason === null;
       }
+      /**
+       * Returns an error code if this Interval is invalid, or null if the Interval is valid
+       * @type {string}
+       */
       get invalidReason() {
         return this.invalid ? this.invalid.reason : null;
       }
+      /**
+       * Returns an explanation of why this Interval became invalid, or null if the Interval is valid
+       * @type {string}
+       */
       get invalidExplanation() {
         return this.invalid ? this.invalid.explanation : null;
       }
+      /**
+       * Returns the length of the Interval in the specified unit.
+       * @param {string} unit - the unit (such as 'hours' or 'days') to return the length in.
+       * @return {number}
+       */
       length(unit2 = "milliseconds") {
         return this.isValid ? this.toDuration(...[unit2]).get(unit2) : NaN;
       }
+      /**
+       * Returns the count of minutes, hours, days, months, or years included in the Interval, even in part.
+       * Unlike {@link Interval#length} this counts sections of the calendar, not periods of time, e.g. specifying 'day'
+       * asks 'what dates are included in this interval?', not 'how many days long is this interval?'
+       * @param {string} [unit='milliseconds'] - the unit of time to count.
+       * @return {number}
+       */
       count(unit2 = "milliseconds") {
-        if (!this.isValid)
-          return NaN;
+        if (!this.isValid) return NaN;
         const start = this.start.startOf(unit2), end = this.end.startOf(unit2);
         return Math.floor(end.diff(start, unit2).get(unit2)) + (end.valueOf() !== this.end.valueOf());
       }
+      /**
+       * Returns whether this Interval's start and end are both in the same unit of time
+       * @param {string} unit - the unit of time to check sameness on
+       * @return {boolean}
+       */
       hasSame(unit2) {
         return this.isValid ? this.isEmpty() || this.e.minus(1).hasSame(this.s, unit2) : false;
       }
+      /**
+       * Return whether this Interval has the same start and end DateTimes.
+       * @return {boolean}
+       */
       isEmpty() {
         return this.s.valueOf() === this.e.valueOf();
       }
+      /**
+       * Return whether this Interval's start is after the specified DateTime.
+       * @param {DateTime} dateTime
+       * @return {boolean}
+       */
       isAfter(dateTime) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return this.s > dateTime;
       }
+      /**
+       * Return whether this Interval's end is before the specified DateTime.
+       * @param {DateTime} dateTime
+       * @return {boolean}
+       */
       isBefore(dateTime) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return this.e <= dateTime;
       }
+      /**
+       * Return whether this Interval contains the specified DateTime.
+       * @param {DateTime} dateTime
+       * @return {boolean}
+       */
       contains(dateTime) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return this.s <= dateTime && this.e > dateTime;
       }
+      /**
+       * "Sets" the start and/or end dates. Returns a newly-constructed Interval.
+       * @param {Object} values - the values to set
+       * @param {DateTime} values.start - the starting DateTime
+       * @param {DateTime} values.end - the ending DateTime
+       * @return {Interval}
+       */
       set({ start, end } = {}) {
-        if (!this.isValid)
-          return this;
-        return Interval.fromDateTimes(start || this.s, end || this.e);
+        if (!this.isValid) return this;
+        return _Interval.fromDateTimes(start || this.s, end || this.e);
       }
+      /**
+       * Split this Interval at each of the specified DateTimes
+       * @param {...DateTime} dateTimes - the unit of time to count.
+       * @return {Array}
+       */
       splitAt(...dateTimes) {
-        if (!this.isValid)
-          return [];
+        if (!this.isValid) return [];
         const sorted = dateTimes.map(friendlyDateTime).filter((d) => this.contains(d)).sort(), results = [];
         let { s: s2 } = this, i2 = 0;
         while (s2 < this.e) {
           const added = sorted[i2] || this.e, next = +added > +this.e ? this.e : added;
-          results.push(Interval.fromDateTimes(s2, next));
+          results.push(_Interval.fromDateTimes(s2, next));
           s2 = next;
           i2 += 1;
         }
         return results;
       }
+      /**
+       * Split this Interval into smaller Intervals, each of the specified length.
+       * Left over time is grouped into a smaller interval
+       * @param {Duration|Object|number} duration - The length of each resulting interval.
+       * @return {Array}
+       */
       splitBy(duration) {
         const dur = Duration.fromDurationLike(duration);
         if (!this.isValid || !dur.isValid || dur.as("milliseconds") === 0) {
@@ -5485,72 +5731,123 @@ var require_lib = __commonJS({
         while (s2 < this.e) {
           const added = this.start.plus(dur.mapUnits((x) => x * idx));
           next = +added > +this.e ? this.e : added;
-          results.push(Interval.fromDateTimes(s2, next));
+          results.push(_Interval.fromDateTimes(s2, next));
           s2 = next;
           idx += 1;
         }
         return results;
       }
+      /**
+       * Split this Interval into the specified number of smaller intervals.
+       * @param {number} numberOfParts - The number of Intervals to divide the Interval into.
+       * @return {Array}
+       */
       divideEqually(numberOfParts) {
-        if (!this.isValid)
-          return [];
+        if (!this.isValid) return [];
         return this.splitBy(this.length() / numberOfParts).slice(0, numberOfParts);
       }
+      /**
+       * Return whether this Interval overlaps with the specified Interval
+       * @param {Interval} other
+       * @return {boolean}
+       */
       overlaps(other) {
         return this.e > other.s && this.s < other.e;
       }
+      /**
+       * Return whether this Interval's end is adjacent to the specified Interval's start.
+       * @param {Interval} other
+       * @return {boolean}
+       */
       abutsStart(other) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return +this.e === +other.s;
       }
+      /**
+       * Return whether this Interval's start is adjacent to the specified Interval's end.
+       * @param {Interval} other
+       * @return {boolean}
+       */
       abutsEnd(other) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return +other.e === +this.s;
       }
+      /**
+       * Return whether this Interval engulfs the start and end of the specified Interval.
+       * @param {Interval} other
+       * @return {boolean}
+       */
       engulfs(other) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         return this.s <= other.s && this.e >= other.e;
       }
+      /**
+       * Return whether this Interval has the same start and end as the specified Interval.
+       * @param {Interval} other
+       * @return {boolean}
+       */
       equals(other) {
         if (!this.isValid || !other.isValid) {
           return false;
         }
         return this.s.equals(other.s) && this.e.equals(other.e);
       }
+      /**
+       * Return an Interval representing the intersection of this Interval and the specified Interval.
+       * Specifically, the resulting Interval has the maximum start time and the minimum end time of the two Intervals.
+       * Returns null if the intersection is empty, meaning, the intervals don't intersect.
+       * @param {Interval} other
+       * @return {Interval}
+       */
       intersection(other) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const s2 = this.s > other.s ? this.s : other.s, e3 = this.e < other.e ? this.e : other.e;
         if (s2 >= e3) {
           return null;
         } else {
-          return Interval.fromDateTimes(s2, e3);
+          return _Interval.fromDateTimes(s2, e3);
         }
       }
+      /**
+       * Return an Interval representing the union of this Interval and the specified Interval.
+       * Specifically, the resulting Interval has the minimum start time and the maximum end time of the two Intervals.
+       * @param {Interval} other
+       * @return {Interval}
+       */
       union(other) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const s2 = this.s < other.s ? this.s : other.s, e3 = this.e > other.e ? this.e : other.e;
-        return Interval.fromDateTimes(s2, e3);
+        return _Interval.fromDateTimes(s2, e3);
       }
+      /**
+       * Merge an array of Intervals into a equivalent minimal set of Intervals.
+       * Combines overlapping and adjacent Intervals.
+       * @param {Array} intervals
+       * @return {Array}
+       */
       static merge(intervals) {
-        const [found, final] = intervals.sort((a, b) => a.s - b.s).reduce(([sofar, current], item) => {
-          if (!current) {
-            return [sofar, item];
-          } else if (current.overlaps(item) || current.abutsStart(item)) {
-            return [sofar, current.union(item)];
-          } else {
-            return [sofar.concat([current]), item];
-          }
-        }, [[], null]);
+        const [found, final] = intervals.sort((a, b) => a.s - b.s).reduce(
+          ([sofar, current], item) => {
+            if (!current) {
+              return [sofar, item];
+            } else if (current.overlaps(item) || current.abutsStart(item)) {
+              return [sofar, current.union(item)];
+            } else {
+              return [sofar.concat([current]), item];
+            }
+          },
+          [[], null]
+        );
         if (final) {
           found.push(final);
         }
         return found;
       }
+      /**
+       * Return an array of Intervals representing the spans of time that only appear in one of the specified Intervals.
+       * @param {Array} intervals
+       * @return {Array}
+       */
       static xor(intervals) {
         let start = null, currentCount = 0;
         const results = [], ends = intervals.map((i2) => [
@@ -5563,83 +5860,260 @@ var require_lib = __commonJS({
             start = i2.time;
           } else {
             if (start && +start !== +i2.time) {
-              results.push(Interval.fromDateTimes(start, i2.time));
+              results.push(_Interval.fromDateTimes(start, i2.time));
             }
             start = null;
           }
         }
-        return Interval.merge(results);
+        return _Interval.merge(results);
       }
+      /**
+       * Return an Interval representing the span of time in this Interval that doesn't overlap with any of the specified Intervals.
+       * @param {...Interval} intervals
+       * @return {Array}
+       */
       difference(...intervals) {
-        return Interval.xor([this].concat(intervals)).map((i2) => this.intersection(i2)).filter((i2) => i2 && !i2.isEmpty());
+        return _Interval.xor([this].concat(intervals)).map((i2) => this.intersection(i2)).filter((i2) => i2 && !i2.isEmpty());
       }
+      /**
+       * Returns a string representation of this Interval appropriate for debugging.
+       * @return {string}
+       */
       toString() {
-        if (!this.isValid)
-          return INVALID$1;
+        if (!this.isValid) return INVALID$1;
         return `[${this.s.toISO()} \u2013 ${this.e.toISO()})`;
       }
+      /**
+       * Returns a localized string representing this Interval. Accepts the same options as the
+       * Intl.DateTimeFormat constructor and any presets defined by Luxon, such as
+       * {@link DateTime.DATE_FULL} or {@link DateTime.TIME_SIMPLE}. The exact behavior of this method
+       * is browser-specific, but in general it will return an appropriate representation of the
+       * Interval in the assigned locale. Defaults to the system's locale if no locale has been
+       * specified.
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+       * @param {Object} [formatOpts=DateTime.DATE_SHORT] - Either a DateTime preset or
+       * Intl.DateTimeFormat constructor options.
+       * @param {Object} opts - Options to override the configuration of the start DateTime.
+       * @example Interval.fromISO('2022-11-07T09:00Z/2022-11-08T09:00Z').toLocaleString(); //=> 11/7/2022 – 11/8/2022
+       * @example Interval.fromISO('2022-11-07T09:00Z/2022-11-08T09:00Z').toLocaleString(DateTime.DATE_FULL); //=> November 7 – 8, 2022
+       * @example Interval.fromISO('2022-11-07T09:00Z/2022-11-08T09:00Z').toLocaleString(DateTime.DATE_FULL, { locale: 'fr-FR' }); //=> 7–8 novembre 2022
+       * @example Interval.fromISO('2022-11-07T17:00Z/2022-11-07T19:00Z').toLocaleString(DateTime.TIME_SIMPLE); //=> 6:00 – 8:00 PM
+       * @example Interval.fromISO('2022-11-07T17:00Z/2022-11-07T19:00Z').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }); //=> Mon, Nov 07, 6:00 – 8:00 p
+       * @return {string}
+       */
       toLocaleString(formatOpts = DATE_SHORT, opts = {}) {
         return this.isValid ? Formatter.create(this.s.loc.clone(opts), formatOpts).formatInterval(this) : INVALID$1;
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this Interval.
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+       * @param {Object} opts - The same options as {@link DateTime#toISO}
+       * @return {string}
+       */
       toISO(opts) {
-        if (!this.isValid)
-          return INVALID$1;
+        if (!this.isValid) return INVALID$1;
         return `${this.s.toISO(opts)}/${this.e.toISO(opts)}`;
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of date of this Interval.
+       * The time components are ignored.
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+       * @return {string}
+       */
       toISODate() {
-        if (!this.isValid)
-          return INVALID$1;
+        if (!this.isValid) return INVALID$1;
         return `${this.s.toISODate()}/${this.e.toISODate()}`;
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of time of this Interval.
+       * The date components are ignored.
+       * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+       * @param {Object} opts - The same options as {@link DateTime#toISO}
+       * @return {string}
+       */
       toISOTime(opts) {
-        if (!this.isValid)
-          return INVALID$1;
+        if (!this.isValid) return INVALID$1;
         return `${this.s.toISOTime(opts)}/${this.e.toISOTime(opts)}`;
       }
+      /**
+       * Returns a string representation of this Interval formatted according to the specified format
+       * string. **You may not want this.** See {@link Interval#toLocaleString} for a more flexible
+       * formatting tool.
+       * @param {string} dateFormat - The format string. This string formats the start and end time.
+       * See {@link DateTime#toFormat} for details.
+       * @param {Object} opts - Options.
+       * @param {string} [opts.separator =  ' – '] - A separator to place between the start and end
+       * representations.
+       * @return {string}
+       */
       toFormat(dateFormat, { separator = " \u2013 " } = {}) {
-        if (!this.isValid)
-          return INVALID$1;
+        if (!this.isValid) return INVALID$1;
         return `${this.s.toFormat(dateFormat)}${separator}${this.e.toFormat(dateFormat)}`;
       }
+      /**
+       * Return a Duration representing the time spanned by this interval.
+       * @param {string|string[]} [unit=['milliseconds']] - the unit or units (such as 'hours' or 'days') to include in the duration.
+       * @param {Object} opts - options that affect the creation of the Duration
+       * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
+       * @example Interval.fromDateTimes(dt1, dt2).toDuration().toObject() //=> { milliseconds: 88489257 }
+       * @example Interval.fromDateTimes(dt1, dt2).toDuration('days').toObject() //=> { days: 1.0241812152777778 }
+       * @example Interval.fromDateTimes(dt1, dt2).toDuration(['hours', 'minutes']).toObject() //=> { hours: 24, minutes: 34.82095 }
+       * @example Interval.fromDateTimes(dt1, dt2).toDuration(['hours', 'minutes', 'seconds']).toObject() //=> { hours: 24, minutes: 34, seconds: 49.257 }
+       * @example Interval.fromDateTimes(dt1, dt2).toDuration('seconds').toObject() //=> { seconds: 88489.257 }
+       * @return {Duration}
+       */
       toDuration(unit2, opts) {
         if (!this.isValid) {
           return Duration.invalid(this.invalidReason);
         }
         return this.e.diff(this.s, unit2, opts);
       }
+      /**
+       * Run mapFn on the interval start and end, returning a new Interval from the resulting DateTimes
+       * @param {function} mapFn
+       * @return {Interval}
+       * @example Interval.fromDateTimes(dt1, dt2).mapEndpoints(endpoint => endpoint.toUTC())
+       * @example Interval.fromDateTimes(dt1, dt2).mapEndpoints(endpoint => endpoint.plus({ hours: 2 }))
+       */
       mapEndpoints(mapFn) {
-        return Interval.fromDateTimes(mapFn(this.s), mapFn(this.e));
+        return _Interval.fromDateTimes(mapFn(this.s), mapFn(this.e));
       }
     };
     var Info = class {
+      /**
+       * Return whether the specified zone contains a DST.
+       * @param {string|Zone} [zone='local'] - Zone to check. Defaults to the environment's local zone.
+       * @return {boolean}
+       */
       static hasDST(zone = Settings.defaultZone) {
         const proto = DateTime.now().setZone(zone).set({ month: 12 });
         return !zone.isUniversal && proto.offset !== proto.set({ month: 6 }).offset;
       }
+      /**
+       * Return whether the specified zone is a valid IANA specifier.
+       * @param {string} zone - Zone to check
+       * @return {boolean}
+       */
       static isValidIANAZone(zone) {
         return IANAZone.isValidZone(zone);
       }
+      /**
+       * Converts the input into a {@link Zone} instance.
+       *
+       * * If `input` is already a Zone instance, it is returned unchanged.
+       * * If `input` is a string containing a valid time zone name, a Zone instance
+       *   with that name is returned.
+       * * If `input` is a string that doesn't refer to a known time zone, a Zone
+       *   instance with {@link Zone#isValid} == false is returned.
+       * * If `input is a number, a Zone instance with the specified fixed offset
+       *   in minutes is returned.
+       * * If `input` is `null` or `undefined`, the default zone is returned.
+       * @param {string|Zone|number} [input] - the value to be converted
+       * @return {Zone}
+       */
       static normalizeZone(input) {
         return normalizeZone(input, Settings.defaultZone);
       }
+      /**
+       * Return an array of standalone month names.
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+       * @param {string} [length='long'] - the length of the month representation, such as "numeric", "2-digit", "narrow", "short", "long"
+       * @param {Object} opts - options
+       * @param {string} [opts.locale] - the locale code
+       * @param {string} [opts.numberingSystem=null] - the numbering system
+       * @param {string} [opts.locObj=null] - an existing locale object to use
+       * @param {string} [opts.outputCalendar='gregory'] - the calendar
+       * @example Info.months()[0] //=> 'January'
+       * @example Info.months('short')[0] //=> 'Jan'
+       * @example Info.months('numeric')[0] //=> '1'
+       * @example Info.months('short', { locale: 'fr-CA' } )[0] //=> 'janv.'
+       * @example Info.months('numeric', { locale: 'ar' })[0] //=> '١'
+       * @example Info.months('long', { outputCalendar: 'islamic' })[0] //=> 'Rabiʻ I'
+       * @return {Array}
+       */
       static months(length = "long", { locale = null, numberingSystem = null, locObj = null, outputCalendar = "gregory" } = {}) {
         return (locObj || Locale.create(locale, numberingSystem, outputCalendar)).months(length);
       }
+      /**
+       * Return an array of format month names.
+       * Format months differ from standalone months in that they're meant to appear next to the day of the month. In some languages, that
+       * changes the string.
+       * See {@link Info#months}
+       * @param {string} [length='long'] - the length of the month representation, such as "numeric", "2-digit", "narrow", "short", "long"
+       * @param {Object} opts - options
+       * @param {string} [opts.locale] - the locale code
+       * @param {string} [opts.numberingSystem=null] - the numbering system
+       * @param {string} [opts.locObj=null] - an existing locale object to use
+       * @param {string} [opts.outputCalendar='gregory'] - the calendar
+       * @return {Array}
+       */
       static monthsFormat(length = "long", { locale = null, numberingSystem = null, locObj = null, outputCalendar = "gregory" } = {}) {
         return (locObj || Locale.create(locale, numberingSystem, outputCalendar)).months(length, true);
       }
+      /**
+       * Return an array of standalone week names.
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+       * @param {string} [length='long'] - the length of the weekday representation, such as "narrow", "short", "long".
+       * @param {Object} opts - options
+       * @param {string} [opts.locale] - the locale code
+       * @param {string} [opts.numberingSystem=null] - the numbering system
+       * @param {string} [opts.locObj=null] - an existing locale object to use
+       * @example Info.weekdays()[0] //=> 'Monday'
+       * @example Info.weekdays('short')[0] //=> 'Mon'
+       * @example Info.weekdays('short', { locale: 'fr-CA' })[0] //=> 'lun.'
+       * @example Info.weekdays('short', { locale: 'ar' })[0] //=> 'الاثنين'
+       * @return {Array}
+       */
       static weekdays(length = "long", { locale = null, numberingSystem = null, locObj = null } = {}) {
         return (locObj || Locale.create(locale, numberingSystem, null)).weekdays(length);
       }
+      /**
+       * Return an array of format week names.
+       * Format weekdays differ from standalone weekdays in that they're meant to appear next to more date information. In some languages, that
+       * changes the string.
+       * See {@link Info#weekdays}
+       * @param {string} [length='long'] - the length of the month representation, such as "narrow", "short", "long".
+       * @param {Object} opts - options
+       * @param {string} [opts.locale=null] - the locale code
+       * @param {string} [opts.numberingSystem=null] - the numbering system
+       * @param {string} [opts.locObj=null] - an existing locale object to use
+       * @return {Array}
+       */
       static weekdaysFormat(length = "long", { locale = null, numberingSystem = null, locObj = null } = {}) {
         return (locObj || Locale.create(locale, numberingSystem, null)).weekdays(length, true);
       }
+      /**
+       * Return an array of meridiems.
+       * @param {Object} opts - options
+       * @param {string} [opts.locale] - the locale code
+       * @example Info.meridiems() //=> [ 'AM', 'PM' ]
+       * @example Info.meridiems({ locale: 'my' }) //=> [ 'နံနက်', 'ညနေ' ]
+       * @return {Array}
+       */
       static meridiems({ locale = null } = {}) {
         return Locale.create(locale).meridiems();
       }
+      /**
+       * Return an array of eras, such as ['BC', 'AD']. The locale can be specified, but the calendar system is always Gregorian.
+       * @param {string} [length='short'] - the length of the era representation, such as "short" or "long".
+       * @param {Object} opts - options
+       * @param {string} [opts.locale] - the locale code
+       * @example Info.eras() //=> [ 'BC', 'AD' ]
+       * @example Info.eras('long') //=> [ 'Before Christ', 'Anno Domini' ]
+       * @example Info.eras('long', { locale: 'fr' }) //=> [ 'avant Jésus-Christ', 'après Jésus-Christ' ]
+       * @return {Array}
+       */
       static eras(length = "short", { locale = null } = {}) {
         return Locale.create(locale, null, "gregory").eras(length);
       }
+      /**
+       * Return the set of available features in this environment.
+       * Some features of Luxon are not available in all environments. For example, on older browsers, relative time formatting support is not available. Use this function to figure out if that's the case.
+       * Keys:
+       * * `relative`: whether this environment supports relative time formatting
+       * @example Info.features() //=> { relative: false }
+       * @return {Object}
+       */
       static features() {
         return { relative: hasRelative() };
       }
@@ -5688,7 +6162,9 @@ var require_lib = __commonJS({
     function diff2(earlier, later, units, opts) {
       let [cursor, results, highWater, lowestOrder] = highOrderDiffs(earlier, later, units);
       const remainingMillis = later - cursor;
-      const lowerOrderUnits = units.filter((u) => ["hours", "minutes", "seconds", "milliseconds"].indexOf(u) >= 0);
+      const lowerOrderUnits = units.filter(
+        (u) => ["hours", "minutes", "seconds", "milliseconds"].indexOf(u) >= 0
+      );
       if (lowerOrderUnits.length === 0) {
         if (highWater < later) {
           highWater = cursor.plus({ [lowestOrder]: 1 });
@@ -5812,10 +6288,12 @@ var require_lib = __commonJS({
           return literal(t);
         }
         switch (t.val) {
+          // era
           case "G":
             return oneOf(loc.eras("short"), 0);
           case "GG":
             return oneOf(loc.eras("long"), 0);
+          // years
           case "y":
             return intUnit(oneToSix);
           case "yy":
@@ -5826,6 +6304,7 @@ var require_lib = __commonJS({
             return intUnit(fourToSix);
           case "yyyyyy":
             return intUnit(six);
+          // months
           case "M":
             return intUnit(oneOrTwo);
           case "MM":
@@ -5842,14 +6321,17 @@ var require_lib = __commonJS({
             return oneOf(loc.months("short", false), 1);
           case "LLLL":
             return oneOf(loc.months("long", false), 1);
+          // dates
           case "d":
             return intUnit(oneOrTwo);
           case "dd":
             return intUnit(two);
+          // ordinals
           case "o":
             return intUnit(oneToThree);
           case "ooo":
             return intUnit(three);
+          // time
           case "HH":
             return intUnit(two);
           case "H":
@@ -5880,16 +6362,20 @@ var require_lib = __commonJS({
             return simple(oneOrTwo);
           case "uuu":
             return intUnit(one);
+          // meridiem
           case "a":
             return oneOf(loc.meridiems(), 0);
+          // weekYear (k)
           case "kkkk":
             return intUnit(four);
           case "kk":
             return intUnit(twoToFour, untruncateYear);
+          // weekNumber (W)
           case "W":
             return intUnit(oneOrTwo);
           case "WW":
             return intUnit(two);
+          // weekdays
           case "E":
           case "c":
             return intUnit(one);
@@ -5901,13 +6387,18 @@ var require_lib = __commonJS({
             return oneOf(loc.weekdays("short", true), 1);
           case "cccc":
             return oneOf(loc.weekdays("long", true), 1);
+          // offset/zone
           case "Z":
           case "ZZ":
             return offset(new RegExp(`([+-]${oneOrTwo.source})(?::(${two.source}))?`), 2);
           case "ZZZ":
             return offset(new RegExp(`([+-]${oneOrTwo.source})(${two.source})?`), 2);
+          // we don't support ZZZZ (PST) or ZZZZZ (Pacific Standard Time) in parsing
+          // because we don't have any way to figure out what they are
           case "z":
             return simple(/[a-z_+-/]{1,256}?/i);
+          // this special-case "token" represents a place where a macro-token expanded into a white-space literal
+          // in this case we accept any non-newline white-space
           case " ":
             return simple(/[^\S\n\r]/);
           default:
@@ -6119,7 +6610,9 @@ var require_lib = __commonJS({
       } else {
         const [regexString, handlers] = buildRegex(units), regex = RegExp(regexString, "i"), [rawMatches, matches] = match(input, regex, handlers), [result, zone, specificOffset] = matches ? dateTimeFromMatches(matches) : [null, null, void 0];
         if (hasOwnProperty2(matches, "a") && hasOwnProperty2(matches, "H")) {
-          throw new ConflictingSpecificationError("Can't include meridiem when specifying 24-hour format");
+          throw new ConflictingSpecificationError(
+            "Can't include meridiem when specifying 24-hour format"
+          );
         }
         return { input, tokens, regex, rawMatches, matches, result, zone, specificOffset };
       }
@@ -6141,7 +6634,10 @@ var require_lib = __commonJS({
     var nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
     var leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
     function unitOutOfRange(unit2, value) {
-      return new Invalid("unit out of range", `you specified ${value} (of type ${typeof value}) as a ${unit2}, which is invalid`);
+      return new Invalid(
+        "unit out of range",
+        `you specified ${value} (of type ${typeof value}) as a ${unit2}, which is invalid`
+      );
     }
     function dayOfWeek(year, month, day) {
       const d = new Date(Date.UTC(year, month - 1, day));
@@ -6205,8 +6701,7 @@ var require_lib = __commonJS({
         return unitOutOfRange("week", obj.week);
       } else if (!validWeekday) {
         return unitOutOfRange("weekday", obj.weekday);
-      } else
-        return false;
+      } else return false;
     }
     function hasInvalidOrdinalData(obj) {
       const validYear = isInteger3(obj.year), validOrdinal = integerBetween(obj.ordinal, 1, daysInYear(obj.year));
@@ -6214,8 +6709,7 @@ var require_lib = __commonJS({
         return unitOutOfRange("year", obj.year);
       } else if (!validOrdinal) {
         return unitOutOfRange("ordinal", obj.ordinal);
-      } else
-        return false;
+      } else return false;
     }
     function hasInvalidGregorianData(obj) {
       const validYear = isInteger3(obj.year), validMonth = integerBetween(obj.month, 1, 12), validDay = integerBetween(obj.day, 1, daysInMonth(obj.year, obj.month));
@@ -6225,8 +6719,7 @@ var require_lib = __commonJS({
         return unitOutOfRange("month", obj.month);
       } else if (!validDay) {
         return unitOutOfRange("day", obj.day);
-      } else
-        return false;
+      } else return false;
     }
     function hasInvalidTimeData(obj) {
       const { hour, minute, second, millisecond } = obj;
@@ -6239,8 +6732,7 @@ var require_lib = __commonJS({
         return unitOutOfRange("second", second);
       } else if (!validMillisecond) {
         return unitOutOfRange("millisecond", millisecond);
-      } else
-        return false;
+      } else return false;
     }
     var INVALID = "Invalid DateTime";
     var MAX_DATE = 864e13;
@@ -6327,7 +6819,9 @@ var require_lib = __commonJS({
         });
         return setZone ? inst : inst.setZone(zone);
       } else {
-        return DateTime.invalid(new Invalid("unparsable", `the input "${text}" can't be parsed as ${format5}`));
+        return DateTime.invalid(
+          new Invalid("unparsable", `the input "${text}" can't be parsed as ${format5}`)
+        );
       }
     }
     function toTechFormat(dt, format5, allowZ = true) {
@@ -6339,8 +6833,7 @@ var require_lib = __commonJS({
     function toISODate(o, extended) {
       const longFormat = o.c.year > 9999 || o.c.year < 0;
       let c = "";
-      if (longFormat && o.c.year >= 0)
-        c += "+";
+      if (longFormat && o.c.year >= 0) c += "+";
       c += padStart(o.c.year, longFormat ? 6 : 4);
       if (extended) {
         c += "-";
@@ -6452,8 +6945,7 @@ var require_lib = __commonJS({
         weekyears: "weekYear",
         ordinal: "ordinal"
       }[unit2.toLowerCase()];
-      if (!normalized)
-        throw new InvalidUnitError(unit2);
+      if (!normalized) throw new InvalidUnitError(unit2);
       return normalized;
     }
     function quickDT(obj, opts) {
@@ -6485,8 +6977,7 @@ var require_lib = __commonJS({
         if (opts.calendary) {
           if (!end.hasSame(start, unit2)) {
             return end.startOf(unit2).diff(start.startOf(unit2), unit2).get(unit2);
-          } else
-            return 0;
+          } else return 0;
         } else {
           return end.diff(start, unit2).get(unit2);
         }
@@ -6512,7 +7003,10 @@ var require_lib = __commonJS({
       }
       return [opts, args];
     }
-    var DateTime = class {
+    var DateTime = class _DateTime {
+      /**
+       * @access private
+       */
       constructor(config4) {
         const zone = config4.zone || Settings.defaultZone;
         let invalid = config4.invalid || (Number.isNaN(config4.ts) ? new Invalid("invalid input") : null) || (!zone.isValid ? unsupportedZone(zone) : null);
@@ -6538,66 +7032,178 @@ var require_lib = __commonJS({
         this.o = o;
         this.isLuxonDateTime = true;
       }
+      // CONSTRUCT
+      /**
+       * Create a DateTime for the current instant, in the system's time zone.
+       *
+       * Use Settings to override these default values if needed.
+       * @example DateTime.now().toISO() //~> now in the ISO format
+       * @return {DateTime}
+       */
       static now() {
-        return new DateTime({});
+        return new _DateTime({});
       }
+      /**
+       * Create a local DateTime
+       * @param {number} [year] - The calendar year. If omitted (as in, call `local()` with no arguments), the current time will be used
+       * @param {number} [month=1] - The month, 1-indexed
+       * @param {number} [day=1] - The day of the month, 1-indexed
+       * @param {number} [hour=0] - The hour of the day, in 24-hour time
+       * @param {number} [minute=0] - The minute of the hour, meaning a number between 0 and 59
+       * @param {number} [second=0] - The second of the minute, meaning a number between 0 and 59
+       * @param {number} [millisecond=0] - The millisecond of the second, meaning a number between 0 and 999
+       * @example DateTime.local()                                  //~> now
+       * @example DateTime.local({ zone: "America/New_York" })      //~> now, in US east coast time
+       * @example DateTime.local(2017)                              //~> 2017-01-01T00:00:00
+       * @example DateTime.local(2017, 3)                           //~> 2017-03-01T00:00:00
+       * @example DateTime.local(2017, 3, 12, { locale: "fr" })     //~> 2017-03-12T00:00:00, with a French locale
+       * @example DateTime.local(2017, 3, 12, 5)                    //~> 2017-03-12T05:00:00
+       * @example DateTime.local(2017, 3, 12, 5, { zone: "utc" })   //~> 2017-03-12T05:00:00, in UTC
+       * @example DateTime.local(2017, 3, 12, 5, 45)                //~> 2017-03-12T05:45:00
+       * @example DateTime.local(2017, 3, 12, 5, 45, 10)            //~> 2017-03-12T05:45:10
+       * @example DateTime.local(2017, 3, 12, 5, 45, 10, 765)       //~> 2017-03-12T05:45:10.765
+       * @return {DateTime}
+       */
       static local() {
         const [opts, args] = lastOpts(arguments), [year, month, day, hour, minute, second, millisecond] = args;
         return quickDT({ year, month, day, hour, minute, second, millisecond }, opts);
       }
+      /**
+       * Create a DateTime in UTC
+       * @param {number} [year] - The calendar year. If omitted (as in, call `utc()` with no arguments), the current time will be used
+       * @param {number} [month=1] - The month, 1-indexed
+       * @param {number} [day=1] - The day of the month
+       * @param {number} [hour=0] - The hour of the day, in 24-hour time
+       * @param {number} [minute=0] - The minute of the hour, meaning a number between 0 and 59
+       * @param {number} [second=0] - The second of the minute, meaning a number between 0 and 59
+       * @param {number} [millisecond=0] - The millisecond of the second, meaning a number between 0 and 999
+       * @param {Object} options - configuration options for the DateTime
+       * @param {string} [options.locale] - a locale to set on the resulting DateTime instance
+       * @param {string} [options.outputCalendar] - the output calendar to set on the resulting DateTime instance
+       * @param {string} [options.numberingSystem] - the numbering system to set on the resulting DateTime instance
+       * @example DateTime.utc()                                              //~> now
+       * @example DateTime.utc(2017)                                          //~> 2017-01-01T00:00:00Z
+       * @example DateTime.utc(2017, 3)                                       //~> 2017-03-01T00:00:00Z
+       * @example DateTime.utc(2017, 3, 12)                                   //~> 2017-03-12T00:00:00Z
+       * @example DateTime.utc(2017, 3, 12, 5)                                //~> 2017-03-12T05:00:00Z
+       * @example DateTime.utc(2017, 3, 12, 5, 45)                            //~> 2017-03-12T05:45:00Z
+       * @example DateTime.utc(2017, 3, 12, 5, 45, { locale: "fr" })          //~> 2017-03-12T05:45:00Z with a French locale
+       * @example DateTime.utc(2017, 3, 12, 5, 45, 10)                        //~> 2017-03-12T05:45:10Z
+       * @example DateTime.utc(2017, 3, 12, 5, 45, 10, 765, { locale: "fr" }) //~> 2017-03-12T05:45:10.765Z with a French locale
+       * @return {DateTime}
+       */
       static utc() {
         const [opts, args] = lastOpts(arguments), [year, month, day, hour, minute, second, millisecond] = args;
         opts.zone = FixedOffsetZone.utcInstance;
         return quickDT({ year, month, day, hour, minute, second, millisecond }, opts);
       }
+      /**
+       * Create a DateTime from a JavaScript Date object. Uses the default zone.
+       * @param {Date} date - a JavaScript Date object
+       * @param {Object} options - configuration options for the DateTime
+       * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
+       * @return {DateTime}
+       */
       static fromJSDate(date, options = {}) {
         const ts = isDate2(date) ? date.valueOf() : NaN;
         if (Number.isNaN(ts)) {
-          return DateTime.invalid("invalid input");
+          return _DateTime.invalid("invalid input");
         }
         const zoneToUse = normalizeZone(options.zone, Settings.defaultZone);
         if (!zoneToUse.isValid) {
-          return DateTime.invalid(unsupportedZone(zoneToUse));
+          return _DateTime.invalid(unsupportedZone(zoneToUse));
         }
-        return new DateTime({
+        return new _DateTime({
           ts,
           zone: zoneToUse,
           loc: Locale.fromObject(options)
         });
       }
+      /**
+       * Create a DateTime from a number of milliseconds since the epoch (meaning since 1 January 1970 00:00:00 UTC). Uses the default zone.
+       * @param {number} milliseconds - a number of milliseconds since 1970 UTC
+       * @param {Object} options - configuration options for the DateTime
+       * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
+       * @param {string} [options.locale] - a locale to set on the resulting DateTime instance
+       * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
+       * @return {DateTime}
+       */
       static fromMillis(milliseconds, options = {}) {
         if (!isNumber2(milliseconds)) {
-          throw new InvalidArgumentError(`fromMillis requires a numerical input, but received a ${typeof milliseconds} with value ${milliseconds}`);
+          throw new InvalidArgumentError(
+            `fromMillis requires a numerical input, but received a ${typeof milliseconds} with value ${milliseconds}`
+          );
         } else if (milliseconds < -MAX_DATE || milliseconds > MAX_DATE) {
-          return DateTime.invalid("Timestamp out of range");
+          return _DateTime.invalid("Timestamp out of range");
         } else {
-          return new DateTime({
+          return new _DateTime({
             ts: milliseconds,
             zone: normalizeZone(options.zone, Settings.defaultZone),
             loc: Locale.fromObject(options)
           });
         }
       }
+      /**
+       * Create a DateTime from a number of seconds since the epoch (meaning since 1 January 1970 00:00:00 UTC). Uses the default zone.
+       * @param {number} seconds - a number of seconds since 1970 UTC
+       * @param {Object} options - configuration options for the DateTime
+       * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
+       * @param {string} [options.locale] - a locale to set on the resulting DateTime instance
+       * @param {string} options.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
+       * @return {DateTime}
+       */
       static fromSeconds(seconds, options = {}) {
         if (!isNumber2(seconds)) {
           throw new InvalidArgumentError("fromSeconds requires a numerical input");
         } else {
-          return new DateTime({
+          return new _DateTime({
             ts: seconds * 1e3,
             zone: normalizeZone(options.zone, Settings.defaultZone),
             loc: Locale.fromObject(options)
           });
         }
       }
+      /**
+       * Create a DateTime from a JavaScript object with keys like 'year' and 'hour' with reasonable defaults.
+       * @param {Object} obj - the object to create the DateTime from
+       * @param {number} obj.year - a year, such as 1987
+       * @param {number} obj.month - a month, 1-12
+       * @param {number} obj.day - a day of the month, 1-31, depending on the month
+       * @param {number} obj.ordinal - day of the year, 1-365 or 366
+       * @param {number} obj.weekYear - an ISO week year
+       * @param {number} obj.weekNumber - an ISO week number, between 1 and 52 or 53, depending on the year
+       * @param {number} obj.weekday - an ISO weekday, 1-7, where 1 is Monday and 7 is Sunday
+       * @param {number} obj.hour - hour of the day, 0-23
+       * @param {number} obj.minute - minute of the hour, 0-59
+       * @param {number} obj.second - second of the minute, 0-59
+       * @param {number} obj.millisecond - millisecond of the second, 0-999
+       * @param {Object} opts - options for creating this DateTime
+       * @param {string|Zone} [opts.zone='local'] - interpret the numbers in the context of a particular zone. Can take any value taken as the first argument to setZone()
+       * @param {string} [opts.locale='system's locale'] - a locale to set on the resulting DateTime instance
+       * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @param {string} opts.numberingSystem - the numbering system to set on the resulting DateTime instance
+       * @example DateTime.fromObject({ year: 1982, month: 5, day: 25}).toISODate() //=> '1982-05-25'
+       * @example DateTime.fromObject({ year: 1982 }).toISODate() //=> '1982-01-01'
+       * @example DateTime.fromObject({ hour: 10, minute: 26, second: 6 }) //~> today at 10:26:06
+       * @example DateTime.fromObject({ hour: 10, minute: 26, second: 6 }, { zone: 'utc' }),
+       * @example DateTime.fromObject({ hour: 10, minute: 26, second: 6 }, { zone: 'local' })
+       * @example DateTime.fromObject({ hour: 10, minute: 26, second: 6 }, { zone: 'America/New_York' })
+       * @example DateTime.fromObject({ weekYear: 2016, weekNumber: 2, weekday: 3 }).toISODate() //=> '2016-01-13'
+       * @return {DateTime}
+       */
       static fromObject(obj, opts = {}) {
         obj = obj || {};
         const zoneToUse = normalizeZone(opts.zone, Settings.defaultZone);
         if (!zoneToUse.isValid) {
-          return DateTime.invalid(unsupportedZone(zoneToUse));
+          return _DateTime.invalid(unsupportedZone(zoneToUse));
         }
         const tsNow = Settings.now(), offsetProvis = !isUndefined2(opts.specificOffset) ? opts.specificOffset : zoneToUse.offset(tsNow), normalized = normalizeObject(obj, normalizeUnit), containsOrdinal = !isUndefined2(normalized.ordinal), containsGregorYear = !isUndefined2(normalized.year), containsGregorMD = !isUndefined2(normalized.month) || !isUndefined2(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber, loc = Locale.fromObject(opts);
         if ((containsGregor || containsOrdinal) && definiteWeekDef) {
-          throw new ConflictingSpecificationError("Can't mix weekYear/weekNumber units with year/month/day or ordinals");
+          throw new ConflictingSpecificationError(
+            "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
+          );
         }
         if (containsGregorMD && containsOrdinal) {
           throw new ConflictingSpecificationError("Can't mix ordinal dates with month/day");
@@ -6629,31 +7235,92 @@ var require_lib = __commonJS({
         }
         const higherOrderInvalid = useWeekData ? hasInvalidWeekData(normalized) : containsOrdinal ? hasInvalidOrdinalData(normalized) : hasInvalidGregorianData(normalized), invalid = higherOrderInvalid || hasInvalidTimeData(normalized);
         if (invalid) {
-          return DateTime.invalid(invalid);
+          return _DateTime.invalid(invalid);
         }
-        const gregorian = useWeekData ? weekToGregorian(normalized) : containsOrdinal ? ordinalToGregorian(normalized) : normalized, [tsFinal, offsetFinal] = objToTS(gregorian, offsetProvis, zoneToUse), inst = new DateTime({
+        const gregorian = useWeekData ? weekToGregorian(normalized) : containsOrdinal ? ordinalToGregorian(normalized) : normalized, [tsFinal, offsetFinal] = objToTS(gregorian, offsetProvis, zoneToUse), inst = new _DateTime({
           ts: tsFinal,
           zone: zoneToUse,
           o: offsetFinal,
           loc
         });
         if (normalized.weekday && containsGregor && obj.weekday !== inst.weekday) {
-          return DateTime.invalid("mismatched weekday", `you can't specify both a weekday of ${normalized.weekday} and a date of ${inst.toISO()}`);
+          return _DateTime.invalid(
+            "mismatched weekday",
+            `you can't specify both a weekday of ${normalized.weekday} and a date of ${inst.toISO()}`
+          );
         }
         return inst;
       }
+      /**
+       * Create a DateTime from an ISO 8601 string
+       * @param {string} text - the ISO string
+       * @param {Object} opts - options to affect the creation
+       * @param {string|Zone} [opts.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the time to this zone
+       * @param {boolean} [opts.setZone=false] - override the zone with a fixed-offset zone specified in the string itself, if it specifies one
+       * @param {string} [opts.locale='system's locale'] - a locale to set on the resulting DateTime instance
+       * @param {string} [opts.outputCalendar] - the output calendar to set on the resulting DateTime instance
+       * @param {string} [opts.numberingSystem] - the numbering system to set on the resulting DateTime instance
+       * @example DateTime.fromISO('2016-05-25T09:08:34.123')
+       * @example DateTime.fromISO('2016-05-25T09:08:34.123+06:00')
+       * @example DateTime.fromISO('2016-05-25T09:08:34.123+06:00', {setZone: true})
+       * @example DateTime.fromISO('2016-05-25T09:08:34.123', {zone: 'utc'})
+       * @example DateTime.fromISO('2016-W05-4')
+       * @return {DateTime}
+       */
       static fromISO(text, opts = {}) {
         const [vals, parsedZone] = parseISODate(text);
         return parseDataToDateTime(vals, parsedZone, opts, "ISO 8601", text);
       }
+      /**
+       * Create a DateTime from an RFC 2822 string
+       * @param {string} text - the RFC 2822 string
+       * @param {Object} opts - options to affect the creation
+       * @param {string|Zone} [opts.zone='local'] - convert the time to this zone. Since the offset is always specified in the string itself, this has no effect on the interpretation of string, merely the zone the resulting DateTime is expressed in.
+       * @param {boolean} [opts.setZone=false] - override the zone with a fixed-offset zone specified in the string itself, if it specifies one
+       * @param {string} [opts.locale='system's locale'] - a locale to set on the resulting DateTime instance
+       * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @param {string} opts.numberingSystem - the numbering system to set on the resulting DateTime instance
+       * @example DateTime.fromRFC2822('25 Nov 2016 13:23:12 GMT')
+       * @example DateTime.fromRFC2822('Fri, 25 Nov 2016 13:23:12 +0600')
+       * @example DateTime.fromRFC2822('25 Nov 2016 13:23 Z')
+       * @return {DateTime}
+       */
       static fromRFC2822(text, opts = {}) {
         const [vals, parsedZone] = parseRFC2822Date(text);
         return parseDataToDateTime(vals, parsedZone, opts, "RFC 2822", text);
       }
+      /**
+       * Create a DateTime from an HTTP header date
+       * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+       * @param {string} text - the HTTP header date
+       * @param {Object} opts - options to affect the creation
+       * @param {string|Zone} [opts.zone='local'] - convert the time to this zone. Since HTTP dates are always in UTC, this has no effect on the interpretation of string, merely the zone the resulting DateTime is expressed in.
+       * @param {boolean} [opts.setZone=false] - override the zone with the fixed-offset zone specified in the string. For HTTP dates, this is always UTC, so this option is equivalent to setting the `zone` option to 'utc', but this option is included for consistency with similar methods.
+       * @param {string} [opts.locale='system's locale'] - a locale to set on the resulting DateTime instance
+       * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @param {string} opts.numberingSystem - the numbering system to set on the resulting DateTime instance
+       * @example DateTime.fromHTTP('Sun, 06 Nov 1994 08:49:37 GMT')
+       * @example DateTime.fromHTTP('Sunday, 06-Nov-94 08:49:37 GMT')
+       * @example DateTime.fromHTTP('Sun Nov  6 08:49:37 1994')
+       * @return {DateTime}
+       */
       static fromHTTP(text, opts = {}) {
         const [vals, parsedZone] = parseHTTPDate(text);
         return parseDataToDateTime(vals, parsedZone, opts, "HTTP", opts);
       }
+      /**
+       * Create a DateTime from an input string and format string.
+       * Defaults to en-US if no locale has been specified, regardless of the system's locale. For a table of tokens and their interpretations, see [here](https://moment.github.io/luxon/#/parsing?id=table-of-tokens).
+       * @param {string} text - the string to parse
+       * @param {string} fmt - the format the string is expected to be in (see the link below for the formats)
+       * @param {Object} opts - options to affect the creation
+       * @param {string|Zone} [opts.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
+       * @param {boolean} [opts.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
+       * @param {string} [opts.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
+       * @param {string} opts.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
+       * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @return {DateTime}
+       */
       static fromFormat(text, fmt, opts = {}) {
         if (isUndefined2(text) || isUndefined2(fmt)) {
           throw new InvalidArgumentError("fromFormat requires an input string and a format");
@@ -6664,18 +7331,47 @@ var require_lib = __commonJS({
           defaultToEN: true
         }), [vals, parsedZone, specificOffset, invalid] = parseFromTokens(localeToUse, text, fmt);
         if (invalid) {
-          return DateTime.invalid(invalid);
+          return _DateTime.invalid(invalid);
         } else {
           return parseDataToDateTime(vals, parsedZone, opts, `format ${fmt}`, text, specificOffset);
         }
       }
+      /**
+       * @deprecated use fromFormat instead
+       */
       static fromString(text, fmt, opts = {}) {
-        return DateTime.fromFormat(text, fmt, opts);
+        return _DateTime.fromFormat(text, fmt, opts);
       }
+      /**
+       * Create a DateTime from a SQL date, time, or datetime
+       * Defaults to en-US if no locale has been specified, regardless of the system's locale
+       * @param {string} text - the string to parse
+       * @param {Object} opts - options to affect the creation
+       * @param {string|Zone} [opts.zone='local'] - use this zone if no offset is specified in the input string itself. Will also convert the DateTime to this zone
+       * @param {boolean} [opts.setZone=false] - override the zone with a zone specified in the string itself, if it specifies one
+       * @param {string} [opts.locale='en-US'] - a locale string to use when parsing. Will also set the DateTime to this locale
+       * @param {string} opts.numberingSystem - the numbering system to use when parsing. Will also set the resulting DateTime to this numbering system
+       * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
+       * @example DateTime.fromSQL('2017-05-15')
+       * @example DateTime.fromSQL('2017-05-15 09:12:34')
+       * @example DateTime.fromSQL('2017-05-15 09:12:34.342')
+       * @example DateTime.fromSQL('2017-05-15 09:12:34.342+06:00')
+       * @example DateTime.fromSQL('2017-05-15 09:12:34.342 America/Los_Angeles')
+       * @example DateTime.fromSQL('2017-05-15 09:12:34.342 America/Los_Angeles', { setZone: true })
+       * @example DateTime.fromSQL('2017-05-15 09:12:34.342', { zone: 'America/Los_Angeles' })
+       * @example DateTime.fromSQL('09:12:34.342')
+       * @return {DateTime}
+       */
       static fromSQL(text, opts = {}) {
         const [vals, parsedZone] = parseSQL(text);
         return parseDataToDateTime(vals, parsedZone, opts, "SQL", text);
       }
+      /**
+       * Create an invalid DateTime.
+       * @param {string} reason - simple string of why this DateTime is invalid. Should not contain parameters or anything else data-dependent.
+       * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
+       * @return {DateTime}
+       */
       static invalid(reason, explanation = null) {
         if (!reason) {
           throw new InvalidArgumentError("need to specify a reason the DateTime is invalid");
@@ -6684,98 +7380,260 @@ var require_lib = __commonJS({
         if (Settings.throwOnInvalid) {
           throw new InvalidDateTimeError(invalid);
         } else {
-          return new DateTime({ invalid });
+          return new _DateTime({ invalid });
         }
       }
+      /**
+       * Check if an object is an instance of DateTime. Works across context boundaries
+       * @param {object} o
+       * @return {boolean}
+       */
       static isDateTime(o) {
         return o && o.isLuxonDateTime || false;
       }
+      /**
+       * Produce the format string for a set of options
+       * @param formatOpts
+       * @param localeOpts
+       * @returns {string}
+       */
       static parseFormatForOpts(formatOpts, localeOpts = {}) {
         const tokenList = formatOptsToTokens(formatOpts, Locale.fromObject(localeOpts));
         return !tokenList ? null : tokenList.map((t) => t ? t.val : null).join("");
       }
+      /**
+       * Produce the the fully expanded format token for the locale
+       * Does NOT quote characters, so quoted tokens will not round trip correctly
+       * @param fmt
+       * @param localeOpts
+       * @returns {string}
+       */
       static expandFormat(fmt, localeOpts = {}) {
         const expanded = expandMacroTokens(Formatter.parseFormat(fmt), Locale.fromObject(localeOpts));
         return expanded.map((t) => t.val).join("");
       }
+      // INFO
+      /**
+       * Get the value of unit.
+       * @param {string} unit - a unit such as 'minute' or 'day'
+       * @example DateTime.local(2017, 7, 4).get('month'); //=> 7
+       * @example DateTime.local(2017, 7, 4).get('day'); //=> 4
+       * @return {number}
+       */
       get(unit2) {
         return this[unit2];
       }
+      /**
+       * Returns whether the DateTime is valid. Invalid DateTimes occur when:
+       * * The DateTime was created from invalid calendar information, such as the 13th month or February 30
+       * * The DateTime was created by an operation on another invalid date
+       * @type {boolean}
+       */
       get isValid() {
         return this.invalid === null;
       }
+      /**
+       * Returns an error code if this DateTime is invalid, or null if the DateTime is valid
+       * @type {string}
+       */
       get invalidReason() {
         return this.invalid ? this.invalid.reason : null;
       }
+      /**
+       * Returns an explanation of why this DateTime became invalid, or null if the DateTime is valid
+       * @type {string}
+       */
       get invalidExplanation() {
         return this.invalid ? this.invalid.explanation : null;
       }
+      /**
+       * Get the locale of a DateTime, such 'en-GB'. The locale is used when formatting the DateTime
+       *
+       * @type {string}
+       */
       get locale() {
         return this.isValid ? this.loc.locale : null;
       }
+      /**
+       * Get the numbering system of a DateTime, such 'beng'. The numbering system is used when formatting the DateTime
+       *
+       * @type {string}
+       */
       get numberingSystem() {
         return this.isValid ? this.loc.numberingSystem : null;
       }
+      /**
+       * Get the output calendar of a DateTime, such 'islamic'. The output calendar is used when formatting the DateTime
+       *
+       * @type {string}
+       */
       get outputCalendar() {
         return this.isValid ? this.loc.outputCalendar : null;
       }
+      /**
+       * Get the time zone associated with this DateTime.
+       * @type {Zone}
+       */
       get zone() {
         return this._zone;
       }
+      /**
+       * Get the name of the time zone.
+       * @type {string}
+       */
       get zoneName() {
         return this.isValid ? this.zone.name : null;
       }
+      /**
+       * Get the year
+       * @example DateTime.local(2017, 5, 25).year //=> 2017
+       * @type {number}
+       */
       get year() {
         return this.isValid ? this.c.year : NaN;
       }
+      /**
+       * Get the quarter
+       * @example DateTime.local(2017, 5, 25).quarter //=> 2
+       * @type {number}
+       */
       get quarter() {
         return this.isValid ? Math.ceil(this.c.month / 3) : NaN;
       }
+      /**
+       * Get the month (1-12).
+       * @example DateTime.local(2017, 5, 25).month //=> 5
+       * @type {number}
+       */
       get month() {
         return this.isValid ? this.c.month : NaN;
       }
+      /**
+       * Get the day of the month (1-30ish).
+       * @example DateTime.local(2017, 5, 25).day //=> 25
+       * @type {number}
+       */
       get day() {
         return this.isValid ? this.c.day : NaN;
       }
+      /**
+       * Get the hour of the day (0-23).
+       * @example DateTime.local(2017, 5, 25, 9).hour //=> 9
+       * @type {number}
+       */
       get hour() {
         return this.isValid ? this.c.hour : NaN;
       }
+      /**
+       * Get the minute of the hour (0-59).
+       * @example DateTime.local(2017, 5, 25, 9, 30).minute //=> 30
+       * @type {number}
+       */
       get minute() {
         return this.isValid ? this.c.minute : NaN;
       }
+      /**
+       * Get the second of the minute (0-59).
+       * @example DateTime.local(2017, 5, 25, 9, 30, 52).second //=> 52
+       * @type {number}
+       */
       get second() {
         return this.isValid ? this.c.second : NaN;
       }
+      /**
+       * Get the millisecond of the second (0-999).
+       * @example DateTime.local(2017, 5, 25, 9, 30, 52, 654).millisecond //=> 654
+       * @type {number}
+       */
       get millisecond() {
         return this.isValid ? this.c.millisecond : NaN;
       }
+      /**
+       * Get the week year
+       * @see https://en.wikipedia.org/wiki/ISO_week_date
+       * @example DateTime.local(2014, 12, 31).weekYear //=> 2015
+       * @type {number}
+       */
       get weekYear() {
         return this.isValid ? possiblyCachedWeekData(this).weekYear : NaN;
       }
+      /**
+       * Get the week number of the week year (1-52ish).
+       * @see https://en.wikipedia.org/wiki/ISO_week_date
+       * @example DateTime.local(2017, 5, 25).weekNumber //=> 21
+       * @type {number}
+       */
       get weekNumber() {
         return this.isValid ? possiblyCachedWeekData(this).weekNumber : NaN;
       }
+      /**
+       * Get the day of the week.
+       * 1 is Monday and 7 is Sunday
+       * @see https://en.wikipedia.org/wiki/ISO_week_date
+       * @example DateTime.local(2014, 11, 31).weekday //=> 4
+       * @type {number}
+       */
       get weekday() {
         return this.isValid ? possiblyCachedWeekData(this).weekday : NaN;
       }
+      /**
+       * Get the ordinal (meaning the day of the year)
+       * @example DateTime.local(2017, 5, 25).ordinal //=> 145
+       * @type {number|DateTime}
+       */
       get ordinal() {
         return this.isValid ? gregorianToOrdinal(this.c).ordinal : NaN;
       }
+      /**
+       * Get the human readable short month name, such as 'Oct'.
+       * Defaults to the system's locale if no locale has been specified
+       * @example DateTime.local(2017, 10, 30).monthShort //=> Oct
+       * @type {string}
+       */
       get monthShort() {
         return this.isValid ? Info.months("short", { locObj: this.loc })[this.month - 1] : null;
       }
+      /**
+       * Get the human readable long month name, such as 'October'.
+       * Defaults to the system's locale if no locale has been specified
+       * @example DateTime.local(2017, 10, 30).monthLong //=> October
+       * @type {string}
+       */
       get monthLong() {
         return this.isValid ? Info.months("long", { locObj: this.loc })[this.month - 1] : null;
       }
+      /**
+       * Get the human readable short weekday, such as 'Mon'.
+       * Defaults to the system's locale if no locale has been specified
+       * @example DateTime.local(2017, 10, 30).weekdayShort //=> Mon
+       * @type {string}
+       */
       get weekdayShort() {
         return this.isValid ? Info.weekdays("short", { locObj: this.loc })[this.weekday - 1] : null;
       }
+      /**
+       * Get the human readable long weekday, such as 'Monday'.
+       * Defaults to the system's locale if no locale has been specified
+       * @example DateTime.local(2017, 10, 30).weekdayLong //=> Monday
+       * @type {string}
+       */
       get weekdayLong() {
         return this.isValid ? Info.weekdays("long", { locObj: this.loc })[this.weekday - 1] : null;
       }
+      /**
+       * Get the UTC offset of this DateTime in minutes
+       * @example DateTime.now().offset //=> -240
+       * @example DateTime.utc().offset //=> 0
+       * @type {number}
+       */
       get offset() {
         return this.isValid ? +this.o : NaN;
       }
+      /**
+       * Get the short human name for the zone's current offset, for example "EST" or "EDT".
+       * Defaults to the system's locale if no locale has been specified
+       * @type {string}
+       */
       get offsetNameShort() {
         if (this.isValid) {
           return this.zone.offsetName(this.ts, {
@@ -6786,6 +7644,11 @@ var require_lib = __commonJS({
           return null;
         }
       }
+      /**
+       * Get the long human name for the zone's current offset, for example "Eastern Standard Time" or "Eastern Daylight Time".
+       * Defaults to the system's locale if no locale has been specified
+       * @type {string}
+       */
       get offsetNameLong() {
         if (this.isValid) {
           return this.zone.offsetName(this.ts, {
@@ -6796,9 +7659,17 @@ var require_lib = __commonJS({
           return null;
         }
       }
+      /**
+       * Get whether this zone's offset ever changes, as in a DST.
+       * @type {boolean}
+       */
       get isOffsetFixed() {
         return this.isValid ? this.zone.isUniversal : null;
       }
+      /**
+       * Get whether the DateTime is in a DST.
+       * @type {boolean}
+       */
       get isInDST() {
         if (this.isOffsetFixed) {
           return false;
@@ -6806,6 +7677,13 @@ var require_lib = __commonJS({
           return this.offset > this.set({ month: 1, day: 1 }).offset || this.offset > this.set({ month: 5 }).offset;
         }
       }
+      /**
+       * Get those DateTimes which have the same local time as this DateTime, but a different offset from UTC
+       * in this DateTime's zone. During DST changes local time can be ambiguous, for example
+       * `2023-10-29T02:30:00` in `Europe/Berlin` can have offset `+01:00` or `+02:00`.
+       * This method will return both possible DateTimes if this DateTime's local time is ambiguous.
+       * @returns {DateTime[]}
+       */
       getPossibleOffsets() {
         if (!this.isValid || this.isOffsetFixed) {
           return [this];
@@ -6829,34 +7707,92 @@ var require_lib = __commonJS({
         }
         return [this];
       }
+      /**
+       * Returns true if this DateTime is in a leap year, false otherwise
+       * @example DateTime.local(2016).isInLeapYear //=> true
+       * @example DateTime.local(2013).isInLeapYear //=> false
+       * @type {boolean}
+       */
       get isInLeapYear() {
         return isLeapYear(this.year);
       }
+      /**
+       * Returns the number of days in this DateTime's month
+       * @example DateTime.local(2016, 2).daysInMonth //=> 29
+       * @example DateTime.local(2016, 3).daysInMonth //=> 31
+       * @type {number}
+       */
       get daysInMonth() {
         return daysInMonth(this.year, this.month);
       }
+      /**
+       * Returns the number of days in this DateTime's year
+       * @example DateTime.local(2016).daysInYear //=> 366
+       * @example DateTime.local(2013).daysInYear //=> 365
+       * @type {number}
+       */
       get daysInYear() {
         return this.isValid ? daysInYear(this.year) : NaN;
       }
+      /**
+       * Returns the number of weeks in this DateTime's year
+       * @see https://en.wikipedia.org/wiki/ISO_week_date
+       * @example DateTime.local(2004).weeksInWeekYear //=> 53
+       * @example DateTime.local(2013).weeksInWeekYear //=> 52
+       * @type {number}
+       */
       get weeksInWeekYear() {
         return this.isValid ? weeksInWeekYear(this.weekYear) : NaN;
       }
+      /**
+       * Returns the resolved Intl options for this DateTime.
+       * This is useful in understanding the behavior of formatting methods
+       * @param {Object} opts - the same options as toLocaleString
+       * @return {Object}
+       */
       resolvedLocaleOptions(opts = {}) {
-        const { locale, numberingSystem, calendar } = Formatter.create(this.loc.clone(opts), opts).resolvedOptions(this);
+        const { locale, numberingSystem, calendar } = Formatter.create(
+          this.loc.clone(opts),
+          opts
+        ).resolvedOptions(this);
         return { locale, numberingSystem, outputCalendar: calendar };
       }
+      // TRANSFORM
+      /**
+       * "Set" the DateTime's zone to UTC. Returns a newly-constructed DateTime.
+       *
+       * Equivalent to {@link DateTime#setZone}('utc')
+       * @param {number} [offset=0] - optionally, an offset from UTC in minutes
+       * @param {Object} [opts={}] - options to pass to `setZone()`
+       * @return {DateTime}
+       */
       toUTC(offset2 = 0, opts = {}) {
         return this.setZone(FixedOffsetZone.instance(offset2), opts);
       }
+      /**
+       * "Set" the DateTime's zone to the host's local zone. Returns a newly-constructed DateTime.
+       *
+       * Equivalent to `setZone('local')`
+       * @return {DateTime}
+       */
       toLocal() {
         return this.setZone(Settings.defaultZone);
       }
+      /**
+       * "Set" the DateTime's zone to specified zone. Returns a newly-constructed DateTime.
+       *
+       * By default, the setter keeps the underlying time the same (as in, the same timestamp), but the new instance will report different local times and consider DSTs when making computations, as with {@link DateTime#plus}. You may wish to use {@link DateTime#toLocal} and {@link DateTime#toUTC} which provide simple convenience wrappers for commonly used zones.
+       * @param {string|Zone} [zone='local'] - a zone identifier. As a string, that can be any IANA zone supported by the host environment, or a fixed-offset name of the form 'UTC+3', or the strings 'local' or 'utc'. You may also supply an instance of a {@link DateTime#Zone} class.
+       * @param {Object} opts - options
+       * @param {boolean} [opts.keepLocalTime=false] - If true, adjust the underlying time so that the local time stays the same, but in the target zone. You should rarely need this.
+       * @return {DateTime}
+       */
       setZone(zone, { keepLocalTime = false, keepCalendarTime = false } = {}) {
         zone = normalizeZone(zone, Settings.defaultZone);
         if (zone.equals(this.zone)) {
           return this;
         } else if (!zone.isValid) {
-          return DateTime.invalid(unsupportedZone(zone));
+          return _DateTime.invalid(unsupportedZone(zone));
         } else {
           let newTS = this.ts;
           if (keepLocalTime || keepCalendarTime) {
@@ -6867,19 +7803,42 @@ var require_lib = __commonJS({
           return clone5(this, { ts: newTS, zone });
         }
       }
+      /**
+       * "Set" the locale, numberingSystem, or outputCalendar. Returns a newly-constructed DateTime.
+       * @param {Object} properties - the properties to set
+       * @example DateTime.local(2017, 5, 25).reconfigure({ locale: 'en-GB' })
+       * @return {DateTime}
+       */
       reconfigure({ locale, numberingSystem, outputCalendar } = {}) {
         const loc = this.loc.clone({ locale, numberingSystem, outputCalendar });
         return clone5(this, { loc });
       }
+      /**
+       * "Set" the locale. Returns a newly-constructed DateTime.
+       * Just a convenient alias for reconfigure({ locale })
+       * @example DateTime.local(2017, 5, 25).setLocale('en-GB')
+       * @return {DateTime}
+       */
       setLocale(locale) {
         return this.reconfigure({ locale });
       }
+      /**
+       * "Set" the values of specified units. Returns a newly-constructed DateTime.
+       * You can only set units with this method; for "setting" metadata, see {@link DateTime#reconfigure} and {@link DateTime#setZone}.
+       * @param {Object} values - a mapping of units to numbers
+       * @example dt.set({ year: 2017 })
+       * @example dt.set({ hour: 8, minute: 30 })
+       * @example dt.set({ weekday: 5 })
+       * @example dt.set({ year: 2005, ordinal: 234 })
+       * @return {DateTime}
+       */
       set(values2) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const normalized = normalizeObject(values2, normalizeUnit), settingWeekStuff = !isUndefined2(normalized.weekYear) || !isUndefined2(normalized.weekNumber) || !isUndefined2(normalized.weekday), containsOrdinal = !isUndefined2(normalized.ordinal), containsGregorYear = !isUndefined2(normalized.year), containsGregorMD = !isUndefined2(normalized.month) || !isUndefined2(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber;
         if ((containsGregor || containsOrdinal) && definiteWeekDef) {
-          throw new ConflictingSpecificationError("Can't mix weekYear/weekNumber units with year/month/day or ordinals");
+          throw new ConflictingSpecificationError(
+            "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
+          );
         }
         if (containsGregorMD && containsOrdinal) {
           throw new ConflictingSpecificationError("Can't mix ordinal dates with month/day");
@@ -6898,35 +7857,66 @@ var require_lib = __commonJS({
         const [ts, o] = objToTS(mixed, this.o, this.zone);
         return clone5(this, { ts, o });
       }
+      /**
+       * Add a period of time to this DateTime and return the resulting DateTime
+       *
+       * Adding hours, minutes, seconds, or milliseconds increases the timestamp by the right number of milliseconds. Adding days, months, or years shifts the calendar, accounting for DSTs and leap years along the way. Thus, `dt.plus({ hours: 24 })` may result in a different time than `dt.plus({ days: 1 })` if there's a DST shift in between.
+       * @param {Duration|Object|number} duration - The amount to add. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
+       * @example DateTime.now().plus(123) //~> in 123 milliseconds
+       * @example DateTime.now().plus({ minutes: 15 }) //~> in 15 minutes
+       * @example DateTime.now().plus({ days: 1 }) //~> this time tomorrow
+       * @example DateTime.now().plus({ days: -1 }) //~> this time yesterday
+       * @example DateTime.now().plus({ hours: 3, minutes: 13 }) //~> in 3 hr, 13 min
+       * @example DateTime.now().plus(Duration.fromObject({ hours: 3, minutes: 13 })) //~> in 3 hr, 13 min
+       * @return {DateTime}
+       */
       plus(duration) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const dur = Duration.fromDurationLike(duration);
         return clone5(this, adjustTime(this, dur));
       }
+      /**
+       * Subtract a period of time to this DateTime and return the resulting DateTime
+       * See {@link DateTime#plus}
+       * @param {Duration|Object|number} duration - The amount to subtract. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
+       @return {DateTime}
+       */
       minus(duration) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const dur = Duration.fromDurationLike(duration).negate();
         return clone5(this, adjustTime(this, dur));
       }
+      /**
+       * "Set" this DateTime to the beginning of a unit of time.
+       * @param {string} unit - The unit to go to the beginning of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
+       * @example DateTime.local(2014, 3, 3).startOf('month').toISODate(); //=> '2014-03-01'
+       * @example DateTime.local(2014, 3, 3).startOf('year').toISODate(); //=> '2014-01-01'
+       * @example DateTime.local(2014, 3, 3).startOf('week').toISODate(); //=> '2014-03-03', weeks always start on Mondays
+       * @example DateTime.local(2014, 3, 3, 5, 30).startOf('day').toISOTime(); //=> '00:00.000-05:00'
+       * @example DateTime.local(2014, 3, 3, 5, 30).startOf('hour').toISOTime(); //=> '05:00:00.000-05:00'
+       * @return {DateTime}
+       */
       startOf(unit2) {
-        if (!this.isValid)
-          return this;
+        if (!this.isValid) return this;
         const o = {}, normalizedUnit = Duration.normalizeUnit(unit2);
         switch (normalizedUnit) {
           case "years":
             o.month = 1;
+          // falls through
           case "quarters":
           case "months":
             o.day = 1;
+          // falls through
           case "weeks":
           case "days":
             o.hour = 0;
+          // falls through
           case "hours":
             o.minute = 0;
+          // falls through
           case "minutes":
             o.second = 0;
+          // falls through
           case "seconds":
             o.millisecond = 0;
             break;
@@ -6940,18 +7930,87 @@ var require_lib = __commonJS({
         }
         return this.set(o);
       }
+      /**
+       * "Set" this DateTime to the end (meaning the last millisecond) of a unit of time
+       * @param {string} unit - The unit to go to the end of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
+       * @example DateTime.local(2014, 3, 3).endOf('month').toISO(); //=> '2014-03-31T23:59:59.999-05:00'
+       * @example DateTime.local(2014, 3, 3).endOf('year').toISO(); //=> '2014-12-31T23:59:59.999-05:00'
+       * @example DateTime.local(2014, 3, 3).endOf('week').toISO(); // => '2014-03-09T23:59:59.999-05:00', weeks start on Mondays
+       * @example DateTime.local(2014, 3, 3, 5, 30).endOf('day').toISO(); //=> '2014-03-03T23:59:59.999-05:00'
+       * @example DateTime.local(2014, 3, 3, 5, 30).endOf('hour').toISO(); //=> '2014-03-03T05:59:59.999-05:00'
+       * @return {DateTime}
+       */
       endOf(unit2) {
         return this.isValid ? this.plus({ [unit2]: 1 }).startOf(unit2).minus(1) : this;
       }
+      // OUTPUT
+      /**
+       * Returns a string representation of this DateTime formatted according to the specified format string.
+       * **You may not want this.** See {@link DateTime#toLocaleString} for a more flexible formatting tool. For a table of tokens and their interpretations, see [here](https://moment.github.io/luxon/#/formatting?id=table-of-tokens).
+       * Defaults to en-US if no locale has been specified, regardless of the system's locale.
+       * @param {string} fmt - the format string
+       * @param {Object} opts - opts to override the configuration options on this DateTime
+       * @example DateTime.now().toFormat('yyyy LLL dd') //=> '2017 Apr 22'
+       * @example DateTime.now().setLocale('fr').toFormat('yyyy LLL dd') //=> '2017 avr. 22'
+       * @example DateTime.now().toFormat('yyyy LLL dd', { locale: "fr" }) //=> '2017 avr. 22'
+       * @example DateTime.now().toFormat("HH 'hours and' mm 'minutes'") //=> '20 hours and 55 minutes'
+       * @return {string}
+       */
       toFormat(fmt, opts = {}) {
         return this.isValid ? Formatter.create(this.loc.redefaultToEN(opts)).formatDateTimeFromString(this, fmt) : INVALID;
       }
+      /**
+       * Returns a localized string representing this date. Accepts the same options as the Intl.DateTimeFormat constructor and any presets defined by Luxon, such as `DateTime.DATE_FULL` or `DateTime.TIME_SIMPLE`.
+       * The exact behavior of this method is browser-specific, but in general it will return an appropriate representation
+       * of the DateTime in the assigned locale.
+       * Defaults to the system's locale if no locale has been specified
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+       * @param formatOpts {Object} - Intl.DateTimeFormat constructor options and configuration options
+       * @param {Object} opts - opts to override the configuration options on this DateTime
+       * @example DateTime.now().toLocaleString(); //=> 4/20/2017
+       * @example DateTime.now().setLocale('en-gb').toLocaleString(); //=> '20/04/2017'
+       * @example DateTime.now().toLocaleString(DateTime.DATE_FULL); //=> 'April 20, 2017'
+       * @example DateTime.now().toLocaleString(DateTime.DATE_FULL, { locale: 'fr' }); //=> '28 août 2022'
+       * @example DateTime.now().toLocaleString(DateTime.TIME_SIMPLE); //=> '11:32 AM'
+       * @example DateTime.now().toLocaleString(DateTime.DATETIME_SHORT); //=> '4/20/2017, 11:32 AM'
+       * @example DateTime.now().toLocaleString({ weekday: 'long', month: 'long', day: '2-digit' }); //=> 'Thursday, April 20'
+       * @example DateTime.now().toLocaleString({ weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }); //=> 'Thu, Apr 20, 11:27 AM'
+       * @example DateTime.now().toLocaleString({ hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); //=> '11:32'
+       * @return {string}
+       */
       toLocaleString(formatOpts = DATE_SHORT, opts = {}) {
         return this.isValid ? Formatter.create(this.loc.clone(opts), formatOpts).formatDateTime(this) : INVALID;
       }
+      /**
+       * Returns an array of format "parts", meaning individual tokens along with metadata. This is allows callers to post-process individual sections of the formatted output.
+       * Defaults to the system's locale if no locale has been specified
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/formatToParts
+       * @param opts {Object} - Intl.DateTimeFormat constructor options, same as `toLocaleString`.
+       * @example DateTime.now().toLocaleParts(); //=> [
+       *                                   //=>   { type: 'day', value: '25' },
+       *                                   //=>   { type: 'literal', value: '/' },
+       *                                   //=>   { type: 'month', value: '05' },
+       *                                   //=>   { type: 'literal', value: '/' },
+       *                                   //=>   { type: 'year', value: '1982' }
+       *                                   //=> ]
+       */
       toLocaleParts(opts = {}) {
         return this.isValid ? Formatter.create(this.loc.clone(opts), opts).formatDateTimeParts(this) : [];
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this DateTime
+       * @param {Object} opts - options
+       * @param {boolean} [opts.suppressMilliseconds=false] - exclude milliseconds from the format if they're 0
+       * @param {boolean} [opts.suppressSeconds=false] - exclude seconds from the format if they're 0
+       * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
+       * @param {boolean} [opts.extendedZone=false] - add the time zone format extension
+       * @param {string} [opts.format='extended'] - choose between the basic and extended format
+       * @example DateTime.utc(1983, 5, 25).toISO() //=> '1982-05-25T00:00:00.000Z'
+       * @example DateTime.now().toISO() //=> '2017-04-22T20:47:05.335-04:00'
+       * @example DateTime.now().toISO({ includeOffset: false }) //=> '2017-04-22T20:47:05.335'
+       * @example DateTime.now().toISO({ format: 'basic' }) //=> '20170422T204705.335-0400'
+       * @return {string}
+       */
       toISO({
         format: format5 = "extended",
         suppressSeconds = false,
@@ -6968,15 +8027,43 @@ var require_lib = __commonJS({
         c += toISOTime(this, ext, suppressSeconds, suppressMilliseconds, includeOffset, extendedZone);
         return c;
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this DateTime's date component
+       * @param {Object} opts - options
+       * @param {string} [opts.format='extended'] - choose between the basic and extended format
+       * @example DateTime.utc(1982, 5, 25).toISODate() //=> '1982-05-25'
+       * @example DateTime.utc(1982, 5, 25).toISODate({ format: 'basic' }) //=> '19820525'
+       * @return {string}
+       */
       toISODate({ format: format5 = "extended" } = {}) {
         if (!this.isValid) {
           return null;
         }
         return toISODate(this, format5 === "extended");
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this DateTime's week date
+       * @example DateTime.utc(1982, 5, 25).toISOWeekDate() //=> '1982-W21-2'
+       * @return {string}
+       */
       toISOWeekDate() {
         return toTechFormat(this, "kkkk-'W'WW-c");
       }
+      /**
+       * Returns an ISO 8601-compliant string representation of this DateTime's time component
+       * @param {Object} opts - options
+       * @param {boolean} [opts.suppressMilliseconds=false] - exclude milliseconds from the format if they're 0
+       * @param {boolean} [opts.suppressSeconds=false] - exclude seconds from the format if they're 0
+       * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
+       * @param {boolean} [opts.extendedZone=true] - add the time zone format extension
+       * @param {boolean} [opts.includePrefix=false] - include the `T` prefix
+       * @param {string} [opts.format='extended'] - choose between the basic and extended format
+       * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime() //=> '07:34:19.361Z'
+       * @example DateTime.utc().set({ hour: 7, minute: 34, seconds: 0, milliseconds: 0 }).toISOTime({ suppressSeconds: true }) //=> '07:34Z'
+       * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime({ format: 'basic' }) //=> '073419.361Z'
+       * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime({ includePrefix: true }) //=> 'T07:34:19.361Z'
+       * @return {string}
+       */
       toISOTime({
         suppressMilliseconds = false,
         suppressSeconds = false,
@@ -6989,20 +8076,58 @@ var require_lib = __commonJS({
           return null;
         }
         let c = includePrefix ? "T" : "";
-        return c + toISOTime(this, format5 === "extended", suppressSeconds, suppressMilliseconds, includeOffset, extendedZone);
+        return c + toISOTime(
+          this,
+          format5 === "extended",
+          suppressSeconds,
+          suppressMilliseconds,
+          includeOffset,
+          extendedZone
+        );
       }
+      /**
+       * Returns an RFC 2822-compatible string representation of this DateTime
+       * @example DateTime.utc(2014, 7, 13).toRFC2822() //=> 'Sun, 13 Jul 2014 00:00:00 +0000'
+       * @example DateTime.local(2014, 7, 13).toRFC2822() //=> 'Sun, 13 Jul 2014 00:00:00 -0400'
+       * @return {string}
+       */
       toRFC2822() {
         return toTechFormat(this, "EEE, dd LLL yyyy HH:mm:ss ZZZ", false);
       }
+      /**
+       * Returns a string representation of this DateTime appropriate for use in HTTP headers. The output is always expressed in GMT.
+       * Specifically, the string conforms to RFC 1123.
+       * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+       * @example DateTime.utc(2014, 7, 13).toHTTP() //=> 'Sun, 13 Jul 2014 00:00:00 GMT'
+       * @example DateTime.utc(2014, 7, 13, 19).toHTTP() //=> 'Sun, 13 Jul 2014 19:00:00 GMT'
+       * @return {string}
+       */
       toHTTP() {
         return toTechFormat(this.toUTC(), "EEE, dd LLL yyyy HH:mm:ss 'GMT'");
       }
+      /**
+       * Returns a string representation of this DateTime appropriate for use in SQL Date
+       * @example DateTime.utc(2014, 7, 13).toSQLDate() //=> '2014-07-13'
+       * @return {string}
+       */
       toSQLDate() {
         if (!this.isValid) {
           return null;
         }
         return toISODate(this, true);
       }
+      /**
+       * Returns a string representation of this DateTime appropriate for use in SQL Time
+       * @param {Object} opts - options
+       * @param {boolean} [opts.includeZone=false] - include the zone, such as 'America/New_York'. Overrides includeOffset.
+       * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
+       * @param {boolean} [opts.includeOffsetSpace=true] - include the space between the time and the offset, such as '05:15:16.345 -04:00'
+       * @example DateTime.utc().toSQL() //=> '05:15:16.345'
+       * @example DateTime.now().toSQL() //=> '05:15:16.345 -04:00'
+       * @example DateTime.now().toSQL({ includeOffset: false }) //=> '05:15:16.345'
+       * @example DateTime.now().toSQL({ includeZone: false }) //=> '05:15:16.345 America/New_York'
+       * @return {string}
+       */
       toSQLTime({ includeOffset = true, includeZone = false, includeOffsetSpace = true } = {}) {
         let fmt = "HH:mm:ss.SSS";
         if (includeZone || includeOffset) {
@@ -7017,36 +8142,82 @@ var require_lib = __commonJS({
         }
         return toTechFormat(this, fmt, true);
       }
+      /**
+       * Returns a string representation of this DateTime appropriate for use in SQL DateTime
+       * @param {Object} opts - options
+       * @param {boolean} [opts.includeZone=false] - include the zone, such as 'America/New_York'. Overrides includeOffset.
+       * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
+       * @param {boolean} [opts.includeOffsetSpace=true] - include the space between the time and the offset, such as '05:15:16.345 -04:00'
+       * @example DateTime.utc(2014, 7, 13).toSQL() //=> '2014-07-13 00:00:00.000 Z'
+       * @example DateTime.local(2014, 7, 13).toSQL() //=> '2014-07-13 00:00:00.000 -04:00'
+       * @example DateTime.local(2014, 7, 13).toSQL({ includeOffset: false }) //=> '2014-07-13 00:00:00.000'
+       * @example DateTime.local(2014, 7, 13).toSQL({ includeZone: true }) //=> '2014-07-13 00:00:00.000 America/New_York'
+       * @return {string}
+       */
       toSQL(opts = {}) {
         if (!this.isValid) {
           return null;
         }
         return `${this.toSQLDate()} ${this.toSQLTime(opts)}`;
       }
+      /**
+       * Returns a string representation of this DateTime appropriate for debugging
+       * @return {string}
+       */
       toString() {
         return this.isValid ? this.toISO() : INVALID;
       }
+      /**
+       * Returns the epoch milliseconds of this DateTime. Alias of {@link DateTime#toMillis}
+       * @return {number}
+       */
       valueOf() {
         return this.toMillis();
       }
+      /**
+       * Returns the epoch milliseconds of this DateTime.
+       * @return {number}
+       */
       toMillis() {
         return this.isValid ? this.ts : NaN;
       }
+      /**
+       * Returns the epoch seconds of this DateTime.
+       * @return {number}
+       */
       toSeconds() {
         return this.isValid ? this.ts / 1e3 : NaN;
       }
+      /**
+       * Returns the epoch seconds (as a whole number) of this DateTime.
+       * @return {number}
+       */
       toUnixInteger() {
         return this.isValid ? Math.floor(this.ts / 1e3) : NaN;
       }
+      /**
+       * Returns an ISO 8601 representation of this DateTime appropriate for use in JSON.
+       * @return {string}
+       */
       toJSON() {
         return this.toISO();
       }
+      /**
+       * Returns a BSON serializable equivalent to this DateTime.
+       * @return {Date}
+       */
       toBSON() {
         return this.toJSDate();
       }
+      /**
+       * Returns a JavaScript object with this DateTime's year, month, day, and so on.
+       * @param opts - options for generating the object
+       * @param {boolean} [opts.includeConfig=false] - include configuration attributes in the output
+       * @example DateTime.now().toObject() //=> { year: 2017, month: 4, day: 22, hour: 20, minute: 49, second: 42, millisecond: 268 }
+       * @return {Object}
+       */
       toObject(opts = {}) {
-        if (!this.isValid)
-          return {};
+        if (!this.isValid) return {};
         const base = { ...this.c };
         if (opts.includeConfig) {
           base.outputCalendar = this.outputCalendar;
@@ -7055,9 +8226,29 @@ var require_lib = __commonJS({
         }
         return base;
       }
+      /**
+       * Returns a JavaScript Date equivalent to this DateTime.
+       * @return {Date}
+       */
       toJSDate() {
         return new Date(this.isValid ? this.ts : NaN);
       }
+      // COMPARE
+      /**
+       * Return the difference between two DateTimes as a Duration.
+       * @param {DateTime} otherDateTime - the DateTime to compare this one to
+       * @param {string|string[]} [unit=['milliseconds']] - the unit or array of units (such as 'hours' or 'days') to include in the duration.
+       * @param {Object} opts - options that affect the creation of the Duration
+       * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
+       * @example
+       * var i1 = DateTime.fromISO('1982-05-25T09:45'),
+       *     i2 = DateTime.fromISO('1983-10-14T10:30');
+       * i2.diff(i1).toObject() //=> { milliseconds: 43807500000 }
+       * i2.diff(i1, 'hours').toObject() //=> { hours: 12168.75 }
+       * i2.diff(i1, ['months', 'days']).toObject() //=> { months: 16, days: 19.03125 }
+       * i2.diff(i1, ['months', 'days', 'hours']).toObject() //=> { months: 16, days: 19, hours: 0.75 }
+       * @return {Duration}
+       */
       diff(otherDateTime, unit2 = "milliseconds", opts = {}) {
         if (!this.isValid || !otherDateTime.isValid) {
           return Duration.invalid("created by diffing an invalid DateTime");
@@ -7066,26 +8257,71 @@ var require_lib = __commonJS({
         const units = maybeArray(unit2).map(Duration.normalizeUnit), otherIsLater = otherDateTime.valueOf() > this.valueOf(), earlier = otherIsLater ? this : otherDateTime, later = otherIsLater ? otherDateTime : this, diffed = diff2(earlier, later, units, durOpts);
         return otherIsLater ? diffed.negate() : diffed;
       }
+      /**
+       * Return the difference between this DateTime and right now.
+       * See {@link DateTime#diff}
+       * @param {string|string[]} [unit=['milliseconds']] - the unit or units units (such as 'hours' or 'days') to include in the duration
+       * @param {Object} opts - options that affect the creation of the Duration
+       * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
+       * @return {Duration}
+       */
       diffNow(unit2 = "milliseconds", opts = {}) {
-        return this.diff(DateTime.now(), unit2, opts);
+        return this.diff(_DateTime.now(), unit2, opts);
       }
+      /**
+       * Return an Interval spanning between this DateTime and another DateTime
+       * @param {DateTime} otherDateTime - the other end point of the Interval
+       * @return {Interval}
+       */
       until(otherDateTime) {
         return this.isValid ? Interval.fromDateTimes(this, otherDateTime) : this;
       }
+      /**
+       * Return whether this DateTime is in the same unit of time as another DateTime.
+       * Higher-order units must also be identical for this function to return `true`.
+       * Note that time zones are **ignored** in this comparison, which compares the **local** calendar time. Use {@link DateTime#setZone} to convert one of the dates if needed.
+       * @param {DateTime} otherDateTime - the other DateTime
+       * @param {string} unit - the unit of time to check sameness on
+       * @example DateTime.now().hasSame(otherDT, 'day'); //~> true if otherDT is in the same current calendar day
+       * @return {boolean}
+       */
       hasSame(otherDateTime, unit2) {
-        if (!this.isValid)
-          return false;
+        if (!this.isValid) return false;
         const inputMs = otherDateTime.valueOf();
         const adjustedToZone = this.setZone(otherDateTime.zone, { keepLocalTime: true });
         return adjustedToZone.startOf(unit2) <= inputMs && inputMs <= adjustedToZone.endOf(unit2);
       }
+      /**
+       * Equality check
+       * Two DateTimes are equal if and only if they represent the same millisecond, have the same zone and location, and are both valid.
+       * To compare just the millisecond values, use `+dt1 === +dt2`.
+       * @param {DateTime} other - the other DateTime
+       * @return {boolean}
+       */
       equals(other) {
         return this.isValid && other.isValid && this.valueOf() === other.valueOf() && this.zone.equals(other.zone) && this.loc.equals(other.loc);
       }
+      /**
+       * Returns a string representation of a this time relative to now, such as "in two days". Can only internationalize if your
+       * platform supports Intl.RelativeTimeFormat. Rounds down by default.
+       * @param {Object} options - options that affect the output
+       * @param {DateTime} [options.base=DateTime.now()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
+       * @param {string} [options.style="long"] - the style of units, must be "long", "short", or "narrow"
+       * @param {string|string[]} options.unit - use a specific unit or array of units; if omitted, or an array, the method will pick the best unit. Use an array or one of "years", "quarters", "months", "weeks", "days", "hours", "minutes", or "seconds"
+       * @param {boolean} [options.round=true] - whether to round the numbers in the output.
+       * @param {number} [options.padding=0] - padding in milliseconds. This allows you to round up the result if it fits inside the threshold. Don't use in combination with {round: false} because the decimal output will include the padding.
+       * @param {string} options.locale - override the locale of this DateTime
+       * @param {string} options.numberingSystem - override the numberingSystem of this DateTime. The Intl system may choose not to honor this
+       * @example DateTime.now().plus({ days: 1 }).toRelative() //=> "in 1 day"
+       * @example DateTime.now().setLocale("es").toRelative({ days: 1 }) //=> "dentro de 1 día"
+       * @example DateTime.now().plus({ days: 1 }).toRelative({ locale: "fr" }) //=> "dans 23 heures"
+       * @example DateTime.now().minus({ days: 2 }).toRelative() //=> "2 days ago"
+       * @example DateTime.now().minus({ days: 2 }).toRelative({ unit: "hours" }) //=> "48 hours ago"
+       * @example DateTime.now().minus({ hours: 36 }).toRelative({ round: false }) //=> "1.5 days ago"
+       */
       toRelative(options = {}) {
-        if (!this.isValid)
-          return null;
-        const base = options.base || DateTime.fromObject({}, { zone: this.zone }), padding = options.padding ? this < base ? -options.padding : options.padding : 0;
+        if (!this.isValid) return null;
+        const base = options.base || _DateTime.fromObject({}, { zone: this.zone }), padding = options.padding ? this < base ? -options.padding : options.padding : 0;
         let units = ["years", "months", "days", "hours", "minutes", "seconds"];
         let unit2 = options.unit;
         if (Array.isArray(options.unit)) {
@@ -7099,28 +8335,58 @@ var require_lib = __commonJS({
           unit: unit2
         });
       }
+      /**
+       * Returns a string representation of this date relative to today, such as "yesterday" or "next month".
+       * Only internationalizes on platforms that supports Intl.RelativeTimeFormat.
+       * @param {Object} options - options that affect the output
+       * @param {DateTime} [options.base=DateTime.now()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
+       * @param {string} options.locale - override the locale of this DateTime
+       * @param {string} options.unit - use a specific unit; if omitted, the method will pick the unit. Use one of "years", "quarters", "months", "weeks", or "days"
+       * @param {string} options.numberingSystem - override the numberingSystem of this DateTime. The Intl system may choose not to honor this
+       * @example DateTime.now().plus({ days: 1 }).toRelativeCalendar() //=> "tomorrow"
+       * @example DateTime.now().setLocale("es").plus({ days: 1 }).toRelative() //=> ""mañana"
+       * @example DateTime.now().plus({ days: 1 }).toRelativeCalendar({ locale: "fr" }) //=> "demain"
+       * @example DateTime.now().minus({ days: 2 }).toRelativeCalendar() //=> "2 days ago"
+       */
       toRelativeCalendar(options = {}) {
-        if (!this.isValid)
-          return null;
-        return diffRelative(options.base || DateTime.fromObject({}, { zone: this.zone }), this, {
+        if (!this.isValid) return null;
+        return diffRelative(options.base || _DateTime.fromObject({}, { zone: this.zone }), this, {
           ...options,
           numeric: "auto",
           units: ["years", "months", "days"],
           calendary: true
         });
       }
+      /**
+       * Return the min of several date times
+       * @param {...DateTime} dateTimes - the DateTimes from which to choose the minimum
+       * @return {DateTime} the min DateTime, or undefined if called with no argument
+       */
       static min(...dateTimes) {
-        if (!dateTimes.every(DateTime.isDateTime)) {
+        if (!dateTimes.every(_DateTime.isDateTime)) {
           throw new InvalidArgumentError("min requires all arguments be DateTimes");
         }
         return bestBy(dateTimes, (i2) => i2.valueOf(), Math.min);
       }
+      /**
+       * Return the max of several date times
+       * @param {...DateTime} dateTimes - the DateTimes from which to choose the maximum
+       * @return {DateTime} the max DateTime, or undefined if called with no argument
+       */
       static max(...dateTimes) {
-        if (!dateTimes.every(DateTime.isDateTime)) {
+        if (!dateTimes.every(_DateTime.isDateTime)) {
           throw new InvalidArgumentError("max requires all arguments be DateTimes");
         }
         return bestBy(dateTimes, (i2) => i2.valueOf(), Math.max);
       }
+      // MISC
+      /**
+       * Explain how a string would be parsed by fromFormat()
+       * @param {string} text - the string to parse
+       * @param {string} fmt - the format the string is expected to be in (see description)
+       * @param {Object} options - options taken by fromFormat()
+       * @return {Object}
+       */
       static fromFormatExplain(text, fmt, options = {}) {
         const { locale = null, numberingSystem = null } = options, localeToUse = Locale.fromOpts({
           locale,
@@ -7129,72 +8395,164 @@ var require_lib = __commonJS({
         });
         return explainFromTokens(localeToUse, text, fmt);
       }
+      /**
+       * @deprecated use fromFormatExplain instead
+       */
       static fromStringExplain(text, fmt, options = {}) {
-        return DateTime.fromFormatExplain(text, fmt, options);
+        return _DateTime.fromFormatExplain(text, fmt, options);
       }
+      // FORMAT PRESETS
+      /**
+       * {@link DateTime#toLocaleString} format like 10/14/1983
+       * @type {Object}
+       */
       static get DATE_SHORT() {
         return DATE_SHORT;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Oct 14, 1983'
+       * @type {Object}
+       */
       static get DATE_MED() {
         return DATE_MED;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Fri, Oct 14, 1983'
+       * @type {Object}
+       */
       static get DATE_MED_WITH_WEEKDAY() {
         return DATE_MED_WITH_WEEKDAY;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'October 14, 1983'
+       * @type {Object}
+       */
       static get DATE_FULL() {
         return DATE_FULL;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Tuesday, October 14, 1983'
+       * @type {Object}
+       */
       static get DATE_HUGE() {
         return DATE_HUGE;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get TIME_SIMPLE() {
         return TIME_SIMPLE;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get TIME_WITH_SECONDS() {
         return TIME_WITH_SECONDS;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23 AM EDT'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get TIME_WITH_SHORT_OFFSET() {
         return TIME_WITH_SHORT_OFFSET;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get TIME_WITH_LONG_OFFSET() {
         return TIME_WITH_LONG_OFFSET;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30', always 24-hour.
+       * @type {Object}
+       */
       static get TIME_24_SIMPLE() {
         return TIME_24_SIMPLE;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23', always 24-hour.
+       * @type {Object}
+       */
       static get TIME_24_WITH_SECONDS() {
         return TIME_24_WITH_SECONDS;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23 EDT', always 24-hour.
+       * @type {Object}
+       */
       static get TIME_24_WITH_SHORT_OFFSET() {
         return TIME_24_WITH_SHORT_OFFSET;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '09:30:23 Eastern Daylight Time', always 24-hour.
+       * @type {Object}
+       */
       static get TIME_24_WITH_LONG_OFFSET() {
         return TIME_24_WITH_LONG_OFFSET;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_SHORT() {
         return DATETIME_SHORT;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30:33 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_SHORT_WITH_SECONDS() {
         return DATETIME_SHORT_WITH_SECONDS;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_MED() {
         return DATETIME_MED;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30:33 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_MED_WITH_SECONDS() {
         return DATETIME_MED_WITH_SECONDS;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Fri, 14 Oct 1983, 9:30 AM'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_MED_WITH_WEEKDAY() {
         return DATETIME_MED_WITH_WEEKDAY;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30 AM EDT'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_FULL() {
         return DATETIME_FULL;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30:33 AM EDT'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_FULL_WITH_SECONDS() {
         return DATETIME_FULL_WITH_SECONDS;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_HUGE() {
         return DATETIME_HUGE;
       }
+      /**
+       * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30:33 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+       * @type {Object}
+       */
       static get DATETIME_HUGE_WITH_SECONDS() {
         return DATETIME_HUGE_WITH_SECONDS;
       }
@@ -7207,7 +8565,9 @@ var require_lib = __commonJS({
       } else if (dateTimeish && typeof dateTimeish === "object") {
         return DateTime.fromObject(dateTimeish);
       } else {
-        throw new InvalidArgumentError(`Unknown datetime argument: ${dateTimeish}, of type ${typeof dateTimeish}`);
+        throw new InvalidArgumentError(
+          `Unknown datetime argument: ${dateTimeish}, of type ${typeof dateTimeish}`
+        );
       }
     }
     var DEFAULT_QUERY_SETTINGS = {
@@ -7245,7 +8605,7 @@ var require_lib = __commonJS({
         dataviewJsKeyword: "dataviewjs"
       }
     });
-    var Success = class {
+    var Success = class _Success {
       constructor(value) {
         __publicField(this, "value");
         __publicField(this, "successful");
@@ -7253,7 +8613,7 @@ var require_lib = __commonJS({
         this.successful = true;
       }
       map(f) {
-        return new Success(f(this.value));
+        return new _Success(f(this.value));
       }
       flatMap(f) {
         return f(this.value);
@@ -7274,7 +8634,7 @@ var require_lib = __commonJS({
         return this.value;
       }
     };
-    var Failure = class {
+    var Failure = class _Failure {
       constructor(error) {
         __publicField(this, "error");
         __publicField(this, "successful");
@@ -7288,7 +8648,7 @@ var require_lib = __commonJS({
         return this;
       }
       mapErr(f) {
-        return new Failure(f(this.error));
+        return new _Failure(f(this.error));
       }
       bimap(_succ, fail) {
         return this.mapErr(fail);
@@ -7338,12 +8698,11 @@ var require_lib = __commonJS({
     (function(module3, exports2) {
       !function(n3, t) {
         module3.exports = t();
-      }(typeof self != "undefined" ? self : commonjsGlobal, function() {
+      }("undefined" != typeof self ? self : commonjsGlobal, function() {
         return function(n3) {
           var t = {};
           function r(e3) {
-            if (t[e3])
-              return t[e3].exports;
+            if (t[e3]) return t[e3].exports;
             var u = t[e3] = { i: e3, l: false, exports: {} };
             return n3[e3].call(u.exports, u, u.exports, r), u.l = true, u.exports;
           }
@@ -7363,14 +8722,12 @@ var require_lib = __commonJS({
           }, r.p = "", r(r.s = 0);
         }([function(n3, t, r) {
           function e3(n4) {
-            if (!(this instanceof e3))
-              return new e3(n4);
+            if (!(this instanceof e3)) return new e3(n4);
             this._ = n4;
           }
           var u = e3.prototype;
           function o(n4, t2) {
-            for (var r2 = 0; r2 < n4; r2++)
-              t2(r2);
+            for (var r2 = 0; r2 < n4; r2++) t2(r2);
           }
           function i2(n4, t2, r2) {
             return function(n5, t3) {
@@ -7401,26 +8758,23 @@ var require_lib = __commonJS({
             }), r2;
           }
           function c() {
-            return typeof Buffer != "undefined";
+            return "undefined" != typeof Buffer;
           }
           function s2() {
-            if (!c())
-              throw new Error("Buffer global does not exist; please use webpack if you need to parse Buffers in the browser.");
+            if (!c()) throw new Error("Buffer global does not exist; please use webpack if you need to parse Buffers in the browser.");
           }
           function l2(n4) {
             s2();
             var t2 = i2(function(n5, t3) {
               return n5 + t3;
             }, 0, n4);
-            if (t2 % 8 != 0)
-              throw new Error("The bits [" + n4.join(", ") + "] add up to " + t2 + " which is not an even number of bytes; the total should be divisible by 8");
+            if (t2 % 8 != 0) throw new Error("The bits [" + n4.join(", ") + "] add up to " + t2 + " which is not an even number of bytes; the total should be divisible by 8");
             var r2, u2 = t2 / 8, o2 = (r2 = function(n5) {
               return n5 > 48;
             }, i2(function(n5, t3) {
               return n5 || (r2(t3) ? t3 : n5);
             }, null, n4));
-            if (o2)
-              throw new Error(o2 + " bit range requested exceeds 48 bit (6 byte) Number max.");
+            if (o2) throw new Error(o2 + " bit range requested exceeds 48 bit (6 byte) Number max.");
             return new e3(function(t3, r3) {
               var e4 = u2 + r3;
               return e4 > t3.length ? x(r3, u2.toString() + " bytes") : b(e4, i2(function(n5, t4) {
@@ -7435,8 +8789,7 @@ var require_lib = __commonJS({
             });
           }
           function p(n4, t2) {
-            if (typeof (r2 = t2) != "number" || Math.floor(r2) !== r2 || t2 < 0 || t2 > 6)
-              throw new Error(n4 + " requires integer length in range [0, 6].");
+            if ("number" != typeof (r2 = t2) || Math.floor(r2) !== r2 || t2 < 0 || t2 > 6) throw new Error(n4 + " requires integer length in range [0, 6].");
             var r2;
           }
           function d(n4) {
@@ -7463,7 +8816,7 @@ var require_lib = __commonJS({
             return n4 instanceof e3;
           }
           function E(n4) {
-            return {}.toString.call(n4) === "[object Array]";
+            return "[object Array]" === {}.toString.call(n4);
           }
           function w(n4) {
             return c() && Buffer.isBuffer(n4);
@@ -7475,66 +8828,54 @@ var require_lib = __commonJS({
             return E(t2) || (t2 = [t2]), { status: false, index: -1, value: null, furthest: n4, expected: t2 };
           }
           function B(n4, t2) {
-            if (!t2)
-              return n4;
-            if (n4.furthest > t2.furthest)
-              return n4;
+            if (!t2) return n4;
+            if (n4.furthest > t2.furthest) return n4;
             var r2 = n4.furthest === t2.furthest ? function(n5, t3) {
               if (function() {
-                if (e3._supportsSet !== void 0)
-                  return e3._supportsSet;
-                var n6 = typeof Set != "undefined";
+                if (void 0 !== e3._supportsSet) return e3._supportsSet;
+                var n6 = "undefined" != typeof Set;
                 return e3._supportsSet = n6, n6;
               }() && Array.from) {
-                for (var r3 = new Set(n5), u2 = 0; u2 < t3.length; u2++)
-                  r3.add(t3[u2]);
+                for (var r3 = new Set(n5), u2 = 0; u2 < t3.length; u2++) r3.add(t3[u2]);
                 var o2 = Array.from(r3);
                 return o2.sort(), o2;
               }
-              for (var i3 = {}, a2 = 0; a2 < n5.length; a2++)
-                i3[n5[a2]] = true;
-              for (var f2 = 0; f2 < t3.length; f2++)
-                i3[t3[f2]] = true;
+              for (var i3 = {}, a2 = 0; a2 < n5.length; a2++) i3[n5[a2]] = true;
+              for (var f2 = 0; f2 < t3.length; f2++) i3[t3[f2]] = true;
               var c2 = [];
-              for (var s3 in i3)
-                ({}).hasOwnProperty.call(i3, s3) && c2.push(s3);
+              for (var s3 in i3) ({}).hasOwnProperty.call(i3, s3) && c2.push(s3);
               return c2.sort(), c2;
             }(n4.expected, t2.expected) : t2.expected;
             return { status: n4.status, index: n4.index, value: n4.value, furthest: t2.furthest, expected: r2 };
           }
           var j = {};
           function S(n4, t2) {
-            if (w(n4))
-              return { offset: t2, line: -1, column: -1 };
+            if (w(n4)) return { offset: t2, line: -1, column: -1 };
             n4 in j || (j[n4] = {});
             for (var r2 = j[n4], e4 = 0, u2 = 0, o2 = 0, i3 = t2; i3 >= 0; ) {
               if (i3 in r2) {
-                e4 = r2[i3].line, o2 === 0 && (o2 = r2[i3].lineStart);
+                e4 = r2[i3].line, 0 === o2 && (o2 = r2[i3].lineStart);
                 break;
               }
-              (n4.charAt(i3) === "\n" || n4.charAt(i3) === "\r" && n4.charAt(i3 + 1) !== "\n") && (u2++, o2 === 0 && (o2 = i3 + 1)), i3--;
+              ("\n" === n4.charAt(i3) || "\r" === n4.charAt(i3) && "\n" !== n4.charAt(i3 + 1)) && (u2++, 0 === o2 && (o2 = i3 + 1)), i3--;
             }
             var a2 = e4 + u2, f2 = t2 - o2;
             return r2[t2] = { line: a2, lineStart: o2 }, { offset: t2, line: a2 + 1, column: f2 + 1 };
           }
           function _(n4) {
-            if (!y(n4))
-              throw new Error("not a parser: " + n4);
+            if (!y(n4)) throw new Error("not a parser: " + n4);
           }
           function L(n4, t2) {
-            return typeof n4 == "string" ? n4.charAt(t2) : n4[t2];
+            return "string" == typeof n4 ? n4.charAt(t2) : n4[t2];
           }
           function O(n4) {
-            if (typeof n4 != "number")
-              throw new Error("not a number: " + n4);
+            if ("number" != typeof n4) throw new Error("not a number: " + n4);
           }
           function k(n4) {
-            if (typeof n4 != "function")
-              throw new Error("not a function: " + n4);
+            if ("function" != typeof n4) throw new Error("not a function: " + n4);
           }
-          function P3(n4) {
-            if (typeof n4 != "string")
-              throw new Error("not a string: " + n4);
+          function P4(n4) {
+            if ("string" != typeof n4) throw new Error("not a string: " + n4);
           }
           var q = 2, A = 3, I = 8, F = 5 * I, M = 4 * I, z = "  ";
           function R(n4, t2) {
@@ -7549,8 +8890,7 @@ var require_lib = __commonJS({
           }
           function D(n4, t2) {
             var r2, e4, u2, o2, f2, c2 = t2.index, s3 = c2.offset, l3 = 1;
-            if (s3 === n4.length)
-              return "Got the end of the input";
+            if (s3 === n4.length) return "Got the end of the input";
             if (w(n4)) {
               var h2 = s3 - s3 % I, p2 = s3 - h2, d2 = W(h2, F, M + I, n4.length), v2 = a(function(n5) {
                 return a(function(n6) {
@@ -7558,14 +8898,12 @@ var require_lib = __commonJS({
                 }, n5);
               }, function(n5, t3) {
                 var r3 = n5.length, e5 = [], u3 = 0;
-                if (r3 <= t3)
-                  return [n5.slice()];
-                for (var o3 = 0; o3 < r3; o3++)
-                  e5[u3] || e5.push([]), e5[u3].push(n5[o3]), (o3 + 1) % t3 == 0 && u3++;
+                if (r3 <= t3) return [n5.slice()];
+                for (var o3 = 0; o3 < r3; o3++) e5[u3] || e5.push([]), e5[u3].push(n5[o3]), (o3 + 1) % t3 == 0 && u3++;
                 return e5;
               }(n4.slice(d2.from, d2.to).toJSON().data, I));
               o2 = function(n5) {
-                return n5.from === 0 && n5.to === 1 ? { from: n5.from, to: n5.to } : { from: n5.from / I, to: Math.floor(n5.to / I) };
+                return 0 === n5.from && 1 === n5.to ? { from: n5.from, to: n5.to } : { from: n5.from / I, to: Math.floor(n5.to / I) };
               }(d2), e4 = h2 / I, r2 = 3 * p2, p2 >= 4 && (r2 += 1), l3 = 2, u2 = a(function(n5) {
                 return n5.length <= 4 ? n5.join(" ") : n5.slice(0, 4).join(" ") + "  " + n5.slice(4).join(" ");
               }, v2), (f2 = (8 * (o2.to > 0 ? o2.to - 1 : o2.to)).toString(16).length) < 2 && (f2 = 2);
@@ -7580,19 +8918,17 @@ var require_lib = __commonJS({
             }, [], u2).join("\n");
           }
           function N(n4, t2) {
-            return ["\n", "-- PARSING FAILED " + R("-", 50), "\n\n", D(n4, t2), "\n\n", (r2 = t2.expected, r2.length === 1 ? "Expected:\n\n" + r2[0] : "Expected one of the following: \n\n" + r2.join(", ")), "\n"].join("");
+            return ["\n", "-- PARSING FAILED " + R("-", 50), "\n\n", D(n4, t2), "\n\n", (r2 = t2.expected, 1 === r2.length ? "Expected:\n\n" + r2[0] : "Expected one of the following: \n\n" + r2.join(", ")), "\n"].join("");
             var r2;
           }
           function G(n4) {
-            return n4.flags !== void 0 ? n4.flags : [n4.global ? "g" : "", n4.ignoreCase ? "i" : "", n4.multiline ? "m" : "", n4.unicode ? "u" : "", n4.sticky ? "y" : ""].join("");
+            return void 0 !== n4.flags ? n4.flags : [n4.global ? "g" : "", n4.ignoreCase ? "i" : "", n4.multiline ? "m" : "", n4.unicode ? "u" : "", n4.sticky ? "y" : ""].join("");
           }
           function C() {
-            for (var n4 = [].slice.call(arguments), t2 = n4.length, r2 = 0; r2 < t2; r2 += 1)
-              _(n4[r2]);
+            for (var n4 = [].slice.call(arguments), t2 = n4.length, r2 = 0; r2 < t2; r2 += 1) _(n4[r2]);
             return e3(function(r3, e4) {
               for (var u2, o2 = new Array(t2), i3 = 0; i3 < t2; i3 += 1) {
-                if (!(u2 = B(n4[i3]._(r3, e4), u2)).status)
-                  return u2;
+                if (!(u2 = B(n4[i3]._(r3, e4), u2)).status) return u2;
                 o2[i3] = u2.value, e4 = u2.index;
               }
               return B(b(e4, o2), u2);
@@ -7600,8 +8936,7 @@ var require_lib = __commonJS({
           }
           function J() {
             var n4 = [].slice.call(arguments);
-            if (n4.length === 0)
-              throw new Error("seqMap needs at least one argument");
+            if (0 === n4.length) throw new Error("seqMap needs at least one argument");
             var t2 = n4.pop();
             return k(t2), C.apply(null, n4).map(function(n5) {
               return t2.apply(null, n5);
@@ -7609,14 +8944,10 @@ var require_lib = __commonJS({
           }
           function T() {
             var n4 = [].slice.call(arguments), t2 = n4.length;
-            if (t2 === 0)
-              return Y("zero alternates");
-            for (var r2 = 0; r2 < t2; r2 += 1)
-              _(n4[r2]);
+            if (0 === t2) return Y("zero alternates");
+            for (var r2 = 0; r2 < t2; r2 += 1) _(n4[r2]);
             return e3(function(t3, r3) {
-              for (var e4, u2 = 0; u2 < n4.length; u2 += 1)
-                if ((e4 = B(n4[u2]._(t3, r3), e4)).status)
-                  return e4;
+              for (var e4, u2 = 0; u2 < n4.length; u2 += 1) if ((e4 = B(n4[u2]._(t3, r3), e4)).status) return e4;
               return e4;
             });
           }
@@ -7629,7 +8960,7 @@ var require_lib = __commonJS({
             });
           }
           function K(n4) {
-            P3(n4);
+            P4(n4);
             var t2 = "'" + n4 + "'";
             return e3(function(r2, e4) {
               var u2 = e4 + n4.length, o2 = r2.slice(e4, u2);
@@ -7638,12 +8969,10 @@ var require_lib = __commonJS({
           }
           function Q2(n4, t2) {
             !function(n5) {
-              if (!(n5 instanceof RegExp))
-                throw new Error("not a regexp: " + n5);
+              if (!(n5 instanceof RegExp)) throw new Error("not a regexp: " + n5);
               for (var t3 = G(n5), r3 = 0; r3 < t3.length; r3++) {
                 var e4 = t3.charAt(r3);
-                if (e4 !== "i" && e4 !== "m" && e4 !== "u" && e4 !== "s")
-                  throw new Error('unsupported regexp flag "' + e4 + '": ' + n5);
+                if ("i" !== e4 && "m" !== e4 && "u" !== e4 && "s" !== e4) throw new Error('unsupported regexp flag "' + e4 + '": ' + n5);
               }
             }(n4), arguments.length >= 2 ? O(t2) : t2 = 0;
             var r2 = function(n5) {
@@ -7672,15 +9001,12 @@ var require_lib = __commonJS({
             });
           }
           function Z(n4) {
-            if (y(n4))
-              return e3(function(t2, r2) {
-                var e4 = n4._(t2, r2);
-                return e4.index = r2, e4.value = "", e4;
-              });
-            if (typeof n4 == "string")
-              return Z(K(n4));
-            if (n4 instanceof RegExp)
-              return Z(Q2(n4));
+            if (y(n4)) return e3(function(t2, r2) {
+              var e4 = n4._(t2, r2);
+              return e4.index = r2, e4.value = "", e4;
+            });
+            if ("string" == typeof n4) return Z(K(n4));
+            if (n4 instanceof RegExp) return Z(Q2(n4));
             throw new Error("not a string, regexp, or parser: " + n4);
           }
           function $(n4) {
@@ -7706,14 +9032,12 @@ var require_lib = __commonJS({
             return Y("fantasy-land/empty");
           }
           u.parse = function(n4) {
-            if (typeof n4 != "string" && !w(n4))
-              throw new Error(".parse must be called with a string or Buffer as its argument");
+            if ("string" != typeof n4 && !w(n4)) throw new Error(".parse must be called with a string or Buffer as its argument");
             var t2, r2 = this.skip(an)._(n4, 0);
             return t2 = r2.status ? { status: true, value: r2.value } : { status: false, index: S(n4, r2.furthest), expected: r2.expected }, delete j[n4], t2;
           }, u.tryParse = function(n4) {
             var t2 = this.parse(n4);
-            if (t2.status)
-              return t2.value;
+            if (t2.status) return t2.value;
             var r2 = N(n4, t2), e4 = new Error(r2);
             throw e4.type = "ParsimmonError", e4.result = t2, e4;
           }, u.assert = function(n4, t2) {
@@ -7738,22 +9062,18 @@ var require_lib = __commonJS({
             var n4 = this;
             return e3(function(t2, r2) {
               for (var e4 = [], u2 = void 0; ; ) {
-                if (!(u2 = B(n4._(t2, r2), u2)).status)
-                  return B(b(r2, e4), u2);
-                if (r2 === u2.index)
-                  throw new Error("infinite loop detected in .many() parser --- calling .many() on a parser which can accept zero characters is usually the cause");
+                if (!(u2 = B(n4._(t2, r2), u2)).status) return B(b(r2, e4), u2);
+                if (r2 === u2.index) throw new Error("infinite loop detected in .many() parser --- calling .many() on a parser which can accept zero characters is usually the cause");
                 r2 = u2.index, e4.push(u2.value);
               }
             });
           }, u.tieWith = function(n4) {
-            return P3(n4), this.map(function(t2) {
+            return P4(n4), this.map(function(t2) {
               if (function(n5) {
-                if (!E(n5))
-                  throw new Error("not an array: " + n5);
+                if (!E(n5)) throw new Error("not an array: " + n5);
               }(t2), t2.length) {
-                P3(t2[0]);
-                for (var r2 = t2[0], e4 = 1; e4 < t2.length; e4++)
-                  P3(t2[e4]), r2 += n4 + t2[e4];
+                P4(t2[0]);
+                for (var r2 = t2[0], e4 = 1; e4 < t2.length; e4++) P4(t2[e4]), r2 += n4 + t2[e4];
                 return r2;
               }
               return "";
@@ -7764,12 +9084,10 @@ var require_lib = __commonJS({
             var r2 = this;
             return arguments.length < 2 && (t2 = n4), O(n4), O(t2), e3(function(e4, u2) {
               for (var o2 = [], i3 = void 0, a2 = void 0, f2 = 0; f2 < n4; f2 += 1) {
-                if (a2 = B(i3 = r2._(e4, u2), a2), !i3.status)
-                  return a2;
+                if (a2 = B(i3 = r2._(e4, u2), a2), !i3.status) return a2;
                 u2 = i3.index, o2.push(i3.value);
               }
-              for (; f2 < t2 && (a2 = B(i3 = r2._(e4, u2), a2), i3.status); f2 += 1)
-                u2 = i3.index, o2.push(i3.value);
+              for (; f2 < t2 && (a2 = B(i3 = r2._(e4, u2), a2), i3.status); f2 += 1) u2 = i3.index, o2.push(i3.value);
               return B(b(u2, o2), a2);
             });
           }, u.result = function(n4) {
@@ -7849,12 +9167,11 @@ var require_lib = __commonJS({
           }), fn = Q2(/[0-9]/).desc("a digit"), cn = Q2(/[0-9]*/).desc("optional digits"), sn = Q2(/[a-z]/i).desc("a letter"), ln2 = Q2(/[a-z]*/i).desc("optional letters"), hn = Q2(/\s*/).desc("optional whitespace"), pn = Q2(/\s+/).desc("whitespace"), dn = K("\r"), vn = K("\n"), gn = K("\r\n"), mn = T(gn, vn, dn).desc("newline"), yn = T(mn, an);
           e3.all = on, e3.alt = T, e3.any = un, e3.cr = dn, e3.createLanguage = function(n4) {
             var t2 = {};
-            for (var r2 in n4)
-              ({}).hasOwnProperty.call(n4, r2) && function(r3) {
-                t2[r3] = tn(function() {
-                  return n4[r3](t2);
-                });
-              }(r2);
+            for (var r2 in n4) ({}).hasOwnProperty.call(n4, r2) && function(r3) {
+              t2[r3] = tn(function() {
+                return n4[r3](t2);
+              });
+            }(r2);
             return t2;
           }, e3.crlf = gn, e3.custom = function(n4) {
             return e3(n4(b, x));
@@ -7863,8 +9180,7 @@ var require_lib = __commonJS({
               return n4.indexOf(t2) < 0;
             }).desc("none of '" + n4 + "'");
           }, e3.notFollowedBy = $, e3.of = X, e3.oneOf = function(n4) {
-            for (var t2 = n4.split(""), r2 = 0; r2 < t2.length; r2++)
-              t2[r2] = "'" + t2[r2] + "'";
+            for (var t2 = n4.split(""), r2 = 0; r2 < t2.length; r2++) t2[r2] = "'" + t2[r2] + "'";
             return nn(function(t3) {
               return n4.indexOf(t3) >= 0;
             }).desc(t2);
@@ -7876,31 +9192,27 @@ var require_lib = __commonJS({
             for (var n4, t2 = {}, r2 = 0, u2 = (n4 = arguments, Array.prototype.slice.call(n4)), o2 = u2.length, i3 = 0; i3 < o2; i3 += 1) {
               var a2 = u2[i3];
               if (!y(a2)) {
-                if (E(a2) && a2.length === 2 && typeof a2[0] == "string" && y(a2[1])) {
+                if (E(a2) && 2 === a2.length && "string" == typeof a2[0] && y(a2[1])) {
                   var f2 = a2[0];
-                  if (Object.prototype.hasOwnProperty.call(t2, f2))
-                    throw new Error("seqObj: duplicate key " + f2);
+                  if (Object.prototype.hasOwnProperty.call(t2, f2)) throw new Error("seqObj: duplicate key " + f2);
                   t2[f2] = true, r2++;
                   continue;
                 }
                 throw new Error("seqObj arguments must be parsers or [string, parser] array pairs.");
               }
             }
-            if (r2 === 0)
-              throw new Error("seqObj expects at least one named parser, found zero");
+            if (0 === r2) throw new Error("seqObj expects at least one named parser, found zero");
             return e3(function(n5, t3) {
               for (var r3, e4 = {}, i4 = 0; i4 < o2; i4 += 1) {
                 var a3, f3;
-                if (E(u2[i4]) ? (a3 = u2[i4][0], f3 = u2[i4][1]) : (a3 = null, f3 = u2[i4]), !(r3 = B(f3._(n5, t3), r3)).status)
-                  return r3;
+                if (E(u2[i4]) ? (a3 = u2[i4][0], f3 = u2[i4][1]) : (a3 = null, f3 = u2[i4]), !(r3 = B(f3._(n5, t3), r3)).status) return r3;
                 a3 && (e4[a3] = r3.value), t3 = r3.index;
               }
               return B(b(t3, e4), r3);
             });
           }, e3.string = K, e3.succeed = X, e3.takeWhile = function(n4) {
             return k(n4), e3(function(t2, r2) {
-              for (var e4 = r2; e4 < t2.length && n4(L(t2, e4)); )
-                e4++;
+              for (var e4 = r2; e4 < t2.length && n4(L(t2, e4)); ) e4++;
               return b(e4, t2.slice(r2, e4));
             });
           }, e3.test = nn, e3.whitespace = pn, e3["fantasy-land/empty"] = rn, e3["fantasy-land/of"] = X, e3.Binary = { bitSeq: l2, bitSeqObj: function(n4) {
@@ -7908,16 +9220,13 @@ var require_lib = __commonJS({
             var t2 = {}, r2 = 0, e4 = a(function(n5) {
               if (E(n5)) {
                 var e5 = n5;
-                if (e5.length !== 2)
-                  throw new Error("[" + e5.join(", ") + "] should be length 2, got length " + e5.length);
-                if (P3(e5[0]), O(e5[1]), Object.prototype.hasOwnProperty.call(t2, e5[0]))
-                  throw new Error("duplicate key in bitSeqObj: " + e5[0]);
+                if (2 !== e5.length) throw new Error("[" + e5.join(", ") + "] should be length 2, got length " + e5.length);
+                if (P4(e5[0]), O(e5[1]), Object.prototype.hasOwnProperty.call(t2, e5[0])) throw new Error("duplicate key in bitSeqObj: " + e5[0]);
                 return t2[e5[0]] = true, r2++, e5;
               }
               return O(n5), [null, n5];
             }, n4);
-            if (r2 < 1)
-              throw new Error("bitSeqObj expects at least one named pair, got [" + n4.join(", ") + "]");
+            if (r2 < 1) throw new Error("bitSeqObj expects at least one named pair, got [" + n4.join(", ") + "]");
             var u2 = a(function(n5) {
               return n5[0];
             }, e4);
@@ -7925,14 +9234,13 @@ var require_lib = __commonJS({
               return n5[1];
             }, e4)).map(function(n5) {
               return i2(function(n6, t3) {
-                return t3[0] !== null && (n6[t3[0]] = t3[1]), n6;
+                return null !== t3[0] && (n6[t3[0]] = t3[1]), n6;
               }, {}, a(function(t3, r3) {
                 return [t3, n5[r3]];
               }, u2));
             });
           }, byte: function(n4) {
-            if (s2(), O(n4), n4 > 255)
-              throw new Error("Value specified to byte constructor (" + n4 + "=0x" + n4.toString(16) + ") is larger in value than a single byte.");
+            if (s2(), O(n4), n4 > 255) throw new Error("Value specified to byte constructor (" + n4 + "=0x" + n4.toString(16) + ") is larger in value than a single byte.");
             var t2 = (n4 > 15 ? "0x" : "0x0") + n4.toString(16);
             return e3(function(r2, e4) {
               var u2 = L(r2, e4);
@@ -8294,17 +9602,23 @@ var require_lib = __commonJS({
       }
       Groupings2.count = count2;
     })(Groupings || (Groupings = {}));
-    var Link = class {
+    var Link = class _Link {
       constructor(fields) {
+        /** The file path this link points to. */
         __publicField(this, "path");
+        /** The display name associated with the link. */
         __publicField(this, "display");
+        /** The block ID or header this link points to within a file, if relevant. */
         __publicField(this, "subpath");
+        /** Is this link an embedded link (!)? */
         __publicField(this, "embed");
+        /** The type of this link, which determines what 'subpath' refers to, if anything. */
         __publicField(this, "type");
         Object.assign(this, fields);
       }
+      /** Create a link to a specific file. */
       static file(path, embed = false, display) {
-        return new Link({
+        return new _Link({
           path,
           embed,
           display,
@@ -8315,15 +9629,16 @@ var require_lib = __commonJS({
       static infer(linkpath, embed = false, display) {
         if (linkpath.includes("#^")) {
           let split = linkpath.split("#^");
-          return Link.block(split[0], split[1], embed, display);
+          return _Link.block(split[0], split[1], embed, display);
         } else if (linkpath.includes("#")) {
           let split = linkpath.split("#");
-          return Link.header(split[0], split[1], embed, display);
+          return _Link.header(split[0], split[1], embed, display);
         } else
-          return Link.file(linkpath, embed, display);
+          return _Link.file(linkpath, embed, display);
       }
+      /** Create a link to a specific file and header in that file. */
       static header(path, header, embed, display) {
-        return new Link({
+        return new _Link({
           path,
           embed,
           display,
@@ -8331,8 +9646,9 @@ var require_lib = __commonJS({
           type: "header"
         });
       }
+      /** Create a link to a specific file and block in that file. */
       static block(path, blockId, embed, display) {
-        return new Link({
+        return new _Link({
           path,
           embed,
           display,
@@ -8341,49 +9657,60 @@ var require_lib = __commonJS({
         });
       }
       static fromObject(object) {
-        return new Link(object);
+        return new _Link(object);
       }
+      /** Checks for link equality (i.e., that the links are pointing to the same exact location). */
       equals(other) {
         if (other == void 0 || other == null)
           return false;
         return this.path == other.path && this.type == other.type && this.subpath == other.subpath;
       }
+      /** Convert this link to it's markdown representation. */
       toString() {
         return this.markdown();
       }
+      /** Convert this link to a raw object which is serialization-friendly. */
       toObject() {
         return { path: this.path, type: this.type, subpath: this.subpath, display: this.display, embed: this.embed };
       }
+      /** Update this link with a new path. */
+      //@ts-ignore; error appeared after updating Obsidian to 0.15.4; it also updated other packages but didn't say which
       withPath(path) {
-        return new Link(Object.assign({}, this, { path }));
+        return new _Link(Object.assign({}, this, { path }));
       }
+      /** Return a new link which points to the same location but with a new display value. */
       withDisplay(display) {
-        return new Link(Object.assign({}, this, { display }));
+        return new _Link(Object.assign({}, this, { display }));
       }
+      /** Convert a file link into a link to a specific header. */
       withHeader(header) {
-        return Link.header(this.path, header, this.embed, this.display);
+        return _Link.header(this.path, header, this.embed, this.display);
       }
+      /** Convert any link into a link to its file. */
       toFile() {
-        return Link.file(this.path, this.embed, this.display);
+        return _Link.file(this.path, this.embed, this.display);
       }
+      /** Convert this link into an embedded link. */
       toEmbed() {
         if (this.embed) {
           return this;
         } else {
-          let link = new Link(this);
+          let link = new _Link(this);
           link.embed = true;
           return link;
         }
       }
+      /** Convert this link into a non-embedded link. */
       fromEmbed() {
         if (!this.embed) {
           return this;
         } else {
-          let link = new Link(this);
+          let link = new _Link(this);
           link.embed = false;
           return link;
         }
       }
+      /** Convert this link to markdown so it can be rendered. */
       markdown() {
         let result = (this.embed ? "!" : "") + "[[" + this.obsidianLink();
         if (this.display) {
@@ -8396,6 +9723,7 @@ var require_lib = __commonJS({
         result += "]]";
         return result;
       }
+      /** Convert the inner part of the link to something that Obsidian can open / understand. */
       obsidianLink() {
         var _a, _b;
         const escaped = this.path.replaceAll("|", "\\|");
@@ -8406,6 +9734,7 @@ var require_lib = __commonJS({
         else
           return escaped;
       }
+      /** The stripped name of the file this link points to. */
       fileName() {
         return getFileTitle(this.path).replace(".md", "");
       }
@@ -8650,7 +9979,9 @@ var require_lib = __commonJS({
       });
     }
     var EXPRESSION = parsimmon_umd_minExports.createLanguage({
+      // A floating point number; the decimal point is optional.
       number: (q) => parsimmon_umd_minExports.regexp(/-?[0-9]+(\.[0-9]+)?/).map((str) => Number.parseFloat(str)).desc("number"),
+      // A quote-surrounded string which supports escape characters ('\').
       string: (q) => parsimmon_umd_minExports.string('"').then(parsimmon_umd_minExports.alt(q.escapeCharacter, parsimmon_umd_minExports.noneOf('"\\')).atLeast(0).map((chars) => chars.join(""))).skip(parsimmon_umd_minExports.string('"')).desc("string"),
       escapeCharacter: (_) => parsimmon_umd_minExports.string("\\").then(parsimmon_umd_minExports.any).map((escaped) => {
         if (escaped === '"')
@@ -8660,18 +9991,28 @@ var require_lib = __commonJS({
         else
           return "\\" + escaped;
       }),
+      // A boolean true/false value.
       bool: (_) => parsimmon_umd_minExports.regexp(/true|false|True|False/).map((str) => str.toLowerCase() == "true").desc("boolean ('true' or 'false')"),
+      // A tag of the form '#stuff/hello-there'.
       tag: (_) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("#"), parsimmon_umd_minExports.alt(parsimmon_umd_minExports.regexp(/[^\u2000-\u206F\u2E00-\u2E7F'!"#$%&()*+,.:;<=>?@^`{|}~\[\]\\\s]/).desc("text")).many(), (start, rest) => start + rest.join("")).desc("tag ('#hello/stuff')"),
+      // A variable identifier, which is alphanumeric and must start with a letter or... emoji.
       identifier: (_) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.alt(parsimmon_umd_minExports.regexp(/\p{Letter}/u), parsimmon_umd_minExports.regexp(EMOJI_REGEX).desc("text")), parsimmon_umd_minExports.alt(parsimmon_umd_minExports.regexp(/[0-9\p{Letter}_-]/u), parsimmon_umd_minExports.regexp(EMOJI_REGEX).desc("text")).many(), (first, rest) => first + rest.join("")).desc("variable identifier"),
+      // An Obsidian link of the form [[<link>]].
       link: (_) => parsimmon_umd_minExports.regexp(/\[\[([^\[\]]*?)\]\]/u, 1).map((linkInner) => parseInnerLink(linkInner)).desc("file link"),
+      // An embeddable link which can start with '!'. This overlaps with the normal negation operator, so it is only
+      // provided for metadata parsing.
       embedLink: (q) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("!").atMost(1), q.link, (p, l2) => {
         if (p.length > 0)
           l2.embed = true;
         return l2;
       }).desc("file link"),
+      // Binary plus or minus operator.
       binaryPlusMinus: (_) => parsimmon_umd_minExports.regexp(/\+|-/).map((str) => str).desc("'+' or '-'"),
+      // Binary times or divide operator.
       binaryMulDiv: (_) => parsimmon_umd_minExports.regexp(/\*|\/|%/).map((str) => str).desc("'*' or '/' or '%'"),
+      // Binary comparison operator.
       binaryCompareOp: (_) => parsimmon_umd_minExports.regexp(/>=|<=|!=|>|<|=/).map((str) => str).desc("'>=' or '<=' or '!=' or '=' or '>' or '<'"),
+      // Binary boolean combination operator.
       binaryBooleanOp: (_) => parsimmon_umd_minExports.regexp(/and|or|&|\|/i).map((str) => {
         if (str.toLowerCase() == "and")
           return "&";
@@ -8680,15 +10021,24 @@ var require_lib = __commonJS({
         else
           return str;
       }).desc("'and' or 'or'"),
+      // A date which can be YYYY-MM[-DDTHH:mm:ss].
       rootDate: (_) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.regexp(/\d{4}/), parsimmon_umd_minExports.string("-"), parsimmon_umd_minExports.regexp(/\d{2}/), (year, _2, month) => {
         return DateTime.fromObject({ year: Number.parseInt(year), month: Number.parseInt(month) });
       }).desc("date in format YYYY-MM[-DDTHH-MM-SS.MS]"),
       dateShorthand: (_) => parsimmon_umd_minExports.alt(...Object.keys(DATE_SHORTHANDS).sort((a, b) => b.length - a.length).map(parsimmon_umd_minExports.string)),
-      date: (q) => chainOpt(q.rootDate, (ym) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("-"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, day) => ym.set({ day: Number.parseInt(day) })), (ymd) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("T"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, hour) => ymd.set({ hour: Number.parseInt(hour) })), (ymdh) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string(":"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, minute) => ymdh.set({ minute: Number.parseInt(minute) })), (ymdhm) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string(":"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, second) => ymdhm.set({ second: Number.parseInt(second) })), (ymdhms) => parsimmon_umd_minExports.alt(parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("."), parsimmon_umd_minExports.regexp(/\d{3}/), (_, millisecond) => ymdhms.set({ millisecond: Number.parseInt(millisecond) })), parsimmon_umd_minExports.succeed(ymdhms)), (dt) => parsimmon_umd_minExports.alt(parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("+").or(parsimmon_umd_minExports.string("-")), parsimmon_umd_minExports.regexp(/\d{1,2}(:\d{2})?/), (pm, hr) => dt.setZone("UTC" + pm + hr, { keepLocalTime: true })), parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("Z"), () => dt.setZone("utc", { keepLocalTime: true })), parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("["), parsimmon_umd_minExports.regexp(/[0-9A-Za-z+-\/]+/u), parsimmon_umd_minExports.string("]"), (_a, zone, _b) => dt.setZone(zone, { keepLocalTime: true })))).assert((dt) => dt.isValid, "valid date").desc("date in format YYYY-MM[-DDTHH-MM-SS.MS]"),
+      date: (q) => chainOpt(q.rootDate, (ym) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("-"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, day) => ym.set({ day: Number.parseInt(day) })), (ymd) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("T"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, hour) => ymd.set({ hour: Number.parseInt(hour) })), (ymdh) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string(":"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, minute) => ymdh.set({ minute: Number.parseInt(minute) })), (ymdhm) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string(":"), parsimmon_umd_minExports.regexp(/\d{2}/), (_, second) => ymdhm.set({ second: Number.parseInt(second) })), (ymdhms) => parsimmon_umd_minExports.alt(
+        parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("."), parsimmon_umd_minExports.regexp(/\d{3}/), (_, millisecond) => ymdhms.set({ millisecond: Number.parseInt(millisecond) })),
+        parsimmon_umd_minExports.succeed(ymdhms)
+        // pass
+      ), (dt) => parsimmon_umd_minExports.alt(parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("+").or(parsimmon_umd_minExports.string("-")), parsimmon_umd_minExports.regexp(/\d{1,2}(:\d{2})?/), (pm, hr) => dt.setZone("UTC" + pm + hr, { keepLocalTime: true })), parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("Z"), () => dt.setZone("utc", { keepLocalTime: true })), parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("["), parsimmon_umd_minExports.regexp(/[0-9A-Za-z+-\/]+/u), parsimmon_umd_minExports.string("]"), (_a, zone, _b) => dt.setZone(zone, { keepLocalTime: true })))).assert((dt) => dt.isValid, "valid date").desc("date in format YYYY-MM[-DDTHH-MM-SS.MS]"),
+      // A date, plus various shorthand times of day it could be.
       datePlus: (q) => parsimmon_umd_minExports.alt(q.dateShorthand.map((d) => DATE_SHORTHANDS[d]()), q.date).desc("date in format YYYY-MM[-DDTHH-MM-SS.MS] or in shorthand"),
+      // A duration of time.
       durationType: (_) => parsimmon_umd_minExports.alt(...Object.keys(DURATION_TYPES).sort((a, b) => b.length - a.length).map(parsimmon_umd_minExports.string)),
       duration: (q) => parsimmon_umd_minExports.seqMap(q.number, parsimmon_umd_minExports.optWhitespace, q.durationType, (count2, _, t) => DURATION_TYPES[t].mapUnits((x) => x * count2)).sepBy1(parsimmon_umd_minExports.string(",").trim(parsimmon_umd_minExports.optWhitespace).or(parsimmon_umd_minExports.optWhitespace)).map((durations) => durations.reduce((p, c) => p.plus(c))).desc("duration like 4hr2min"),
+      // A raw null value.
       rawNull: (_) => parsimmon_umd_minExports.string("null"),
+      // Source parsing.
       tagSource: (q) => q.tag.map((tag2) => Sources.tag(tag2)),
       csvSource: (q) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("csv(").skip(parsimmon_umd_minExports.optWhitespace), q.string, parsimmon_umd_minExports.string(")"), (_1, path, _2) => Sources.csv(path)),
       linkIncomingSource: (q) => q.link.map((link) => Sources.link(link.path, true)),
@@ -8699,6 +10049,7 @@ var require_lib = __commonJS({
       atomSource: (q) => parsimmon_umd_minExports.alt(q.parensSource, q.negateSource, q.linkOutgoingSource, q.linkIncomingSource, q.folderSource, q.tagSource, q.csvSource),
       binaryOpSource: (q) => createBinaryParser(q.atomSource, q.binaryBooleanOp.map((s2) => s2), Sources.binaryOp),
       source: (q) => q.binaryOpSource,
+      // Field parsing.
       variableField: (q) => q.identifier.chain((r) => {
         if (KEYWORDS.includes(r.toUpperCase())) {
           return parsimmon_umd_minExports.fail("Variable fields cannot be a keyword (" + KEYWORDS.join(" or ") + ")");
@@ -8725,7 +10076,23 @@ var require_lib = __commonJS({
       atomInlineField: (q) => parsimmon_umd_minExports.alt(q.date, q.duration.map((d) => normalizeDuration(d)), q.string, q.tag, q.embedLink, q.bool, q.number, q.rawNull),
       inlineFieldList: (q) => q.atomInlineField.sepBy(parsimmon_umd_minExports.string(",").trim(parsimmon_umd_minExports.optWhitespace).lookahead(q.atomInlineField)),
       inlineField: (q) => parsimmon_umd_minExports.alt(parsimmon_umd_minExports.seqMap(q.atomInlineField, parsimmon_umd_minExports.string(",").trim(parsimmon_umd_minExports.optWhitespace), q.inlineFieldList, (f, _s, l2) => [f].concat(l2)), q.atomInlineField),
-      atomField: (q) => parsimmon_umd_minExports.alt(q.embedLink.map((l2) => Fields.literal(l2)), q.negatedField, q.linkField, q.listField, q.objectField, q.lambdaField, q.parensField, q.boolField, q.numberField, q.stringField, q.dateField, q.durationField, q.nullField, q.variableField),
+      atomField: (q) => parsimmon_umd_minExports.alt(
+        // Place embed links above negated fields as they are the special parser case '![[thing]]' and are generally unambiguous.
+        q.embedLink.map((l2) => Fields.literal(l2)),
+        q.negatedField,
+        q.linkField,
+        q.listField,
+        q.objectField,
+        q.lambdaField,
+        q.parensField,
+        q.boolField,
+        q.numberField,
+        q.stringField,
+        q.dateField,
+        q.durationField,
+        q.nullField,
+        q.variableField
+      ),
       indexField: (q) => parsimmon_umd_minExports.seqMap(q.atomField, parsimmon_umd_minExports.alt(q.dotPostfix, q.indexPostfix, q.functionPostfix).many(), (obj, postfixes) => {
         let result = obj;
         for (let post of postfixes) {
@@ -8757,6 +10124,7 @@ var require_lib = __commonJS({
       functionPostfix: (q) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.string("("), parsimmon_umd_minExports.optWhitespace, q.field.sepBy(parsimmon_umd_minExports.string(",").trim(parsimmon_umd_minExports.optWhitespace)), parsimmon_umd_minExports.optWhitespace, parsimmon_umd_minExports.string(")"), (_, _1, fields, _2, _3) => {
         return { type: "function", fields };
       }),
+      // The precedence hierarchy of operators - multiply/divide, add/subtract, compare, and then boolean operations.
       binaryMulDivField: (q) => createBinaryParser(q.indexField, q.binaryMulDiv, Fields.binaryOp),
       binaryPlusMinusField: (q) => createBinaryParser(q.binaryMulDivField, q.binaryPlusMinus, Fields.binaryOp),
       binaryCompareField: (q) => createBinaryParser(q.binaryPlusMinusField, q.binaryCompareOp, Fields.binaryOp),
@@ -8799,6 +10167,7 @@ var require_lib = __commonJS({
       return parsimmon_umd_minExports.eof.map(if_eof).or(parsimmon_umd_minExports.whitespace.then(parser2));
     }
     var QUERY_LANGUAGE = parsimmon_umd_minExports.createLanguage({
+      // Simple atom parsing, like words, identifiers, numbers.
       queryType: (q) => parsimmon_umd_minExports.alt(parsimmon_umd_minExports.regexp(/TABLE|LIST|TASK|CALENDAR/i)).map((str) => str.toLowerCase()).desc("query type ('TABLE', 'LIST', 'TASK', or 'CALENDAR')"),
       explicitNamedField: (q) => parsimmon_umd_minExports.seqMap(EXPRESSION.field.skip(parsimmon_umd_minExports.whitespace), parsimmon_umd_minExports.regexp(/AS/i).skip(parsimmon_umd_minExports.whitespace), EXPRESSION.identifier.or(EXPRESSION.string), (field, _as, ident) => QueryFields.named(ident, field)),
       comment: () => parsimmon_umd_minExports.Parser((input, i2) => {
@@ -8866,6 +10235,7 @@ var require_lib = __commonJS({
       groupByClause: (q) => parsimmon_umd_minExports.seqMap(parsimmon_umd_minExports.regexp(/GROUP BY/i).skip(parsimmon_umd_minExports.whitespace), q.namedField, (_, field) => {
         return { type: "group", field };
       }).desc("GROUP BY <value> [AS <name>]"),
+      // Full query parsing.
       clause: (q) => parsimmon_umd_minExports.alt(q.fromClause, q.whereClause, q.sortByClause, q.limitClause, q.groupByClause, q.flattenClause),
       query: (q) => parsimmon_umd_minExports.seqMap(q.headerClause.trim(optionalWhitespaceOrComment), q.fromClause.trim(optionalWhitespaceOrComment).atMost(1), q.clause.trim(optionalWhitespaceOrComment).many(), (header, from, clauses) => {
         return {
@@ -8877,14 +10247,14 @@ var require_lib = __commonJS({
       })
     });
     var optionalWhitespaceOrComment = parsimmon_umd_minExports.alt(parsimmon_umd_minExports.whitespace, QUERY_LANGUAGE.comment).many().map((arr) => arr.join(""));
-    var getAPI3 = (app2) => {
+    var getAPI3 = (app) => {
       var _a;
-      if (app2)
-        return (_a = app2.plugins.plugins.dataview) == null ? void 0 : _a.api;
+      if (app)
+        return (_a = app.plugins.plugins.dataview) == null ? void 0 : _a.api;
       else
         return window.DataviewAPI;
     };
-    var isPluginEnabled = (app2) => app2.plugins.enabledPlugins.has("dataview");
+    var isPluginEnabled = (app) => app.plugins.enabledPlugins.has("dataview");
     exports.DATE_SHORTHANDS = DATE_SHORTHANDS;
     exports.DURATION_TYPES = DURATION_TYPES;
     exports.EXPRESSION = EXPRESSION;
@@ -8901,38 +10271,28 @@ var require_fast_deep_equal = __commonJS({
   "node_modules/fast-deep-equal/index.js"(exports, module2) {
     "use strict";
     module2.exports = function equal3(a, b) {
-      if (a === b)
-        return true;
+      if (a === b) return true;
       if (a && b && typeof a == "object" && typeof b == "object") {
-        if (a.constructor !== b.constructor)
-          return false;
+        if (a.constructor !== b.constructor) return false;
         var length, i2, keys;
         if (Array.isArray(a)) {
           length = a.length;
-          if (length != b.length)
-            return false;
+          if (length != b.length) return false;
           for (i2 = length; i2-- !== 0; )
-            if (!equal3(a[i2], b[i2]))
-              return false;
+            if (!equal3(a[i2], b[i2])) return false;
           return true;
         }
-        if (a.constructor === RegExp)
-          return a.source === b.source && a.flags === b.flags;
-        if (a.valueOf !== Object.prototype.valueOf)
-          return a.valueOf() === b.valueOf();
-        if (a.toString !== Object.prototype.toString)
-          return a.toString() === b.toString();
+        if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+        if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+        if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
         keys = Object.keys(a);
         length = keys.length;
-        if (length !== Object.keys(b).length)
-          return false;
+        if (length !== Object.keys(b).length) return false;
         for (i2 = length; i2-- !== 0; )
-          if (!Object.prototype.hasOwnProperty.call(b, keys[i2]))
-            return false;
+          if (!Object.prototype.hasOwnProperty.call(b, keys[i2])) return false;
         for (i2 = length; i2-- !== 0; ) {
           var key = keys[i2];
-          if (!equal3(a[key], b[key]))
-            return false;
+          if (!equal3(a[key], b[key])) return false;
         }
         return true;
       }
@@ -9148,7 +10508,7 @@ __export(esm_exports, {
   corrDependencies: () => corrDependencies,
   cos: () => cos2,
   cosDependencies: () => cosDependencies,
-  cosh: () => cosh3,
+  cosh: () => cosh4,
   coshDependencies: () => coshDependencies,
   cot: () => cot,
   cotDependencies: () => cotDependencies,
@@ -9639,7 +10999,7 @@ __export(esm_exports, {
   helpDependencies: () => helpDependencies,
   hex: () => hex,
   hexDependencies: () => hexDependencies,
-  hypot: () => hypot2,
+  hypot: () => hypot3,
   hypotDependencies: () => hypotDependencies,
   i: () => i,
   iDependencies: () => iDependencies,
@@ -9820,7 +11180,7 @@ __export(esm_exports, {
   onesDependencies: () => onesDependencies,
   or: () => or,
   orDependencies: () => orDependencies,
-  parse: () => parse,
+  parse: () => parse2,
   parseDependencies: () => parseDependencies,
   parser: () => parser,
   parserDependencies: () => parserDependencies,
@@ -9944,7 +11304,7 @@ __export(esm_exports, {
   simplifyDependencies: () => simplifyDependencies,
   sin: () => sin2,
   sinDependencies: () => sinDependencies,
-  sinh: () => sinh3,
+  sinh: () => sinh4,
   sinhDependencies: () => sinhDependencies,
   size: () => size,
   sizeDependencies: () => sizeDependencies,
@@ -10054,8 +11414,7 @@ function _extends() {
   return _extends = Object.assign ? Object.assign.bind() : function(n) {
     for (var e3 = 1; e3 < arguments.length; e3++) {
       var t = arguments[e3];
-      for (var r in t)
-        ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+      for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
     }
     return n;
   }, _extends.apply(null, arguments);
@@ -10063,11 +11422,22 @@ function _extends() {
 
 // node_modules/mathjs/lib/esm/core/config.js
 var DEFAULT_CONFIG = {
+  // minimum relative difference between two compared values,
+  // used by all comparison functions
   epsilon: 1e-12,
+  // type of default matrix output. Choose 'matrix' (default) or 'array'
   matrix: "Matrix",
+  // type of default number output. Choose 'number' (default) 'BigNumber', or 'Fraction
   number: "number",
+  // number of significant digits in BigNumbers
   precision: 64,
+  // predictable output type of functions. When true, output type depends only
+  // on the input types. When false (default), output type can vary depending
+  // on input values. For example `math.sqrt(-4)` returns `complex('2i')` when
+  // predictable is false, and returns `NaN` when true.
   predictable: false,
+  // random seed for seeded pseudo random number generation
+  // null = randomly seed
   randomSeed: null
 };
 
@@ -10202,12 +11572,9 @@ function isChain(x) {
 function typeOf(x) {
   var t = typeof x;
   if (t === "object") {
-    if (x === null)
-      return "null";
-    if (isBigNumber(x))
-      return "BigNumber";
-    if (x.constructor && x.constructor.name)
-      return x.constructor.name;
+    if (x === null) return "null";
+    if (isBigNumber(x)) return "BigNumber";
+    if (x.constructor && x.constructor.name) return x.constructor.name;
     return "Object";
   }
   return t;
@@ -10227,10 +11594,8 @@ function clone(x) {
       return clone(value);
     });
   }
-  if (x instanceof Date)
-    return new Date(x.valueOf());
-  if (isBigNumber(x))
-    return x;
+  if (x instanceof Date) return new Date(x.valueOf());
+  if (isBigNumber(x)) return x;
   if (isObject(x)) {
     return mapObject(x, clone);
   }
@@ -11195,8 +12560,7 @@ function format2(value, options) {
     case "auto": {
       var lowerExp = options && options.lowerExp !== void 0 ? options.lowerExp : -3;
       var upperExp = options && options.upperExp !== void 0 ? options.upperExp : 5;
-      if (value.isZero())
-        return "0";
+      if (value.isZero()) return "0";
       var str;
       var rounded = value.toSignificantDigits(precision);
       var exp3 = rounded.e;
@@ -12034,6 +13398,10 @@ var createTyped = /* @__PURE__ */ factory("typed", dependencies, function create
       name: "Unit",
       test: isUnit
     },
+    // The following type matches a valid variable name, i.e., an alphanumeric
+    // string starting with an alphabetic character. It is used (at least)
+    // in the definition of the derivative() function, as the argument telling
+    // what to differentiate over must (currently) be a variable.
     {
       name: "identifier",
       test: (s) => isString && /^(?:[A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])(?:[0-9A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u1884\u1887-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF2D-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD801[\uDC00-\uDC9D\uDCB0-\uDCD3\uDCD8-\uDCFB\uDD00-\uDD27\uDD30-\uDD63\uDD70-\uDD7A\uDD7C-\uDD8A\uDD8C-\uDD92\uDD94\uDD95\uDD97-\uDDA1\uDDA3-\uDDB1\uDDB3-\uDDB9\uDDBB\uDDBC\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67\uDF80-\uDF85\uDF87-\uDFB0\uDFB2-\uDFBA]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE35\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2\uDD00-\uDD23\uDE80-\uDEA9\uDEB0\uDEB1\uDF00-\uDF1C\uDF27\uDF30-\uDF45\uDF70-\uDF81\uDFB0-\uDFC4\uDFE0-\uDFF6]|\uD804[\uDC03-\uDC37\uDC71\uDC72\uDC75\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD44\uDD47\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE3F\uDE40\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD805[\uDC00-\uDC34\uDC47-\uDC4A\uDC5F-\uDC61\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDEB8\uDF00-\uDF1A\uDF40-\uDF46]|\uD806[\uDC00-\uDC2B\uDCA0-\uDCDF\uDCFF-\uDD06\uDD09\uDD0C-\uDD13\uDD15\uDD16\uDD18-\uDD2F\uDD3F\uDD41\uDDA0-\uDDA7\uDDAA-\uDDD0\uDDE1\uDDE3\uDE00\uDE0B-\uDE32\uDE3A\uDE50\uDE5C-\uDE89\uDE9D\uDEB0-\uDEF8]|\uD807[\uDC00-\uDC08\uDC0A-\uDC2E\uDC40\uDC72-\uDC8F\uDD00-\uDD06\uDD08\uDD09\uDD0B-\uDD30\uDD46\uDD60-\uDD65\uDD67\uDD68\uDD6A-\uDD89\uDD98\uDEE0-\uDEF2\uDF02\uDF04-\uDF10\uDF12-\uDF33\uDFB0]|\uD808[\uDC00-\uDF99]|\uD809[\uDC80-\uDD43]|\uD80B[\uDF90-\uDFF0]|[\uD80C\uD81C-\uD820\uD822\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883\uD885-\uD887][\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F\uDC41-\uDC46]|\uD811[\uDC00-\uDE46]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDE70-\uDEBE\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD81B[\uDE40-\uDE7F\uDF00-\uDF4A\uDF50\uDF93-\uDF9F\uDFE0\uDFE1\uDFE3]|\uD821[\uDC00-\uDFF7]|\uD823[\uDC00-\uDCD5\uDD00-\uDD08]|\uD82B[\uDFF0-\uDFF3\uDFF5-\uDFFB\uDFFD\uDFFE]|\uD82C[\uDC00-\uDD22\uDD32\uDD50-\uDD52\uDD55\uDD64-\uDD67\uDD70-\uDEFB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD837[\uDF00-\uDF1E\uDF25-\uDF2A]|\uD838[\uDC30-\uDC6D\uDD00-\uDD2C\uDD37-\uDD3D\uDD4E\uDE90-\uDEAD\uDEC0-\uDEEB]|\uD839[\uDCD0-\uDCEB\uDFE0-\uDFE6\uDFE8-\uDFEB\uDFED\uDFEE\uDFF0-\uDFFE]|\uD83A[\uDC00-\uDCC4\uDD00-\uDD43\uDD4B]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD869[\uDC00-\uDEDF\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF39\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD87E[\uDC00-\uDE1D]|\uD884[\uDC00-\uDF4A\uDF50-\uDFFF]|\uD888[\uDC00-\uDFAF])*$/.test(s)
@@ -12174,6 +13542,7 @@ var createTyped = /* @__PURE__ */ factory("typed", dependencies, function create
       name: "Object",
       test: isObject
     }
+    // order 'Object' last, it matches on other classes too
   ]);
   typed3.addConversions([{
     from: "number",
@@ -12234,6 +13603,13 @@ var createTyped = /* @__PURE__ */ factory("typed", dependencies, function create
       return f;
     }
   }, {
+    // FIXME: add conversion from Fraction to number, for example for `sqrt(fraction(1,3))`
+    //  from: 'Fraction',
+    //  to: 'number',
+    //  convert: function (x) {
+    //    return x.valueOf()
+    //  }
+    // }, {
     from: "string",
     to: "number",
     convert: function convert(x) {
@@ -12330,7 +13706,8 @@ var createTyped = /* @__PURE__ */ factory("typed", dependencies, function create
   }]);
   typed3.onMismatch = (name310, args, signatures) => {
     var usualError = typed3.createError(name310, args, signatures);
-    if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && signatures.some((sig) => !sig.params.includes(","))) {
+    if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && // check if the function can be unary:
+    signatures.some((sig) => !sig.params.includes(","))) {
       var err = new TypeError("Function '".concat(name310, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name310, ")'."));
       err.data = usualError.data;
       throw err;
@@ -12339,7 +13716,8 @@ var createTyped = /* @__PURE__ */ factory("typed", dependencies, function create
   };
   typed3.onMismatch = (name310, args, signatures) => {
     var usualError = typed3.createError(name310, args, signatures);
-    if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && signatures.some((sig) => !sig.params.includes(","))) {
+    if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && // check if the function can be unary:
+    signatures.some((sig) => !sig.params.includes(","))) {
       var err = new TypeError("Function '".concat(name310, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name310, ")'."));
       err.data = usualError.data;
       throw err;
@@ -12400,14 +13778,63 @@ var NUMERALS = "0123456789abcdef";
 var LN10 = "2.3025850929940456840179914546843642076011014886287729760333279009675726096773524802359972050895982983419677840422862486334095254650828067566662873690987816894829072083255546808437998948262331985283935053089653777326288461633662222876982198867465436674744042432743651550489343149393914796194044002221051017141748003688084012647080685567743216228355220114804663715659121373450747856947683463616792101806445070648000277502684916746550586856935673420670581136429224554405758925724208241314695689016758940256776311356919292033376587141660230105703089634572075440370847469940168269282808481184289314848524948644871927809676271275775397027668605952496716674183485704422507197965004714951050492214776567636938662976979522110718264549734772662425709429322582798502585509785265383207606726317164309505995087807523710333101197857547331541421808427543863591778117054309827482385045648019095610299291824318237525357709750539565187697510374970888692180205189339507238539205144634197265287286965110862571492198849978748873771345686209167058";
 var PI = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989380952572010654858632789";
 var DEFAULTS = {
+  // These values must be integers within the stated ranges (inclusive).
+  // Most of these values can be changed at run-time using the `Decimal.config` method.
+  // The maximum number of significant digits of the result of a calculation or base conversion.
+  // E.g. `Decimal.config({ precision: 20 });`
   precision: 20,
+  // 1 to MAX_DIGITS
+  // The rounding mode used when rounding to `precision`.
+  //
+  // ROUND_UP         0 Away from zero.
+  // ROUND_DOWN       1 Towards zero.
+  // ROUND_CEIL       2 Towards +Infinity.
+  // ROUND_FLOOR      3 Towards -Infinity.
+  // ROUND_HALF_UP    4 Towards nearest neighbour. If equidistant, up.
+  // ROUND_HALF_DOWN  5 Towards nearest neighbour. If equidistant, down.
+  // ROUND_HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
+  // ROUND_HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
+  // ROUND_HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
+  //
+  // E.g.
+  // `Decimal.rounding = 4;`
+  // `Decimal.rounding = Decimal.ROUND_HALF_UP;`
   rounding: 4,
+  // 0 to 8
+  // The modulo mode used when calculating the modulus: a mod n.
+  // The quotient (q = a / n) is calculated according to the corresponding rounding mode.
+  // The remainder (r) is calculated as: r = a - n * q.
+  //
+  // UP         0 The remainder is positive if the dividend is negative, else is negative.
+  // DOWN       1 The remainder has the same sign as the dividend (JavaScript %).
+  // FLOOR      3 The remainder has the same sign as the divisor (Python %).
+  // HALF_EVEN  6 The IEEE 754 remainder function.
+  // EUCLID     9 Euclidian division. q = sign(n) * floor(a / abs(n)). Always positive.
+  //
+  // Truncated division (1), floored division (3), the IEEE 754 remainder (6), and Euclidian
+  // division (9) are commonly used for the modulus operation. The other rounding modes can also
+  // be used, but they may not give useful results.
   modulo: 1,
+  // 0 to 9
+  // The exponent value at and beneath which `toString` returns exponential notation.
+  // JavaScript numbers: -7
   toExpNeg: -7,
+  // 0 to -EXP_LIMIT
+  // The exponent value at and above which `toString` returns exponential notation.
+  // JavaScript numbers: 21
   toExpPos: 21,
+  // 0 to EXP_LIMIT
+  // The minimum exponent value, beneath which underflow to zero occurs.
+  // JavaScript numbers: -324  (5e-324)
   minE: -EXP_LIMIT,
+  // -1 to -EXP_LIMIT
+  // The maximum exponent value, above which overflow to Infinity occurs.
+  // JavaScript numbers: 308  (1.7976931348623157e+308)
   maxE: EXP_LIMIT,
+  // 1 to EXP_LIMIT
+  // Whether to use cryptographically-secure random number generation, if available.
   crypto: false
+  // true/false
 };
 var inexact;
 var quadrant;
@@ -12431,8 +13858,7 @@ var PI_PRECISION = PI.length - 1;
 var P = { toStringTag: tag };
 P.absoluteValue = P.abs = function() {
   var x = new this.constructor(this);
-  if (x.s < 0)
-    x.s = 1;
+  if (x.s < 0) x.s = 1;
   return finalise(x);
 };
 P.ceil = function() {
@@ -12442,10 +13868,8 @@ P.clampedTo = P.clamp = function(min3, max3) {
   var k, x = this, Ctor = x.constructor;
   min3 = new Ctor(min3);
   max3 = new Ctor(max3);
-  if (!min3.s || !max3.s)
-    return new Ctor(NaN);
-  if (min3.gt(max3))
-    throw Error(invalidArgument + max3);
+  if (!min3.s || !max3.s) return new Ctor(NaN);
+  if (min3.gt(max3)) throw Error(invalidArgument + max3);
   k = x.cmp(min3);
   return k < 0 ? min3 : x.cmp(max3) > 0 ? max3 : new Ctor(x);
 };
@@ -12454,26 +13878,20 @@ P.comparedTo = P.cmp = function(y) {
   if (!xd || !yd) {
     return !xs || !ys ? NaN : xs !== ys ? xs : xd === yd ? 0 : !xd ^ xs < 0 ? 1 : -1;
   }
-  if (!xd[0] || !yd[0])
-    return xd[0] ? xs : yd[0] ? -ys : 0;
-  if (xs !== ys)
-    return xs;
-  if (x.e !== y.e)
-    return x.e > y.e ^ xs < 0 ? 1 : -1;
+  if (!xd[0] || !yd[0]) return xd[0] ? xs : yd[0] ? -ys : 0;
+  if (xs !== ys) return xs;
+  if (x.e !== y.e) return x.e > y.e ^ xs < 0 ? 1 : -1;
   xdL = xd.length;
   ydL = yd.length;
   for (i2 = 0, j = xdL < ydL ? xdL : ydL; i2 < j; ++i2) {
-    if (xd[i2] !== yd[i2])
-      return xd[i2] > yd[i2] ^ xs < 0 ? 1 : -1;
+    if (xd[i2] !== yd[i2]) return xd[i2] > yd[i2] ^ xs < 0 ? 1 : -1;
   }
   return xdL === ydL ? 0 : xdL > ydL ^ xs < 0 ? 1 : -1;
 };
 P.cosine = P.cos = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.d)
-    return new Ctor(NaN);
-  if (!x.d[0])
-    return new Ctor(1);
+  if (!x.d) return new Ctor(NaN);
+  if (!x.d[0]) return new Ctor(1);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + LOG_BASE;
@@ -12485,15 +13903,13 @@ P.cosine = P.cos = function() {
 };
 P.cubeRoot = P.cbrt = function() {
   var e3, m, n, r, rep, s, sd, t, t3, t3plusx, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   external = false;
   s = x.s * mathpow(x.s * x, 1 / 3);
   if (!s || Math.abs(s) == 1 / 0) {
     n = digitsToString(x.d);
     e3 = x.e;
-    if (s = (e3 - n.length + 1) % 3)
-      n += s == 1 || s == -2 ? "0" : "00";
+    if (s = (e3 - n.length + 1) % 3) n += s == 1 || s == -2 ? "0" : "00";
     s = mathpow(n, 1 / 3);
     e3 = mathfloor((e3 + 1) / 3) - (e3 % 3 == (e3 < 0 ? -1 : 2));
     if (s == 1 / 0) {
@@ -12543,11 +13959,8 @@ P.decimalPlaces = P.dp = function() {
     w = d.length - 1;
     n = (w - mathfloor(this.e / LOG_BASE)) * LOG_BASE;
     w = d[w];
-    if (w)
-      for (; w % 10 == 0; w /= 10)
-        n--;
-    if (n < 0)
-      n = 0;
+    if (w) for (; w % 10 == 0; w /= 10) n--;
+    if (n < 0) n = 0;
   }
   return n;
 };
@@ -12573,10 +13986,8 @@ P.greaterThanOrEqualTo = P.gte = function(y) {
 };
 P.hyperbolicCosine = P.cosh = function() {
   var k, n, pr, rm, len, x = this, Ctor = x.constructor, one = new Ctor(1);
-  if (!x.isFinite())
-    return new Ctor(x.s ? 1 / 0 : NaN);
-  if (x.isZero())
-    return one;
+  if (!x.isFinite()) return new Ctor(x.s ? 1 / 0 : NaN);
+  if (x.isZero()) return one;
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + 4;
@@ -12599,8 +14010,7 @@ P.hyperbolicCosine = P.cosh = function() {
 };
 P.hyperbolicSine = P.sinh = function() {
   var k, pr, rm, len, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + 4;
@@ -12625,10 +14035,8 @@ P.hyperbolicSine = P.sinh = function() {
 };
 P.hyperbolicTangent = P.tanh = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(x.s);
-  if (x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite()) return new Ctor(x.s);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 7;
@@ -12636,26 +14044,22 @@ P.hyperbolicTangent = P.tanh = function() {
   return divide(x.sinh(), x.cosh(), Ctor.precision = pr, Ctor.rounding = rm);
 };
 P.inverseCosine = P.acos = function() {
-  var halfPi, x = this, Ctor = x.constructor, k = x.abs().cmp(1), pr = Ctor.precision, rm = Ctor.rounding;
+  var x = this, Ctor = x.constructor, k = x.abs().cmp(1), pr = Ctor.precision, rm = Ctor.rounding;
   if (k !== -1) {
     return k === 0 ? x.isNeg() ? getPi(Ctor, pr, rm) : new Ctor(0) : new Ctor(NaN);
   }
-  if (x.isZero())
-    return getPi(Ctor, pr + 4, rm).times(0.5);
+  if (x.isZero()) return getPi(Ctor, pr + 4, rm).times(0.5);
   Ctor.precision = pr + 6;
   Ctor.rounding = 1;
-  x = x.asin();
-  halfPi = getPi(Ctor, pr + 4, rm).times(0.5);
+  x = new Ctor(1).minus(x).div(x.plus(1)).sqrt().atan();
   Ctor.precision = pr;
   Ctor.rounding = rm;
-  return halfPi.minus(x);
+  return x.times(2);
 };
 P.inverseHyperbolicCosine = P.acosh = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (x.lte(1))
-    return new Ctor(x.eq(1) ? 0 : NaN);
-  if (!x.isFinite())
-    return new Ctor(x);
+  if (x.lte(1)) return new Ctor(x.eq(1) ? 0 : NaN);
+  if (!x.isFinite()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(Math.abs(x.e), x.sd()) + 4;
@@ -12669,8 +14073,7 @@ P.inverseHyperbolicCosine = P.acosh = function() {
 };
 P.inverseHyperbolicSine = P.asinh = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite() || x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite() || x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 2 * Math.max(Math.abs(x.e), x.sd()) + 6;
@@ -12684,15 +14087,12 @@ P.inverseHyperbolicSine = P.asinh = function() {
 };
 P.inverseHyperbolicTangent = P.atanh = function() {
   var pr, rm, wpr, xsd, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.e >= 0)
-    return new Ctor(x.abs().eq(1) ? x.s / 0 : x.isZero() ? x : NaN);
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.e >= 0) return new Ctor(x.abs().eq(1) ? x.s / 0 : x.isZero() ? x : NaN);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   xsd = x.sd();
-  if (Math.max(xsd, pr) < 2 * -x.e - 1)
-    return finalise(new Ctor(x), pr, rm, true);
+  if (Math.max(xsd, pr) < 2 * -x.e - 1) return finalise(new Ctor(x), pr, rm, true);
   Ctor.precision = wpr = xsd - x.e;
   x = divide(x.plus(1), new Ctor(1).minus(x), wpr + pr, 1);
   Ctor.precision = pr + 4;
@@ -12704,8 +14104,7 @@ P.inverseHyperbolicTangent = P.atanh = function() {
 };
 P.inverseSine = P.asin = function() {
   var halfPi, k, pr, rm, x = this, Ctor = x.constructor;
-  if (x.isZero())
-    return new Ctor(x);
+  if (x.isZero()) return new Ctor(x);
   k = x.abs().cmp(1);
   pr = Ctor.precision;
   rm = Ctor.rounding;
@@ -12727,8 +14126,7 @@ P.inverseSine = P.asin = function() {
 P.inverseTangent = P.atan = function() {
   var i2, j, k, n, px, t, r, wpr, x2, x = this, Ctor = x.constructor, pr = Ctor.precision, rm = Ctor.rounding;
   if (!x.isFinite()) {
-    if (!x.s)
-      return new Ctor(NaN);
+    if (!x.s) return new Ctor(NaN);
     if (pr + 4 <= PI_PRECISION) {
       r = getPi(Ctor, pr + 4, rm).times(0.5);
       r.s = x.s;
@@ -12744,8 +14142,7 @@ P.inverseTangent = P.atan = function() {
   Ctor.precision = wpr = pr + 10;
   Ctor.rounding = 1;
   k = Math.min(28, wpr / LOG_BASE + 2 | 0);
-  for (i2 = k; i2; --i2)
-    x = x.div(x.times(x).plus(1).sqrt().plus(1));
+  for (i2 = k; i2; --i2) x = x.div(x.times(x).plus(1).sqrt().plus(1));
   external = false;
   j = Math.ceil(wpr / LOG_BASE);
   n = 1;
@@ -12757,12 +14154,9 @@ P.inverseTangent = P.atan = function() {
     t = r.minus(px.div(n += 2));
     px = px.times(x2);
     r = t.plus(px.div(n += 2));
-    if (r.d[j] !== void 0)
-      for (i2 = j; r.d[i2] === t.d[i2] && i2--; )
-        ;
+    if (r.d[j] !== void 0) for (i2 = j; r.d[i2] === t.d[i2] && i2--; ) ;
   }
-  if (k)
-    r = r.times(2 << k - 1);
+  if (k) r = r.times(2 << k - 1);
   external = true;
   return finalise(r, Ctor.precision = pr, Ctor.rounding = rm, true);
 };
@@ -12798,8 +14192,7 @@ P.logarithm = P.log = function(base) {
   } else {
     base = new Ctor(base);
     d = base.d;
-    if (base.s < 0 || !d || !d[0] || base.eq(1))
-      return new Ctor(NaN);
+    if (base.s < 0 || !d || !d[0] || base.eq(1)) return new Ctor(NaN);
     isBase10 = base.eq(10);
   }
   d = arg2.d;
@@ -12810,8 +14203,7 @@ P.logarithm = P.log = function(base) {
     if (d.length > 1) {
       inf = true;
     } else {
-      for (k = d[0]; k % 10 === 0; )
-        k /= 10;
+      for (k = d[0]; k % 10 === 0; ) k /= 10;
       inf = k !== 1;
     }
   }
@@ -12841,12 +14233,9 @@ P.minus = P.sub = function(y) {
   var d, e3, i2, j, k, len, pr, rm, xd, xe, xLTy, yd, x = this, Ctor = x.constructor;
   y = new Ctor(y);
   if (!x.d || !y.d) {
-    if (!x.s || !y.s)
-      y = new Ctor(NaN);
-    else if (x.d)
-      y.s = -y.s;
-    else
-      y = new Ctor(y.d || x.s !== y.s ? x : NaN);
+    if (!x.s || !y.s) y = new Ctor(NaN);
+    else if (x.d) y.s = -y.s;
+    else y = new Ctor(y.d || x.s !== y.s ? x : NaN);
     return y;
   }
   if (x.s != y.s) {
@@ -12858,12 +14247,9 @@ P.minus = P.sub = function(y) {
   pr = Ctor.precision;
   rm = Ctor.rounding;
   if (!xd[0] || !yd[0]) {
-    if (yd[0])
-      y.s = -y.s;
-    else if (xd[0])
-      y = new Ctor(x);
-    else
-      return new Ctor(rm === 3 ? -0 : 0);
+    if (yd[0]) y.s = -y.s;
+    else if (xd[0]) y = new Ctor(x);
+    else return new Ctor(rm === 3 ? -0 : 0);
     return external ? finalise(y, pr, rm) : y;
   }
   e3 = mathfloor(y.e / LOG_BASE);
@@ -12887,15 +14273,13 @@ P.minus = P.sub = function(y) {
       d.length = 1;
     }
     d.reverse();
-    for (i2 = k; i2--; )
-      d.push(0);
+    for (i2 = k; i2--; ) d.push(0);
     d.reverse();
   } else {
     i2 = xd.length;
     len = yd.length;
     xLTy = i2 < len;
-    if (xLTy)
-      len = i2;
+    if (xLTy) len = i2;
     for (i2 = 0; i2 < len; i2++) {
       if (xd[i2] != yd[i2]) {
         xLTy = xd[i2] < yd[i2];
@@ -12911,23 +14295,18 @@ P.minus = P.sub = function(y) {
     y.s = -y.s;
   }
   len = xd.length;
-  for (i2 = yd.length - len; i2 > 0; --i2)
-    xd[len++] = 0;
+  for (i2 = yd.length - len; i2 > 0; --i2) xd[len++] = 0;
   for (i2 = yd.length; i2 > k; ) {
     if (xd[--i2] < yd[i2]) {
-      for (j = i2; j && xd[--j] === 0; )
-        xd[j] = BASE - 1;
+      for (j = i2; j && xd[--j] === 0; ) xd[j] = BASE - 1;
       --xd[j];
       xd[i2] += BASE;
     }
     xd[i2] -= yd[i2];
   }
-  for (; xd[--len] === 0; )
-    xd.pop();
-  for (; xd[0] === 0; xd.shift())
-    --e3;
-  if (!xd[0])
-    return new Ctor(rm === 3 ? -0 : 0);
+  for (; xd[--len] === 0; ) xd.pop();
+  for (; xd[0] === 0; xd.shift()) --e3;
+  if (!xd[0]) return new Ctor(rm === 3 ? -0 : 0);
   y.d = xd;
   y.e = getBase10Exponent(xd, e3);
   return external ? finalise(y, pr, rm) : y;
@@ -12935,8 +14314,7 @@ P.minus = P.sub = function(y) {
 P.modulo = P.mod = function(y) {
   var q, x = this, Ctor = x.constructor;
   y = new Ctor(y);
-  if (!x.d || !y.s || y.d && !y.d[0])
-    return new Ctor(NaN);
+  if (!x.d || !y.s || y.d && !y.d[0]) return new Ctor(NaN);
   if (!y.d || x.d && !x.d[0]) {
     return finalise(new Ctor(x), Ctor.precision, Ctor.rounding);
   }
@@ -12966,10 +14344,8 @@ P.plus = P.add = function(y) {
   var carry, d, e3, i2, k, len, pr, rm, xd, yd, x = this, Ctor = x.constructor;
   y = new Ctor(y);
   if (!x.d || !y.d) {
-    if (!x.s || !y.s)
-      y = new Ctor(NaN);
-    else if (!x.d)
-      y = new Ctor(y.d || x.s === y.s ? x : NaN);
+    if (!x.s || !y.s) y = new Ctor(NaN);
+    else if (!x.d) y = new Ctor(y.d || x.s === y.s ? x : NaN);
     return y;
   }
   if (x.s != y.s) {
@@ -12981,8 +14357,7 @@ P.plus = P.add = function(y) {
   pr = Ctor.precision;
   rm = Ctor.rounding;
   if (!xd[0] || !yd[0]) {
-    if (!yd[0])
-      y = new Ctor(x);
+    if (!yd[0]) y = new Ctor(x);
     return external ? finalise(y, pr, rm) : y;
   }
   k = mathfloor(x.e / LOG_BASE);
@@ -13006,8 +14381,7 @@ P.plus = P.add = function(y) {
       d.length = 1;
     }
     d.reverse();
-    for (; i2--; )
-      d.push(0);
+    for (; i2--; ) d.push(0);
     d.reverse();
   }
   len = xd.length;
@@ -13026,20 +14400,17 @@ P.plus = P.add = function(y) {
     xd.unshift(carry);
     ++e3;
   }
-  for (len = xd.length; xd[--len] == 0; )
-    xd.pop();
+  for (len = xd.length; xd[--len] == 0; ) xd.pop();
   y.d = xd;
   y.e = getBase10Exponent(xd, e3);
   return external ? finalise(y, pr, rm) : y;
 };
 P.precision = P.sd = function(z) {
   var k, x = this;
-  if (z !== void 0 && z !== !!z && z !== 1 && z !== 0)
-    throw Error(invalidArgument + z);
+  if (z !== void 0 && z !== !!z && z !== 1 && z !== 0) throw Error(invalidArgument + z);
   if (x.d) {
     k = getPrecision(x.d);
-    if (z && x.e + 1 > k)
-      k = x.e + 1;
+    if (z && x.e + 1 > k) k = x.e + 1;
   } else {
     k = NaN;
   }
@@ -13051,10 +14422,8 @@ P.round = function() {
 };
 P.sine = P.sin = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + Math.max(x.e, x.sd()) + LOG_BASE;
@@ -13073,8 +14442,7 @@ P.squareRoot = P.sqrt = function() {
   s = Math.sqrt(+x);
   if (s == 0 || s == 1 / 0) {
     n = digitsToString(d);
-    if ((n.length + e3) % 2 == 0)
-      n += "0";
+    if ((n.length + e3) % 2 == 0) n += "0";
     s = Math.sqrt(n);
     e3 = mathfloor((e3 + 1) / 2) - (e3 < 0 || e3 % 2);
     if (s == 1 / 0) {
@@ -13117,10 +14485,8 @@ P.squareRoot = P.sqrt = function() {
 };
 P.tangent = P.tan = function() {
   var pr, rm, x = this, Ctor = x.constructor;
-  if (!x.isFinite())
-    return new Ctor(NaN);
-  if (x.isZero())
-    return new Ctor(x);
+  if (!x.isFinite()) return new Ctor(NaN);
+  if (x.isZero()) return new Ctor(x);
   pr = Ctor.precision;
   rm = Ctor.rounding;
   Ctor.precision = pr + 10;
@@ -13151,8 +14517,7 @@ P.times = P.mul = function(y) {
   }
   r = [];
   rL = xdL + ydL;
-  for (i2 = rL; i2--; )
-    r.push(0);
+  for (i2 = rL; i2--; ) r.push(0);
   for (i2 = ydL; --i2 >= 0; ) {
     carry = 0;
     for (k = xdL + i2; k > i2; ) {
@@ -13162,12 +14527,9 @@ P.times = P.mul = function(y) {
     }
     r[k] = (r[k] + carry) % BASE | 0;
   }
-  for (; !r[--rL]; )
-    r.pop();
-  if (carry)
-    ++e3;
-  else
-    r.shift();
+  for (; !r[--rL]; ) r.pop();
+  if (carry) ++e3;
+  else r.shift();
   y.d = r;
   y.e = getBase10Exponent(r, e3);
   return external ? finalise(y, Ctor.precision, Ctor.rounding) : y;
@@ -13178,13 +14540,10 @@ P.toBinary = function(sd, rm) {
 P.toDecimalPlaces = P.toDP = function(dp, rm) {
   var x = this, Ctor = x.constructor;
   x = new Ctor(x);
-  if (dp === void 0)
-    return x;
+  if (dp === void 0) return x;
   checkInt32(dp, 0, MAX_DIGITS);
-  if (rm === void 0)
-    rm = Ctor.rounding;
-  else
-    checkInt32(rm, 0, 8);
+  if (rm === void 0) rm = Ctor.rounding;
+  else checkInt32(rm, 0, 8);
   return finalise(x, dp + x.e + 1, rm);
 };
 P.toExponential = function(dp, rm) {
@@ -13193,10 +14552,8 @@ P.toExponential = function(dp, rm) {
     str = finiteToString(x, true);
   } else {
     checkInt32(dp, 0, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     x = finalise(new Ctor(x), dp + 1, rm);
     str = finiteToString(x, true, dp + 1);
   }
@@ -13208,10 +14565,8 @@ P.toFixed = function(dp, rm) {
     str = finiteToString(x);
   } else {
     checkInt32(dp, 0, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     y = finalise(new Ctor(x), dp + x.e + 1, rm);
     str = finiteToString(y, false, dp + y.e + 1);
   }
@@ -13219,8 +14574,7 @@ P.toFixed = function(dp, rm) {
 };
 P.toFraction = function(maxD) {
   var d, d0, d1, d2, e3, k, n, n0, n16, pr, q, r, x = this, xd = x.d, Ctor = x.constructor;
-  if (!xd)
-    return new Ctor(x);
+  if (!xd) return new Ctor(x);
   n16 = d0 = new Ctor(1);
   d1 = n0 = new Ctor(0);
   d = new Ctor(d1);
@@ -13231,8 +14585,7 @@ P.toFraction = function(maxD) {
     maxD = e3 > 0 ? d : n16;
   } else {
     n = new Ctor(maxD);
-    if (!n.isInt() || n.lt(n16))
-      throw Error(invalidArgument + n);
+    if (!n.isInt() || n.lt(n16)) throw Error(invalidArgument + n);
     maxD = n.gt(d) ? e3 > 0 ? d : n16 : n;
   }
   external = false;
@@ -13242,8 +14595,7 @@ P.toFraction = function(maxD) {
   for (; ; ) {
     q = divide(n, d, 0, 1, 1);
     d2 = d0.plus(q.times(d1));
-    if (d2.cmp(maxD) == 1)
-      break;
+    if (d2.cmp(maxD) == 1) break;
     d0 = d1;
     d1 = d2;
     d2 = n16;
@@ -13269,8 +14621,7 @@ P.toNearest = function(y, rm) {
   var x = this, Ctor = x.constructor;
   x = new Ctor(x);
   if (y == null) {
-    if (!x.d)
-      return x;
+    if (!x.d) return x;
     y = new Ctor(1);
     rm = Ctor.rounding;
   } else {
@@ -13280,11 +14631,9 @@ P.toNearest = function(y, rm) {
     } else {
       checkInt32(rm, 0, 8);
     }
-    if (!x.d)
-      return y.s ? x : y;
+    if (!x.d) return y.s ? x : y;
     if (!y.d) {
-      if (y.s)
-        y.s = x.s;
+      if (y.s) y.s = x.s;
       return y;
     }
   }
@@ -13307,15 +14656,12 @@ P.toOctal = function(sd, rm) {
 };
 P.toPower = P.pow = function(y) {
   var e3, k, pr, r, rm, s, x = this, Ctor = x.constructor, yn = +(y = new Ctor(y));
-  if (!x.d || !y.d || !x.d[0] || !y.d[0])
-    return new Ctor(mathpow(+x, yn));
+  if (!x.d || !y.d || !x.d[0] || !y.d[0]) return new Ctor(mathpow(+x, yn));
   x = new Ctor(x);
-  if (x.eq(1))
-    return x;
+  if (x.eq(1)) return x;
   pr = Ctor.precision;
   rm = Ctor.rounding;
-  if (y.eq(1))
-    return finalise(x, pr, rm);
+  if (y.eq(1)) return finalise(x, pr, rm);
   e3 = mathfloor(y.e / LOG_BASE);
   if (e3 >= y.d.length - 1 && (k = yn < 0 ? -yn : yn) <= MAX_SAFE_INTEGER) {
     r = intPow(Ctor, x, k, pr);
@@ -13323,10 +14669,8 @@ P.toPower = P.pow = function(y) {
   }
   s = x.s;
   if (s < 0) {
-    if (e3 < y.d.length - 1)
-      return new Ctor(NaN);
-    if ((y.d[e3] & 1) == 0)
-      s = 1;
+    if (e3 < y.d.length - 1) return new Ctor(NaN);
+    if ((y.d[e3] & 1) == 0) s = 1;
     if (x.e == 0 && x.d[0] == 1 && x.d.length == 1) {
       x.s = s;
       return x;
@@ -13334,8 +14678,7 @@ P.toPower = P.pow = function(y) {
   }
   k = mathpow(+x, yn);
   e3 = k == 0 || !isFinite(k) ? mathfloor(yn * (Math.log("0." + digitsToString(x.d)) / Math.LN10 + x.e + 1)) : new Ctor(k + "").e;
-  if (e3 > Ctor.maxE + 1 || e3 < Ctor.minE - 1)
-    return new Ctor(e3 > 0 ? s / 0 : 0);
+  if (e3 > Ctor.maxE + 1 || e3 < Ctor.minE - 1) return new Ctor(e3 > 0 ? s / 0 : 0);
   external = false;
   Ctor.rounding = x.s = 1;
   k = Math.min(12, (e3 + "").length);
@@ -13361,10 +14704,8 @@ P.toPrecision = function(sd, rm) {
     str = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
   } else {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
     x = finalise(new Ctor(x), sd, rm);
     str = finiteToString(x, sd <= x.e || x.e <= Ctor.toExpNeg, sd);
   }
@@ -13377,10 +14718,8 @@ P.toSignificantDigits = P.toSD = function(sd, rm) {
     rm = Ctor.rounding;
   } else {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
   }
   return finalise(new Ctor(x), sd, rm);
 };
@@ -13402,20 +14741,17 @@ function digitsToString(d) {
     for (i2 = 1; i2 < indexOfLastWord; i2++) {
       ws = d[i2] + "";
       k = LOG_BASE - ws.length;
-      if (k)
-        str += getZeroString(k);
+      if (k) str += getZeroString(k);
       str += ws;
     }
     w = d[i2];
     ws = w + "";
     k = LOG_BASE - ws.length;
-    if (k)
-      str += getZeroString(k);
+    if (k) str += getZeroString(k);
   } else if (w === 0) {
     return "0";
   }
-  for (; w % 10 === 0; )
-    w /= 10;
+  for (; w % 10 === 0; ) w /= 10;
   return str + w;
 }
 function checkInt32(i2, min3, max3) {
@@ -13425,8 +14761,7 @@ function checkInt32(i2, min3, max3) {
 }
 function checkRoundingDigits(d, i2, rm, repeating) {
   var di, k, r, rd;
-  for (k = d[0]; k >= 10; k /= 10)
-    --i2;
+  for (k = d[0]; k >= 10; k /= 10) --i2;
   if (--i2 < 0) {
     i2 += LOG_BASE;
     di = 0;
@@ -13438,22 +14773,17 @@ function checkRoundingDigits(d, i2, rm, repeating) {
   rd = d[di] % k | 0;
   if (repeating == null) {
     if (i2 < 3) {
-      if (i2 == 0)
-        rd = rd / 100 | 0;
-      else if (i2 == 1)
-        rd = rd / 10 | 0;
+      if (i2 == 0) rd = rd / 100 | 0;
+      else if (i2 == 1) rd = rd / 10 | 0;
       r = rm < 4 && rd == 99999 || rm > 3 && rd == 49999 || rd == 5e4 || rd == 0;
     } else {
       r = (rm < 4 && rd + 1 == k || rm > 3 && rd + 1 == k / 2) && (d[di + 1] / k / 100 | 0) == mathpow(10, i2 - 2) - 1 || (rd == k / 2 || rd == 0) && (d[di + 1] / k / 100 | 0) == 0;
     }
   } else {
     if (i2 < 4) {
-      if (i2 == 0)
-        rd = rd / 1e3 | 0;
-      else if (i2 == 1)
-        rd = rd / 100 | 0;
-      else if (i2 == 2)
-        rd = rd / 10 | 0;
+      if (i2 == 0) rd = rd / 1e3 | 0;
+      else if (i2 == 1) rd = rd / 100 | 0;
+      else if (i2 == 2) rd = rd / 10 | 0;
       r = (repeating || rm < 4) && rd == 9999 || !repeating && rm > 3 && rd == 4999;
     } else {
       r = ((repeating || rm < 4) && rd + 1 == k || !repeating && rm > 3 && rd + 1 == k / 2) && (d[di + 1] / k / 1e3 | 0) == mathpow(10, i2 - 3) - 1;
@@ -13464,13 +14794,11 @@ function checkRoundingDigits(d, i2, rm, repeating) {
 function convertBase(str, baseIn, baseOut) {
   var j, arr = [0], arrL, i2 = 0, strL = str.length;
   for (; i2 < strL; ) {
-    for (arrL = arr.length; arrL--; )
-      arr[arrL] *= baseIn;
+    for (arrL = arr.length; arrL--; ) arr[arrL] *= baseIn;
     arr[0] += NUMERALS.indexOf(str.charAt(i2++));
     for (j = 0; j < arr.length; j++) {
       if (arr[j] > baseOut - 1) {
-        if (arr[j + 1] === void 0)
-          arr[j + 1] = 0;
+        if (arr[j + 1] === void 0) arr[j + 1] = 0;
         arr[j + 1] += arr[j] / baseOut | 0;
         arr[j] %= baseOut;
       }
@@ -13480,8 +14808,7 @@ function convertBase(str, baseIn, baseOut) {
 }
 function cosine(Ctor, x) {
   var k, len, y;
-  if (x.isZero())
-    return x;
+  if (x.isZero()) return x;
   len = x.d.length;
   if (len < 32) {
     k = Math.ceil(len / 3);
@@ -13499,7 +14826,7 @@ function cosine(Ctor, x) {
   Ctor.precision -= k;
   return x;
 }
-var divide = function() {
+var divide = /* @__PURE__ */ function() {
   function multiplyInteger(x, k, base) {
     var temp, carry = 0, i2 = x.length;
     for (x = x.slice(); i2--; ) {
@@ -13507,8 +14834,7 @@ var divide = function() {
       x[i2] = temp % base | 0;
       carry = temp / base | 0;
     }
-    if (carry)
-      x.unshift(carry);
+    if (carry) x.unshift(carry);
     return x;
   }
   function compare2(a, b, aL, bL) {
@@ -13532,13 +14858,18 @@ var divide = function() {
       i2 = a[aL] < b[aL] ? 1 : 0;
       a[aL] = i2 * base + a[aL] - b[aL];
     }
-    for (; !a[0] && a.length > 1; )
-      a.shift();
+    for (; !a[0] && a.length > 1; ) a.shift();
   }
   return function(x, y, pr, rm, dp, base) {
     var cmp, e3, i2, k, logBase, more, prod2, prodL, q, qd, rem, remL, rem0, sd, t, xi, xL, yd0, yL, yz, Ctor = x.constructor, sign4 = x.s == y.s ? 1 : -1, xd = x.d, yd = y.d;
     if (!xd || !xd[0] || !yd || !yd[0]) {
-      return new Ctor(!x.s || !y.s || (xd ? yd && xd[0] == yd[0] : !yd) ? NaN : xd && xd[0] == 0 || !yd ? sign4 * 0 : sign4 / 0);
+      return new Ctor(
+        // Return NaN if either NaN, or both Infinity or 0.
+        !x.s || !y.s || (xd ? yd && xd[0] == yd[0] : !yd) ? NaN : (
+          // Return ±0 if x is 0 or y is ±Infinity, or return ±Infinity as y is 0.
+          xd && xd[0] == 0 || !yd ? sign4 * 0 : sign4 / 0
+        )
+      );
     }
     if (base) {
       logBase = 1;
@@ -13552,10 +14883,8 @@ var divide = function() {
     xL = xd.length;
     q = new Ctor(sign4);
     qd = q.d = [];
-    for (i2 = 0; yd[i2] == (xd[i2] || 0); i2++)
-      ;
-    if (yd[i2] > (xd[i2] || 0))
-      e3--;
+    for (i2 = 0; yd[i2] == (xd[i2] || 0); i2++) ;
+    if (yd[i2] > (xd[i2] || 0)) e3--;
     if (pr == null) {
       sd = pr = Ctor.precision;
       rm = Ctor.rounding;
@@ -13591,24 +14920,20 @@ var divide = function() {
         xi = yL;
         rem = xd.slice(0, yL);
         remL = rem.length;
-        for (; remL < yL; )
-          rem[remL++] = 0;
+        for (; remL < yL; ) rem[remL++] = 0;
         yz = yd.slice();
         yz.unshift(0);
         yd0 = yd[0];
-        if (yd[1] >= base / 2)
-          ++yd0;
+        if (yd[1] >= base / 2) ++yd0;
         do {
           k = 0;
           cmp = compare2(yd, rem, yL, remL);
           if (cmp < 0) {
             rem0 = rem[0];
-            if (yL != remL)
-              rem0 = rem0 * base + (rem[1] || 0);
+            if (yL != remL) rem0 = rem0 * base + (rem[1] || 0);
             k = rem0 / yd0 | 0;
             if (k > 1) {
-              if (k >= base)
-                k = base - 1;
+              if (k >= base) k = base - 1;
               prod2 = multiplyInteger(yd, k, base);
               prodL = prod2.length;
               remL = rem.length;
@@ -13618,13 +14943,11 @@ var divide = function() {
                 subtract2(prod2, yL < prodL ? yz : yd, prodL, base);
               }
             } else {
-              if (k == 0)
-                cmp = k = 1;
+              if (k == 0) cmp = k = 1;
               prod2 = yd.slice();
             }
             prodL = prod2.length;
-            if (prodL < remL)
-              prod2.unshift(0);
+            if (prodL < remL) prod2.unshift(0);
             subtract2(rem, prod2, remL, base);
             if (cmp == -1) {
               remL = rem.length;
@@ -13649,15 +14972,13 @@ var divide = function() {
         } while ((xi++ < xL || rem[0] !== void 0) && sd--);
         more = rem[0] !== void 0;
       }
-      if (!qd[0])
-        qd.shift();
+      if (!qd[0]) qd.shift();
     }
     if (logBase == 1) {
       q.e = e3;
       inexact = more;
     } else {
-      for (i2 = 1, k = qd[0]; k >= 10; k /= 10)
-        i2++;
+      for (i2 = 1, k = qd[0]; k >= 10; k /= 10) i2++;
       q.e = i2 + e3 * logBase - 1;
       finalise(q, dp ? pr + q.e + 1 : pr, rm, more);
     }
@@ -13666,90 +14987,81 @@ var divide = function() {
 }();
 function finalise(x, sd, rm, isTruncated) {
   var digits2, i2, j, k, rd, roundUp, w, xd, xdi, Ctor = x.constructor;
-  out:
-    if (sd != null) {
-      xd = x.d;
-      if (!xd)
-        return x;
-      for (digits2 = 1, k = xd[0]; k >= 10; k /= 10)
-        digits2++;
-      i2 = sd - digits2;
-      if (i2 < 0) {
-        i2 += LOG_BASE;
-        j = sd;
-        w = xd[xdi = 0];
-        rd = w / mathpow(10, digits2 - j - 1) % 10 | 0;
-      } else {
-        xdi = Math.ceil((i2 + 1) / LOG_BASE);
-        k = xd.length;
-        if (xdi >= k) {
-          if (isTruncated) {
-            for (; k++ <= xdi; )
-              xd.push(0);
-            w = rd = 0;
-            digits2 = 1;
-            i2 %= LOG_BASE;
-            j = i2 - LOG_BASE + 1;
-          } else {
-            break out;
-          }
-        } else {
-          w = k = xd[xdi];
-          for (digits2 = 1; k >= 10; k /= 10)
-            digits2++;
+  out: if (sd != null) {
+    xd = x.d;
+    if (!xd) return x;
+    for (digits2 = 1, k = xd[0]; k >= 10; k /= 10) digits2++;
+    i2 = sd - digits2;
+    if (i2 < 0) {
+      i2 += LOG_BASE;
+      j = sd;
+      w = xd[xdi = 0];
+      rd = w / mathpow(10, digits2 - j - 1) % 10 | 0;
+    } else {
+      xdi = Math.ceil((i2 + 1) / LOG_BASE);
+      k = xd.length;
+      if (xdi >= k) {
+        if (isTruncated) {
+          for (; k++ <= xdi; ) xd.push(0);
+          w = rd = 0;
+          digits2 = 1;
           i2 %= LOG_BASE;
-          j = i2 - LOG_BASE + digits2;
-          rd = j < 0 ? 0 : w / mathpow(10, digits2 - j - 1) % 10 | 0;
-        }
-      }
-      isTruncated = isTruncated || sd < 0 || xd[xdi + 1] !== void 0 || (j < 0 ? w : w % mathpow(10, digits2 - j - 1));
-      roundUp = rm < 4 ? (rd || isTruncated) && (rm == 0 || rm == (x.s < 0 ? 3 : 2)) : rd > 5 || rd == 5 && (rm == 4 || isTruncated || rm == 6 && (i2 > 0 ? j > 0 ? w / mathpow(10, digits2 - j) : 0 : xd[xdi - 1]) % 10 & 1 || rm == (x.s < 0 ? 8 : 7));
-      if (sd < 1 || !xd[0]) {
-        xd.length = 0;
-        if (roundUp) {
-          sd -= x.e + 1;
-          xd[0] = mathpow(10, (LOG_BASE - sd % LOG_BASE) % LOG_BASE);
-          x.e = -sd || 0;
+          j = i2 - LOG_BASE + 1;
         } else {
-          xd[0] = x.e = 0;
+          break out;
         }
-        return x;
-      }
-      if (i2 == 0) {
-        xd.length = xdi;
-        k = 1;
-        xdi--;
       } else {
-        xd.length = xdi + 1;
-        k = mathpow(10, LOG_BASE - i2);
-        xd[xdi] = j > 0 ? (w / mathpow(10, digits2 - j) % mathpow(10, j) | 0) * k : 0;
+        w = k = xd[xdi];
+        for (digits2 = 1; k >= 10; k /= 10) digits2++;
+        i2 %= LOG_BASE;
+        j = i2 - LOG_BASE + digits2;
+        rd = j < 0 ? 0 : w / mathpow(10, digits2 - j - 1) % 10 | 0;
       }
+    }
+    isTruncated = isTruncated || sd < 0 || xd[xdi + 1] !== void 0 || (j < 0 ? w : w % mathpow(10, digits2 - j - 1));
+    roundUp = rm < 4 ? (rd || isTruncated) && (rm == 0 || rm == (x.s < 0 ? 3 : 2)) : rd > 5 || rd == 5 && (rm == 4 || isTruncated || rm == 6 && // Check whether the digit to the left of the rounding digit is odd.
+    (i2 > 0 ? j > 0 ? w / mathpow(10, digits2 - j) : 0 : xd[xdi - 1]) % 10 & 1 || rm == (x.s < 0 ? 8 : 7));
+    if (sd < 1 || !xd[0]) {
+      xd.length = 0;
       if (roundUp) {
-        for (; ; ) {
-          if (xdi == 0) {
-            for (i2 = 1, j = xd[0]; j >= 10; j /= 10)
-              i2++;
-            j = xd[0] += k;
-            for (k = 1; j >= 10; j /= 10)
-              k++;
-            if (i2 != k) {
-              x.e++;
-              if (xd[0] == BASE)
-                xd[0] = 1;
-            }
-            break;
-          } else {
-            xd[xdi] += k;
-            if (xd[xdi] != BASE)
-              break;
-            xd[xdi--] = 0;
-            k = 1;
+        sd -= x.e + 1;
+        xd[0] = mathpow(10, (LOG_BASE - sd % LOG_BASE) % LOG_BASE);
+        x.e = -sd || 0;
+      } else {
+        xd[0] = x.e = 0;
+      }
+      return x;
+    }
+    if (i2 == 0) {
+      xd.length = xdi;
+      k = 1;
+      xdi--;
+    } else {
+      xd.length = xdi + 1;
+      k = mathpow(10, LOG_BASE - i2);
+      xd[xdi] = j > 0 ? (w / mathpow(10, digits2 - j) % mathpow(10, j) | 0) * k : 0;
+    }
+    if (roundUp) {
+      for (; ; ) {
+        if (xdi == 0) {
+          for (i2 = 1, j = xd[0]; j >= 10; j /= 10) i2++;
+          j = xd[0] += k;
+          for (k = 1; j >= 10; j /= 10) k++;
+          if (i2 != k) {
+            x.e++;
+            if (xd[0] == BASE) xd[0] = 1;
           }
+          break;
+        } else {
+          xd[xdi] += k;
+          if (xd[xdi] != BASE) break;
+          xd[xdi--] = 0;
+          k = 1;
         }
       }
-      for (i2 = xd.length; xd[--i2] === 0; )
-        xd.pop();
     }
+    for (i2 = xd.length; xd[--i2] === 0; ) xd.pop();
+  }
   if (external) {
     if (x.e > Ctor.maxE) {
       x.d = null;
@@ -13762,8 +15074,7 @@ function finalise(x, sd, rm, isTruncated) {
   return x;
 }
 function finiteToString(x, isExp, sd) {
-  if (!x.isFinite())
-    return nonFiniteToString(x);
+  if (!x.isFinite()) return nonFiniteToString(x);
   var k, e3 = x.e, str = digitsToString(x.d), len = str.length;
   if (isExp) {
     if (sd && (k = sd - len) > 0) {
@@ -13774,18 +15085,14 @@ function finiteToString(x, isExp, sd) {
     str = str + (x.e < 0 ? "e" : "e+") + x.e;
   } else if (e3 < 0) {
     str = "0." + getZeroString(-e3 - 1) + str;
-    if (sd && (k = sd - len) > 0)
-      str += getZeroString(k);
+    if (sd && (k = sd - len) > 0) str += getZeroString(k);
   } else if (e3 >= len) {
     str += getZeroString(e3 + 1 - len);
-    if (sd && (k = sd - e3 - 1) > 0)
-      str = str + "." + getZeroString(k);
+    if (sd && (k = sd - e3 - 1) > 0) str = str + "." + getZeroString(k);
   } else {
-    if ((k = e3 + 1) < len)
-      str = str.slice(0, k) + "." + str.slice(k);
+    if ((k = e3 + 1) < len) str = str.slice(0, k) + "." + str.slice(k);
     if (sd && (k = sd - len) > 0) {
-      if (e3 + 1 === len)
-        str += ".";
+      if (e3 + 1 === len) str += ".";
       str += getZeroString(k);
     }
   }
@@ -13793,39 +15100,33 @@ function finiteToString(x, isExp, sd) {
 }
 function getBase10Exponent(digits2, e3) {
   var w = digits2[0];
-  for (e3 *= LOG_BASE; w >= 10; w /= 10)
-    e3++;
+  for (e3 *= LOG_BASE; w >= 10; w /= 10) e3++;
   return e3;
 }
 function getLn10(Ctor, sd, pr) {
   if (sd > LN10_PRECISION) {
     external = true;
-    if (pr)
-      Ctor.precision = pr;
+    if (pr) Ctor.precision = pr;
     throw Error(precisionLimitExceeded);
   }
   return finalise(new Ctor(LN10), sd, 1, true);
 }
 function getPi(Ctor, sd, rm) {
-  if (sd > PI_PRECISION)
-    throw Error(precisionLimitExceeded);
+  if (sd > PI_PRECISION) throw Error(precisionLimitExceeded);
   return finalise(new Ctor(PI), sd, rm, true);
 }
 function getPrecision(digits2) {
   var w = digits2.length - 1, len = w * LOG_BASE + 1;
   w = digits2[w];
   if (w) {
-    for (; w % 10 == 0; w /= 10)
-      len--;
-    for (w = digits2[0]; w >= 10; w /= 10)
-      len++;
+    for (; w % 10 == 0; w /= 10) len--;
+    for (w = digits2[0]; w >= 10; w /= 10) len++;
   }
   return len;
 }
 function getZeroString(k) {
   var zs = "";
-  for (; k--; )
-    zs += "0";
+  for (; k--; ) zs += "0";
   return zs;
 }
 function intPow(Ctor, x, n, pr) {
@@ -13834,14 +15135,12 @@ function intPow(Ctor, x, n, pr) {
   for (; ; ) {
     if (n % 2) {
       r = r.times(x);
-      if (truncate(r.d, k))
-        isTruncated = true;
+      if (truncate(r.d, k)) isTruncated = true;
     }
     n = mathfloor(n / 2);
     if (n === 0) {
       n = r.d.length - 1;
-      if (isTruncated && r.d[n] === 0)
-        ++r.d[n];
+      if (isTruncated && r.d[n] === 0) ++r.d[n];
       break;
     }
     x = x.times(x);
@@ -13853,14 +15152,16 @@ function intPow(Ctor, x, n, pr) {
 function isOdd(n) {
   return n.d[n.d.length - 1] & 1;
 }
-function maxOrMin(Ctor, args, ltgt) {
-  var y, x = new Ctor(args[0]), i2 = 0;
+function maxOrMin(Ctor, args, n) {
+  var k, y, x = new Ctor(args[0]), i2 = 0;
   for (; ++i2 < args.length; ) {
     y = new Ctor(args[i2]);
     if (!y.s) {
       x = y;
       break;
-    } else if (x[ltgt](y)) {
+    }
+    k = x.cmp(y);
+    if (k === n || k === 0 && x.s === n) {
       x = y;
     }
   }
@@ -13892,8 +15193,7 @@ function naturalExponential(x, sd) {
     t = sum3.plus(divide(pow3, denominator, wpr, 1));
     if (digitsToString(t.d).slice(0, wpr) === digitsToString(sum3.d).slice(0, wpr)) {
       j = k;
-      while (j--)
-        sum3 = finalise(sum3.times(sum3), wpr, 1);
+      while (j--) sum3 = finalise(sum3.times(sum3), wpr, 1);
       if (sd == null) {
         if (rep < 3 && checkRoundingDigits(sum3.d, wpr - guard, rm, rep)) {
           Ctor.precision = wpr += 10;
@@ -13954,8 +15254,7 @@ function naturalLogarithm(y, sd) {
     t = sum3.plus(divide(numerator, new Ctor(denominator), wpr, 1));
     if (digitsToString(t.d).slice(0, wpr) === digitsToString(sum3.d).slice(0, wpr)) {
       sum3 = sum3.times(2);
-      if (e3 !== 0)
-        sum3 = sum3.plus(getLn10(Ctor, wpr + 2, pr).times(e3 + ""));
+      if (e3 !== 0) sum3 = sum3.plus(getLn10(Ctor, wpr + 2, pr).times(e3 + ""));
       sum3 = divide(sum3, new Ctor(n), wpr, 1);
       if (sd == null) {
         if (checkRoundingDigits(sum3.d, wpr - guard, rm, rep)) {
@@ -13980,40 +15279,32 @@ function nonFiniteToString(x) {
 }
 function parseDecimal(x, str) {
   var e3, i2, len;
-  if ((e3 = str.indexOf(".")) > -1)
-    str = str.replace(".", "");
+  if ((e3 = str.indexOf(".")) > -1) str = str.replace(".", "");
   if ((i2 = str.search(/e/i)) > 0) {
-    if (e3 < 0)
-      e3 = i2;
+    if (e3 < 0) e3 = i2;
     e3 += +str.slice(i2 + 1);
     str = str.substring(0, i2);
   } else if (e3 < 0) {
     e3 = str.length;
   }
-  for (i2 = 0; str.charCodeAt(i2) === 48; i2++)
-    ;
-  for (len = str.length; str.charCodeAt(len - 1) === 48; --len)
-    ;
+  for (i2 = 0; str.charCodeAt(i2) === 48; i2++) ;
+  for (len = str.length; str.charCodeAt(len - 1) === 48; --len) ;
   str = str.slice(i2, len);
   if (str) {
     len -= i2;
     x.e = e3 = e3 - i2 - 1;
     x.d = [];
     i2 = (e3 + 1) % LOG_BASE;
-    if (e3 < 0)
-      i2 += LOG_BASE;
+    if (e3 < 0) i2 += LOG_BASE;
     if (i2 < len) {
-      if (i2)
-        x.d.push(+str.slice(0, i2));
-      for (len -= LOG_BASE; i2 < len; )
-        x.d.push(+str.slice(i2, i2 += LOG_BASE));
+      if (i2) x.d.push(+str.slice(0, i2));
+      for (len -= LOG_BASE; i2 < len; ) x.d.push(+str.slice(i2, i2 += LOG_BASE));
       str = str.slice(i2);
       i2 = LOG_BASE - str.length;
     } else {
       i2 -= len;
     }
-    for (; i2--; )
-      str += "0";
+    for (; i2--; ) str += "0";
     x.d.push(+str);
     if (external) {
       if (x.e > x.constructor.maxE) {
@@ -14034,11 +15325,9 @@ function parseOther(x, str) {
   var base, Ctor, divisor, i2, isFloat, len, p, xd, xe;
   if (str.indexOf("_") > -1) {
     str = str.replace(/(\d)_(?=\d)/g, "$1");
-    if (isDecimal.test(str))
-      return parseDecimal(x, str);
+    if (isDecimal.test(str)) return parseDecimal(x, str);
   } else if (str === "Infinity" || str === "NaN") {
-    if (!+str)
-      x.s = NaN;
+    if (!+str) x.s = NaN;
     x.e = NaN;
     x.d = null;
     return x;
@@ -14071,17 +15360,13 @@ function parseOther(x, str) {
   }
   xd = convertBase(str, base, BASE);
   xe = xd.length - 1;
-  for (i2 = xe; xd[i2] === 0; --i2)
-    xd.pop();
-  if (i2 < 0)
-    return new Ctor(x.s * 0);
+  for (i2 = xe; xd[i2] === 0; --i2) xd.pop();
+  if (i2 < 0) return new Ctor(x.s * 0);
   x.e = getBase10Exponent(xd, xe);
   x.d = xd;
   external = false;
-  if (isFloat)
-    x = divide(x, divisor, len * 4);
-  if (p)
-    x = x.times(Math.abs(p) < 54 ? mathpow(2, p) : Decimal.pow(2, p));
+  if (isFloat) x = divide(x, divisor, len * 4);
+  if (p) x = x.times(Math.abs(p) < 54 ? mathpow(2, p) : Decimal.pow(2, p));
   external = true;
   return x;
 }
@@ -14112,10 +15397,8 @@ function taylorSeries(Ctor, n, x, y, isHyperbolic) {
     y = divide(t.times(x2), new Ctor(n++ * n++), pr, 1);
     t = u.plus(y);
     if (t.d[k] !== void 0) {
-      for (j = k; t.d[j] === u.d[j] && j--; )
-        ;
-      if (j == -1)
-        break;
+      for (j = k; t.d[j] === u.d[j] && j--; ) ;
+      if (j == -1) break;
     }
     j = u;
     u = y;
@@ -14129,8 +15412,7 @@ function taylorSeries(Ctor, n, x, y, isHyperbolic) {
 }
 function tinyPow(b, e3) {
   var n = b;
-  while (--e3)
-    n *= b;
+  while (--e3) n *= b;
   return n;
 }
 function toLessThanHalfPi(Ctor, x) {
@@ -14157,10 +15439,8 @@ function toStringBinary(x, baseOut, sd, rm) {
   var base, e3, i2, k, len, roundUp, str, xd, y, Ctor = x.constructor, isExp = sd !== void 0;
   if (isExp) {
     checkInt32(sd, 1, MAX_DIGITS);
-    if (rm === void 0)
-      rm = Ctor.rounding;
-    else
-      checkInt32(rm, 0, 8);
+    if (rm === void 0) rm = Ctor.rounding;
+    else checkInt32(rm, 0, 8);
   } else {
     sd = Ctor.precision;
     rm = Ctor.rounding;
@@ -14189,8 +15469,7 @@ function toStringBinary(x, baseOut, sd, rm) {
     }
     xd = convertBase(str, 10, base);
     e3 = len = xd.length;
-    for (; xd[--len] == 0; )
-      xd.pop();
+    for (; xd[--len] == 0; ) xd.pop();
     if (!xd[0]) {
       str = isExp ? "0p+0" : "0";
     } else {
@@ -14219,36 +15498,27 @@ function toStringBinary(x, baseOut, sd, rm) {
           }
         }
       }
-      for (len = xd.length; !xd[len - 1]; --len)
-        ;
-      for (i2 = 0, str = ""; i2 < len; i2++)
-        str += NUMERALS.charAt(xd[i2]);
+      for (len = xd.length; !xd[len - 1]; --len) ;
+      for (i2 = 0, str = ""; i2 < len; i2++) str += NUMERALS.charAt(xd[i2]);
       if (isExp) {
         if (len > 1) {
           if (baseOut == 16 || baseOut == 8) {
             i2 = baseOut == 16 ? 4 : 3;
-            for (--len; len % i2; len++)
-              str += "0";
+            for (--len; len % i2; len++) str += "0";
             xd = convertBase(str, base, baseOut);
-            for (len = xd.length; !xd[len - 1]; --len)
-              ;
-            for (i2 = 1, str = "1."; i2 < len; i2++)
-              str += NUMERALS.charAt(xd[i2]);
+            for (len = xd.length; !xd[len - 1]; --len) ;
+            for (i2 = 1, str = "1."; i2 < len; i2++) str += NUMERALS.charAt(xd[i2]);
           } else {
             str = str.charAt(0) + "." + str.slice(1);
           }
         }
         str = str + (e3 < 0 ? "p" : "p+") + e3;
       } else if (e3 < 0) {
-        for (; ++e3; )
-          str = "0" + str;
+        for (; ++e3; ) str = "0" + str;
         str = "0." + str;
       } else {
-        if (++e3 > len)
-          for (e3 -= len; e3--; )
-            str += "0";
-        else if (e3 < len)
-          str = str.slice(0, e3) + "." + str.slice(e3);
+        if (++e3 > len) for (e3 -= len; e3--; ) str += "0";
+        else if (e3 < len) str = str.slice(0, e3) + "." + str.slice(e3);
       }
     }
     str = (baseOut == 16 ? "0x" : baseOut == 2 ? "0b" : baseOut == 8 ? "0o" : "") + str;
@@ -14323,8 +15593,7 @@ function clamp(x, min3, max3) {
   return new this(x).clamp(min3, max3);
 }
 function config3(obj) {
-  if (!obj || typeof obj !== "object")
-    throw Error(decimalError + "Object expected");
+  if (!obj || typeof obj !== "object") throw Error(decimalError + "Object expected");
   var i2, p, v, useDefaults = obj.defaults === true, ps = [
     "precision",
     1,
@@ -14349,17 +15618,13 @@ function config3(obj) {
     9
   ];
   for (i2 = 0; i2 < ps.length; i2 += 3) {
-    if (p = ps[i2], useDefaults)
-      this[p] = DEFAULTS[p];
+    if (p = ps[i2], useDefaults) this[p] = DEFAULTS[p];
     if ((v = obj[p]) !== void 0) {
-      if (mathfloor(v) === v && v >= ps[i2 + 1] && v <= ps[i2 + 2])
-        this[p] = v;
-      else
-        throw Error(invalidArgument + p + ": " + v);
+      if (mathfloor(v) === v && v >= ps[i2 + 1] && v <= ps[i2 + 2]) this[p] = v;
+      else throw Error(invalidArgument + p + ": " + v);
     }
   }
-  if (p = "crypto", useDefaults)
-    this[p] = DEFAULTS[p];
+  if (p = "crypto", useDefaults) this[p] = DEFAULTS[p];
   if ((v = obj[p]) !== void 0) {
     if (v === true || v === false || v === 0 || v === 1) {
       if (v) {
@@ -14387,8 +15652,7 @@ function clone3(obj) {
   var i2, p, ps;
   function Decimal2(v) {
     var e3, i3, t, x = this;
-    if (!(x instanceof Decimal2))
-      return new Decimal2(v);
+    if (!(x instanceof Decimal2)) return new Decimal2(v);
     x.constructor = Decimal2;
     if (isDecimalInstance(v)) {
       x.s = v.s;
@@ -14424,8 +15688,7 @@ function clone3(obj) {
         x.s = 1;
       }
       if (v === ~~v && v < 1e7) {
-        for (e3 = 0, i3 = v; i3 >= 10; i3 /= 10)
-          e3++;
+        for (e3 = 0, i3 = v; i3 >= 10; i3 /= 10) e3++;
         if (external) {
           if (e3 > Decimal2.maxE) {
             x.e = NaN;
@@ -14442,26 +15705,35 @@ function clone3(obj) {
           x.d = [v];
         }
         return;
-      } else if (v * 0 !== 0) {
-        if (!v)
-          x.s = NaN;
+      }
+      if (v * 0 !== 0) {
+        if (!v) x.s = NaN;
         x.e = NaN;
         x.d = null;
         return;
       }
       return parseDecimal(x, v.toString());
-    } else if (t !== "string") {
-      throw Error(invalidArgument + v);
     }
-    if ((i3 = v.charCodeAt(0)) === 45) {
-      v = v.slice(1);
-      x.s = -1;
-    } else {
-      if (i3 === 43)
+    if (t === "string") {
+      if ((i3 = v.charCodeAt(0)) === 45) {
         v = v.slice(1);
-      x.s = 1;
+        x.s = -1;
+      } else {
+        if (i3 === 43) v = v.slice(1);
+        x.s = 1;
+      }
+      return isDecimal.test(v) ? parseDecimal(x, v) : parseOther(x, v);
     }
-    return isDecimal.test(v) ? parseDecimal(x, v) : parseOther(x, v);
+    if (t === "bigint") {
+      if (v < 0) {
+        v = -v;
+        x.s = -1;
+      } else {
+        x.s = 1;
+      }
+      return parseDecimal(x, v.toString());
+    }
+    throw Error(invalidArgument + v);
   }
   Decimal2.prototype = P;
   Decimal2.ROUND_UP = 0;
@@ -14515,14 +15787,11 @@ function clone3(obj) {
   Decimal2.tan = tan;
   Decimal2.tanh = tanh2;
   Decimal2.trunc = trunc;
-  if (obj === void 0)
-    obj = {};
+  if (obj === void 0) obj = {};
   if (obj) {
     if (obj.defaults !== true) {
       ps = ["precision", "rounding", "toExpNeg", "toExpPos", "maxE", "minE", "modulo", "crypto"];
-      for (i2 = 0; i2 < ps.length; )
-        if (!obj.hasOwnProperty(p = ps[i2++]))
-          obj[p] = this[p];
+      for (i2 = 0; i2 < ps.length; ) if (!obj.hasOwnProperty(p = ps[i2++])) obj[p] = this[p];
     }
   }
   Decimal2.config(obj);
@@ -14571,10 +15840,10 @@ function log103(x) {
   return new this(x).log(10);
 }
 function max() {
-  return maxOrMin(this, arguments, "lt");
+  return maxOrMin(this, arguments, -1);
 }
 function min() {
-  return maxOrMin(this, arguments, "gt");
+  return maxOrMin(this, arguments, 1);
 }
 function mod(x, y) {
   return new this(x).mod(y);
@@ -14587,14 +15856,11 @@ function pow(x, y) {
 }
 function random(sd) {
   var d, e3, k, n, i2 = 0, r = new this(1), rd = [];
-  if (sd === void 0)
-    sd = this.precision;
-  else
-    checkInt32(sd, 1, MAX_DIGITS);
+  if (sd === void 0) sd = this.precision;
+  else checkInt32(sd, 1, MAX_DIGITS);
   k = Math.ceil(sd / LOG_BASE);
   if (!this.crypto) {
-    for (; i2 < k; )
-      rd[i2++] = Math.random() * 1e7 | 0;
+    for (; i2 < k; ) rd[i2++] = Math.random() * 1e7 | 0;
   } else if (crypto.getRandomValues) {
     d = crypto.getRandomValues(new Uint32Array(k));
     for (; i2 < k; ) {
@@ -14626,19 +15892,15 @@ function random(sd) {
     n = mathpow(10, LOG_BASE - sd);
     rd[i2] = (k / n | 0) * n;
   }
-  for (; rd[i2] === 0; i2--)
-    rd.pop();
+  for (; rd[i2] === 0; i2--) rd.pop();
   if (i2 < 0) {
     e3 = 0;
     rd = [0];
   } else {
     e3 = -1;
-    for (; rd[0] === 0; e3 -= LOG_BASE)
-      rd.shift();
-    for (k = 1, n = rd[0]; n >= 10; n /= 10)
-      k++;
-    if (k < LOG_BASE)
-      e3 -= LOG_BASE - k;
+    for (; rd[0] === 0; e3 -= LOG_BASE) rd.shift();
+    for (k = 1, n = rd[0]; n >= 10; n /= 10) k++;
+    if (k < LOG_BASE) e3 -= LOG_BASE - k;
   }
   r.e = e3;
   r.d = rd;
@@ -14666,8 +15928,7 @@ function sub(x, y) {
 function sum() {
   var i2 = 0, args = arguments, x = new this(args[i2]);
   external = false;
-  for (; x.s && ++i2 < args.length; )
-    x = x.plus(args[i2]);
+  for (; x.s && ++i2 < args.length; ) x = x.plus(args[i2]);
   external = true;
   return finalise(x, this.precision, this.rounding);
 }
@@ -14725,31 +15986,1017 @@ var createBigNumberClass = /* @__PURE__ */ factory(name2, dependencies3, (_ref) 
   isClass: true
 });
 
+// node_modules/complex.js/dist/complex.mjs
+var cosh3 = Math.cosh || function(x) {
+  return Math.abs(x) < 1e-9 ? 1 - x : (Math.exp(x) + Math.exp(-x)) * 0.5;
+};
+var sinh3 = Math.sinh || function(x) {
+  return Math.abs(x) < 1e-9 ? x : (Math.exp(x) - Math.exp(-x)) * 0.5;
+};
+var cosm1 = function(x) {
+  const b = Math.PI / 4;
+  if (-b > x || x > b) {
+    return Math.cos(x) - 1;
+  }
+  const xx = x * x;
+  return xx * (xx * (xx * (xx * (xx * (xx * (xx * (xx / 20922789888e3 - 1 / 87178291200) + 1 / 479001600) - 1 / 3628800) + 1 / 40320) - 1 / 720) + 1 / 24) - 1 / 2);
+};
+var hypot2 = function(x, y) {
+  x = Math.abs(x);
+  y = Math.abs(y);
+  if (x < y) [x, y] = [y, x];
+  if (x < 1e8) return Math.sqrt(x * x + y * y);
+  y /= x;
+  return x * Math.sqrt(1 + y * y);
+};
+var parser_exit = function() {
+  throw SyntaxError("Invalid Param");
+};
+function logHypot(a, b) {
+  const _a = Math.abs(a);
+  const _b = Math.abs(b);
+  if (a === 0) {
+    return Math.log(_b);
+  }
+  if (b === 0) {
+    return Math.log(_a);
+  }
+  if (_a < 3e3 && _b < 3e3) {
+    return Math.log(a * a + b * b) * 0.5;
+  }
+  a = a * 0.5;
+  b = b * 0.5;
+  return 0.5 * Math.log(a * a + b * b) + Math.LN2;
+}
+var P2 = { "re": 0, "im": 0 };
+var parse = function(a, b) {
+  const z = P2;
+  if (a === void 0 || a === null) {
+    z["re"] = z["im"] = 0;
+  } else if (b !== void 0) {
+    z["re"] = a;
+    z["im"] = b;
+  } else
+    switch (typeof a) {
+      case "object":
+        if ("im" in a && "re" in a) {
+          z["re"] = a["re"];
+          z["im"] = a["im"];
+        } else if ("abs" in a && "arg" in a) {
+          if (!isFinite(a["abs"]) && isFinite(a["arg"])) {
+            return Complex["INFINITY"];
+          }
+          z["re"] = a["abs"] * Math.cos(a["arg"]);
+          z["im"] = a["abs"] * Math.sin(a["arg"]);
+        } else if ("r" in a && "phi" in a) {
+          if (!isFinite(a["r"]) && isFinite(a["phi"])) {
+            return Complex["INFINITY"];
+          }
+          z["re"] = a["r"] * Math.cos(a["phi"]);
+          z["im"] = a["r"] * Math.sin(a["phi"]);
+        } else if (a.length === 2) {
+          z["re"] = a[0];
+          z["im"] = a[1];
+        } else {
+          parser_exit();
+        }
+        break;
+      case "string":
+        z["im"] = /* void */
+        z["re"] = 0;
+        const tokens = a.replace(/_/g, "").match(/\d+\.?\d*e[+-]?\d+|\d+\.?\d*|\.\d+|./g);
+        let plus = 1;
+        let minus = 0;
+        if (tokens === null) {
+          parser_exit();
+        }
+        for (let i2 = 0; i2 < tokens.length; i2++) {
+          const c = tokens[i2];
+          if (c === " " || c === "	" || c === "\n") {
+          } else if (c === "+") {
+            plus++;
+          } else if (c === "-") {
+            minus++;
+          } else if (c === "i" || c === "I") {
+            if (plus + minus === 0) {
+              parser_exit();
+            }
+            if (tokens[i2 + 1] !== " " && !isNaN(tokens[i2 + 1])) {
+              z["im"] += parseFloat((minus % 2 ? "-" : "") + tokens[i2 + 1]);
+              i2++;
+            } else {
+              z["im"] += parseFloat((minus % 2 ? "-" : "") + "1");
+            }
+            plus = minus = 0;
+          } else {
+            if (plus + minus === 0 || isNaN(c)) {
+              parser_exit();
+            }
+            if (tokens[i2 + 1] === "i" || tokens[i2 + 1] === "I") {
+              z["im"] += parseFloat((minus % 2 ? "-" : "") + c);
+              i2++;
+            } else {
+              z["re"] += parseFloat((minus % 2 ? "-" : "") + c);
+            }
+            plus = minus = 0;
+          }
+        }
+        if (plus + minus > 0) {
+          parser_exit();
+        }
+        break;
+      case "number":
+        z["im"] = 0;
+        z["re"] = a;
+        break;
+      default:
+        parser_exit();
+    }
+  if (isNaN(z["re"]) || isNaN(z["im"])) {
+  }
+  return z;
+};
+function Complex(a, b) {
+  if (!(this instanceof Complex)) {
+    return new Complex(a, b);
+  }
+  const z = parse(a, b);
+  this["re"] = z["re"];
+  this["im"] = z["im"];
+}
+Complex.prototype = {
+  "re": 0,
+  "im": 0,
+  /**
+   * Calculates the sign of a complex number, which is a normalized complex
+   *
+   * @returns {Complex}
+   */
+  "sign": function() {
+    const abs3 = hypot2(this["re"], this["im"]);
+    return new Complex(
+      this["re"] / abs3,
+      this["im"] / abs3
+    );
+  },
+  /**
+   * Adds two complex numbers
+   *
+   * @returns {Complex}
+   */
+  "add": function(a, b) {
+    const z = parse(a, b);
+    const tInfin = this["isInfinite"]();
+    const zInfin = !(isFinite(z["re"]) && isFinite(z["im"]));
+    if (tInfin || zInfin) {
+      if (tInfin && zInfin) {
+        return Complex["NAN"];
+      }
+      return Complex["INFINITY"];
+    }
+    return new Complex(
+      this["re"] + z["re"],
+      this["im"] + z["im"]
+    );
+  },
+  /**
+   * Subtracts two complex numbers
+   *
+   * @returns {Complex}
+   */
+  "sub": function(a, b) {
+    const z = parse(a, b);
+    const tInfin = this["isInfinite"]();
+    const zInfin = !(isFinite(z["re"]) && isFinite(z["im"]));
+    if (tInfin || zInfin) {
+      if (tInfin && zInfin) {
+        return Complex["NAN"];
+      }
+      return Complex["INFINITY"];
+    }
+    return new Complex(
+      this["re"] - z["re"],
+      this["im"] - z["im"]
+    );
+  },
+  /**
+   * Multiplies two complex numbers
+   *
+   * @returns {Complex}
+   */
+  "mul": function(a, b) {
+    const z = parse(a, b);
+    const tInfin = this["isInfinite"]();
+    const zInfin = !(isFinite(z["re"]) && isFinite(z["im"]));
+    const tIsZero = this["re"] === 0 && this["im"] === 0;
+    const zIsZero = z["re"] === 0 && z["im"] === 0;
+    if (tInfin && zIsZero || zInfin && tIsZero) {
+      return Complex["NAN"];
+    }
+    if (tInfin || zInfin) {
+      return Complex["INFINITY"];
+    }
+    if (z["im"] === 0 && this["im"] === 0) {
+      return new Complex(this["re"] * z["re"], 0);
+    }
+    return new Complex(
+      this["re"] * z["re"] - this["im"] * z["im"],
+      this["re"] * z["im"] + this["im"] * z["re"]
+    );
+  },
+  /**
+   * Divides two complex numbers
+   *
+   * @returns {Complex}
+   */
+  "div": function(a, b) {
+    const z = parse(a, b);
+    const tInfin = this["isInfinite"]();
+    const zInfin = !(isFinite(z["re"]) && isFinite(z["im"]));
+    const tIsZero = this["re"] === 0 && this["im"] === 0;
+    const zIsZero = z["re"] === 0 && z["im"] === 0;
+    if (tIsZero && zIsZero || tInfin && zInfin) {
+      return Complex["NAN"];
+    }
+    if (zIsZero || tInfin) {
+      return Complex["INFINITY"];
+    }
+    if (tIsZero || zInfin) {
+      return Complex["ZERO"];
+    }
+    if (0 === z["im"]) {
+      return new Complex(this["re"] / z["re"], this["im"] / z["re"]);
+    }
+    if (Math.abs(z["re"]) < Math.abs(z["im"])) {
+      const x = z["re"] / z["im"];
+      const t = z["re"] * x + z["im"];
+      return new Complex(
+        (this["re"] * x + this["im"]) / t,
+        (this["im"] * x - this["re"]) / t
+      );
+    } else {
+      const x = z["im"] / z["re"];
+      const t = z["im"] * x + z["re"];
+      return new Complex(
+        (this["re"] + this["im"] * x) / t,
+        (this["im"] - this["re"] * x) / t
+      );
+    }
+  },
+  /**
+   * Calculate the power of two complex numbers
+   *
+   * @returns {Complex}
+   */
+  "pow": function(a, b) {
+    const z = parse(a, b);
+    const tIsZero = this["re"] === 0 && this["im"] === 0;
+    const zIsZero = z["re"] === 0 && z["im"] === 0;
+    if (zIsZero) {
+      return Complex["ONE"];
+    }
+    if (z["im"] === 0) {
+      if (this["im"] === 0 && this["re"] > 0) {
+        return new Complex(Math.pow(this["re"], z["re"]), 0);
+      } else if (this["re"] === 0) {
+        switch ((z["re"] % 4 + 4) % 4) {
+          case 0:
+            return new Complex(Math.pow(this["im"], z["re"]), 0);
+          case 1:
+            return new Complex(0, Math.pow(this["im"], z["re"]));
+          case 2:
+            return new Complex(-Math.pow(this["im"], z["re"]), 0);
+          case 3:
+            return new Complex(0, -Math.pow(this["im"], z["re"]));
+        }
+      }
+    }
+    if (tIsZero && z["re"] > 0) {
+      return Complex["ZERO"];
+    }
+    const arg2 = Math.atan2(this["im"], this["re"]);
+    const loh = logHypot(this["re"], this["im"]);
+    let re2 = Math.exp(z["re"] * loh - z["im"] * arg2);
+    let im2 = z["im"] * loh + z["re"] * arg2;
+    return new Complex(
+      re2 * Math.cos(im2),
+      re2 * Math.sin(im2)
+    );
+  },
+  /**
+   * Calculate the complex square root
+   *
+   * @returns {Complex}
+   */
+  "sqrt": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (b === 0) {
+      if (a >= 0) {
+        return new Complex(Math.sqrt(a), 0);
+      } else {
+        return new Complex(0, Math.sqrt(-a));
+      }
+    }
+    const r = hypot2(a, b);
+    let re2 = Math.sqrt(0.5 * (r + Math.abs(a)));
+    let im2 = Math.abs(b) / (2 * re2);
+    if (a >= 0) {
+      return new Complex(re2, b < 0 ? -im2 : im2);
+    } else {
+      return new Complex(im2, b < 0 ? -re2 : re2);
+    }
+  },
+  /**
+   * Calculate the complex exponent
+   *
+   * @returns {Complex}
+   */
+  "exp": function() {
+    const er = Math.exp(this["re"]);
+    if (this["im"] === 0) {
+      return new Complex(er, 0);
+    }
+    return new Complex(
+      er * Math.cos(this["im"]),
+      er * Math.sin(this["im"])
+    );
+  },
+  /**
+   * Calculate the complex exponent and subtracts one.
+   *
+   * This may be more accurate than `Complex(x).exp().sub(1)` if
+   * `x` is small.
+   *
+   * @returns {Complex}
+   */
+  "expm1": function() {
+    const a = this["re"];
+    const b = this["im"];
+    return new Complex(
+      Math.expm1(a) * Math.cos(b) + cosm1(b),
+      Math.exp(a) * Math.sin(b)
+    );
+  },
+  /**
+   * Calculate the natural log
+   *
+   * @returns {Complex}
+   */
+  "log": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (b === 0 && a > 0) {
+      return new Complex(Math.log(a), 0);
+    }
+    return new Complex(
+      logHypot(a, b),
+      Math.atan2(b, a)
+    );
+  },
+  /**
+   * Calculate the magnitude of the complex number
+   *
+   * @returns {number}
+   */
+  "abs": function() {
+    return hypot2(this["re"], this["im"]);
+  },
+  /**
+   * Calculate the angle of the complex number
+   *
+   * @returns {number}
+   */
+  "arg": function() {
+    return Math.atan2(this["im"], this["re"]);
+  },
+  /**
+   * Calculate the sine of the complex number
+   *
+   * @returns {Complex}
+   */
+  "sin": function() {
+    const a = this["re"];
+    const b = this["im"];
+    return new Complex(
+      Math.sin(a) * cosh3(b),
+      Math.cos(a) * sinh3(b)
+    );
+  },
+  /**
+   * Calculate the cosine
+   *
+   * @returns {Complex}
+   */
+  "cos": function() {
+    const a = this["re"];
+    const b = this["im"];
+    return new Complex(
+      Math.cos(a) * cosh3(b),
+      -Math.sin(a) * sinh3(b)
+    );
+  },
+  /**
+   * Calculate the tangent
+   *
+   * @returns {Complex}
+   */
+  "tan": function() {
+    const a = 2 * this["re"];
+    const b = 2 * this["im"];
+    const d = Math.cos(a) + cosh3(b);
+    return new Complex(
+      Math.sin(a) / d,
+      sinh3(b) / d
+    );
+  },
+  /**
+   * Calculate the cotangent
+   *
+   * @returns {Complex}
+   */
+  "cot": function() {
+    const a = 2 * this["re"];
+    const b = 2 * this["im"];
+    const d = Math.cos(a) - cosh3(b);
+    return new Complex(
+      -Math.sin(a) / d,
+      sinh3(b) / d
+    );
+  },
+  /**
+   * Calculate the secant
+   *
+   * @returns {Complex}
+   */
+  "sec": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const d = 0.5 * cosh3(2 * b) + 0.5 * Math.cos(2 * a);
+    return new Complex(
+      Math.cos(a) * cosh3(b) / d,
+      Math.sin(a) * sinh3(b) / d
+    );
+  },
+  /**
+   * Calculate the cosecans
+   *
+   * @returns {Complex}
+   */
+  "csc": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const d = 0.5 * cosh3(2 * b) - 0.5 * Math.cos(2 * a);
+    return new Complex(
+      Math.sin(a) * cosh3(b) / d,
+      -Math.cos(a) * sinh3(b) / d
+    );
+  },
+  /**
+   * Calculate the complex arcus sinus
+   *
+   * @returns {Complex}
+   */
+  "asin": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const t1 = new Complex(
+      b * b - a * a + 1,
+      -2 * a * b
+    )["sqrt"]();
+    const t2 = new Complex(
+      t1["re"] - b,
+      t1["im"] + a
+    )["log"]();
+    return new Complex(t2["im"], -t2["re"]);
+  },
+  /**
+   * Calculate the complex arcus cosinus
+   *
+   * @returns {Complex}
+   */
+  "acos": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const t1 = new Complex(
+      b * b - a * a + 1,
+      -2 * a * b
+    )["sqrt"]();
+    const t2 = new Complex(
+      t1["re"] - b,
+      t1["im"] + a
+    )["log"]();
+    return new Complex(Math.PI / 2 - t2["im"], t2["re"]);
+  },
+  /**
+   * Calculate the complex arcus tangent
+   *
+   * @returns {Complex}
+   */
+  "atan": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (a === 0) {
+      if (b === 1) {
+        return new Complex(0, Infinity);
+      }
+      if (b === -1) {
+        return new Complex(0, -Infinity);
+      }
+    }
+    const d = a * a + (1 - b) * (1 - b);
+    const t1 = new Complex(
+      (1 - b * b - a * a) / d,
+      -2 * a / d
+    ).log();
+    return new Complex(-0.5 * t1["im"], 0.5 * t1["re"]);
+  },
+  /**
+   * Calculate the complex arcus cotangent
+   *
+   * @returns {Complex}
+   */
+  "acot": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (b === 0) {
+      return new Complex(Math.atan2(1, a), 0);
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).atan() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).atan();
+  },
+  /**
+   * Calculate the complex arcus secant
+   *
+   * @returns {Complex}
+   */
+  "asec": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (a === 0 && b === 0) {
+      return new Complex(0, Infinity);
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).acos() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).acos();
+  },
+  /**
+   * Calculate the complex arcus cosecans
+   *
+   * @returns {Complex}
+   */
+  "acsc": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (a === 0 && b === 0) {
+      return new Complex(Math.PI / 2, Infinity);
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).asin() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).asin();
+  },
+  /**
+   * Calculate the complex sinh
+   *
+   * @returns {Complex}
+   */
+  "sinh": function() {
+    const a = this["re"];
+    const b = this["im"];
+    return new Complex(
+      sinh3(a) * Math.cos(b),
+      cosh3(a) * Math.sin(b)
+    );
+  },
+  /**
+   * Calculate the complex cosh
+   *
+   * @returns {Complex}
+   */
+  "cosh": function() {
+    const a = this["re"];
+    const b = this["im"];
+    return new Complex(
+      cosh3(a) * Math.cos(b),
+      sinh3(a) * Math.sin(b)
+    );
+  },
+  /**
+   * Calculate the complex tanh
+   *
+   * @returns {Complex}
+   */
+  "tanh": function() {
+    const a = 2 * this["re"];
+    const b = 2 * this["im"];
+    const d = cosh3(a) + Math.cos(b);
+    return new Complex(
+      sinh3(a) / d,
+      Math.sin(b) / d
+    );
+  },
+  /**
+   * Calculate the complex coth
+   *
+   * @returns {Complex}
+   */
+  "coth": function() {
+    const a = 2 * this["re"];
+    const b = 2 * this["im"];
+    const d = cosh3(a) - Math.cos(b);
+    return new Complex(
+      sinh3(a) / d,
+      -Math.sin(b) / d
+    );
+  },
+  /**
+   * Calculate the complex coth
+   *
+   * @returns {Complex}
+   */
+  "csch": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const d = Math.cos(2 * b) - cosh3(2 * a);
+    return new Complex(
+      -2 * sinh3(a) * Math.cos(b) / d,
+      2 * cosh3(a) * Math.sin(b) / d
+    );
+  },
+  /**
+   * Calculate the complex sech
+   *
+   * @returns {Complex}
+   */
+  "sech": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const d = Math.cos(2 * b) + cosh3(2 * a);
+    return new Complex(
+      2 * cosh3(a) * Math.cos(b) / d,
+      -2 * sinh3(a) * Math.sin(b) / d
+    );
+  },
+  /**
+   * Calculate the complex asinh
+   *
+   * @returns {Complex}
+   */
+  "asinh": function() {
+    let tmp = this["im"];
+    this["im"] = -this["re"];
+    this["re"] = tmp;
+    const res = this["asin"]();
+    this["re"] = -this["im"];
+    this["im"] = tmp;
+    tmp = res["re"];
+    res["re"] = -res["im"];
+    res["im"] = tmp;
+    return res;
+  },
+  /**
+   * Calculate the complex acosh
+   *
+   * @returns {Complex}
+   */
+  "acosh": function() {
+    const res = this["acos"]();
+    if (res["im"] <= 0) {
+      const tmp = res["re"];
+      res["re"] = -res["im"];
+      res["im"] = tmp;
+    } else {
+      const tmp = res["im"];
+      res["im"] = -res["re"];
+      res["re"] = tmp;
+    }
+    return res;
+  },
+  /**
+   * Calculate the complex atanh
+   *
+   * @returns {Complex}
+   */
+  "atanh": function() {
+    const a = this["re"];
+    const b = this["im"];
+    const noIM = a > 1 && b === 0;
+    const oneMinus = 1 - a;
+    const onePlus = 1 + a;
+    const d = oneMinus * oneMinus + b * b;
+    const x = d !== 0 ? new Complex(
+      (onePlus * oneMinus - b * b) / d,
+      (b * oneMinus + onePlus * b) / d
+    ) : new Complex(
+      a !== -1 ? a / 0 : 0,
+      b !== 0 ? b / 0 : 0
+    );
+    const temp = x["re"];
+    x["re"] = logHypot(x["re"], x["im"]) / 2;
+    x["im"] = Math.atan2(x["im"], temp) / 2;
+    if (noIM) {
+      x["im"] = -x["im"];
+    }
+    return x;
+  },
+  /**
+   * Calculate the complex acoth
+   *
+   * @returns {Complex}
+   */
+  "acoth": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (a === 0 && b === 0) {
+      return new Complex(0, Math.PI / 2);
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).atanh() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).atanh();
+  },
+  /**
+   * Calculate the complex acsch
+   *
+   * @returns {Complex}
+   */
+  "acsch": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (b === 0) {
+      return new Complex(
+        a !== 0 ? Math.log(a + Math.sqrt(a * a + 1)) : Infinity,
+        0
+      );
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).asinh() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).asinh();
+  },
+  /**
+   * Calculate the complex asech
+   *
+   * @returns {Complex}
+   */
+  "asech": function() {
+    const a = this["re"];
+    const b = this["im"];
+    if (this["isZero"]()) {
+      return Complex["INFINITY"];
+    }
+    const d = a * a + b * b;
+    return d !== 0 ? new Complex(
+      a / d,
+      -b / d
+    ).acosh() : new Complex(
+      a !== 0 ? a / 0 : 0,
+      b !== 0 ? -b / 0 : 0
+    ).acosh();
+  },
+  /**
+   * Calculate the complex inverse 1/z
+   *
+   * @returns {Complex}
+   */
+  "inverse": function() {
+    if (this["isZero"]()) {
+      return Complex["INFINITY"];
+    }
+    if (this["isInfinite"]()) {
+      return Complex["ZERO"];
+    }
+    const a = this["re"];
+    const b = this["im"];
+    const d = a * a + b * b;
+    return new Complex(a / d, -b / d);
+  },
+  /**
+   * Returns the complex conjugate
+   *
+   * @returns {Complex}
+   */
+  "conjugate": function() {
+    return new Complex(this["re"], -this["im"]);
+  },
+  /**
+   * Gets the negated complex number
+   *
+   * @returns {Complex}
+   */
+  "neg": function() {
+    return new Complex(-this["re"], -this["im"]);
+  },
+  /**
+   * Ceils the actual complex number
+   *
+   * @returns {Complex}
+   */
+  "ceil": function(places) {
+    places = Math.pow(10, places || 0);
+    return new Complex(
+      Math.ceil(this["re"] * places) / places,
+      Math.ceil(this["im"] * places) / places
+    );
+  },
+  /**
+   * Floors the actual complex number
+   *
+   * @returns {Complex}
+   */
+  "floor": function(places) {
+    places = Math.pow(10, places || 0);
+    return new Complex(
+      Math.floor(this["re"] * places) / places,
+      Math.floor(this["im"] * places) / places
+    );
+  },
+  /**
+   * Ceils the actual complex number
+   *
+   * @returns {Complex}
+   */
+  "round": function(places) {
+    places = Math.pow(10, places || 0);
+    return new Complex(
+      Math.round(this["re"] * places) / places,
+      Math.round(this["im"] * places) / places
+    );
+  },
+  /**
+   * Compares two complex numbers
+   *
+   * **Note:** new Complex(Infinity).equals(Infinity) === false
+   *
+   * @returns {boolean}
+   */
+  "equals": function(a, b) {
+    const z = parse(a, b);
+    return Math.abs(z["re"] - this["re"]) <= Complex["EPSILON"] && Math.abs(z["im"] - this["im"]) <= Complex["EPSILON"];
+  },
+  /**
+   * Clones the actual object
+   *
+   * @returns {Complex}
+   */
+  "clone": function() {
+    return new Complex(this["re"], this["im"]);
+  },
+  /**
+   * Gets a string of the actual complex number
+   *
+   * @returns {string}
+   */
+  "toString": function() {
+    let a = this["re"];
+    let b = this["im"];
+    let ret = "";
+    if (this["isNaN"]()) {
+      return "NaN";
+    }
+    if (this["isInfinite"]()) {
+      return "Infinity";
+    }
+    if (Math.abs(a) < Complex["EPSILON"]) {
+      a = 0;
+    }
+    if (Math.abs(b) < Complex["EPSILON"]) {
+      b = 0;
+    }
+    if (b === 0) {
+      return ret + a;
+    }
+    if (a !== 0) {
+      ret += a;
+      ret += " ";
+      if (b < 0) {
+        b = -b;
+        ret += "-";
+      } else {
+        ret += "+";
+      }
+      ret += " ";
+    } else if (b < 0) {
+      b = -b;
+      ret += "-";
+    }
+    if (1 !== b) {
+      ret += b;
+    }
+    return ret + "i";
+  },
+  /**
+   * Returns the actual number as a vector
+   *
+   * @returns {Array}
+   */
+  "toVector": function() {
+    return [this["re"], this["im"]];
+  },
+  /**
+   * Returns the actual real value of the current object
+   *
+   * @returns {number|null}
+   */
+  "valueOf": function() {
+    if (this["im"] === 0) {
+      return this["re"];
+    }
+    return null;
+  },
+  /**
+   * Determines whether a complex number is not on the Riemann sphere.
+   *
+   * @returns {boolean}
+   */
+  "isNaN": function() {
+    return isNaN(this["re"]) || isNaN(this["im"]);
+  },
+  /**
+   * Determines whether or not a complex number is at the zero pole of the
+   * Riemann sphere.
+   *
+   * @returns {boolean}
+   */
+  "isZero": function() {
+    return this["im"] === 0 && this["re"] === 0;
+  },
+  /**
+   * Determines whether a complex number is not at the infinity pole of the
+   * Riemann sphere.
+   *
+   * @returns {boolean}
+   */
+  "isFinite": function() {
+    return isFinite(this["re"]) && isFinite(this["im"]);
+  },
+  /**
+   * Determines whether or not a complex number is at the infinity pole of the
+   * Riemann sphere.
+   *
+   * @returns {boolean}
+   */
+  "isInfinite": function() {
+    return !this["isFinite"]();
+  }
+};
+Complex["ZERO"] = new Complex(0, 0);
+Complex["ONE"] = new Complex(1, 0);
+Complex["I"] = new Complex(0, 1);
+Complex["PI"] = new Complex(Math.PI, 0);
+Complex["E"] = new Complex(Math.E, 0);
+Complex["INFINITY"] = new Complex(Infinity, Infinity);
+Complex["NAN"] = new Complex(NaN, NaN);
+Complex["EPSILON"] = 1e-15;
+
 // node_modules/mathjs/lib/esm/type/complex/Complex.js
-var import_complex = __toESM(require_complex(), 1);
 var name3 = "Complex";
 var dependencies4 = [];
 var createComplexClass = /* @__PURE__ */ factory(name3, dependencies4, () => {
-  Object.defineProperty(import_complex.default, "name", {
+  Object.defineProperty(Complex, "name", {
     value: "Complex"
   });
-  import_complex.default.prototype.constructor = import_complex.default;
-  import_complex.default.prototype.type = "Complex";
-  import_complex.default.prototype.isComplex = true;
-  import_complex.default.prototype.toJSON = function() {
+  Complex.prototype.constructor = Complex;
+  Complex.prototype.type = "Complex";
+  Complex.prototype.isComplex = true;
+  Complex.prototype.toJSON = function() {
     return {
       mathjs: "Complex",
       re: this.re,
       im: this.im
     };
   };
-  import_complex.default.prototype.toPolar = function() {
+  Complex.prototype.toPolar = function() {
     return {
       r: this.abs(),
       phi: this.arg()
     };
   };
-  import_complex.default.prototype.format = function(options) {
+  Complex.prototype.format = function(options) {
     var str = "";
     var im2 = this.im;
     var re2 = this.re;
@@ -14792,12 +17039,12 @@ var createComplexClass = /* @__PURE__ */ factory(name3, dependencies4, () => {
     }
     return str;
   };
-  import_complex.default.fromPolar = function(args) {
+  Complex.fromPolar = function(args) {
     switch (arguments.length) {
       case 1: {
         var arg2 = arguments[0];
         if (typeof arg2 === "object") {
-          return (0, import_complex.default)(arg2);
+          return Complex(arg2);
         } else {
           throw new TypeError("Input has to be an object with r and phi keys.");
         }
@@ -14810,7 +17057,7 @@ var createComplexClass = /* @__PURE__ */ factory(name3, dependencies4, () => {
             phi3 = phi3.toNumber("rad");
           }
           if (isNumber(phi3)) {
-            return new import_complex.default({
+            return new Complex({
               r,
               phi: phi3
             });
@@ -14824,11 +17071,11 @@ var createComplexClass = /* @__PURE__ */ factory(name3, dependencies4, () => {
         throw new SyntaxError("Wrong number of arguments in function fromPolar");
     }
   };
-  import_complex.default.prototype.valueOf = import_complex.default.prototype.toString;
-  import_complex.default.fromJSON = function(json) {
-    return new import_complex.default(json);
+  Complex.prototype.valueOf = Complex.prototype.toString;
+  Complex.fromJSON = function(json) {
+    return new Complex(json);
   };
-  import_complex.default.compare = function(a, b) {
+  Complex.compare = function(a, b) {
     if (a.re > b.re) {
       return 1;
     }
@@ -14843,7 +17090,7 @@ var createComplexClass = /* @__PURE__ */ factory(name3, dependencies4, () => {
     }
     return 0;
   };
-  return import_complex.default;
+  return Complex;
 }, {
   isClass: true
 });
@@ -15117,13 +17364,11 @@ function lruQueue(limit) {
   var index2 = 0;
   var del = function del2(id) {
     var oldIndex = map3[id];
-    if (!oldIndex)
-      return;
+    if (!oldIndex) return;
     delete queue[oldIndex];
     delete map3[id];
     --size2;
-    if (base !== oldIndex)
-      return;
+    if (base !== oldIndex) return;
     if (!size2) {
       index2 = 0;
       base = 1;
@@ -15141,15 +17386,13 @@ function lruQueue(limit) {
       map3[id] = nuIndex;
       if (!oldIndex) {
         ++size2;
-        if (size2 <= limit)
-          return void 0;
+        if (size2 <= limit) return void 0;
         id = queue[base];
         del(id);
         return id;
       }
       delete queue[oldIndex];
-      if (base !== oldIndex)
-        return void 0;
+      if (base !== oldIndex) return void 0;
       while (!Object.prototype.hasOwnProperty.call(queue, ++base)) {
       }
       return void 0;
@@ -15269,6 +17512,7 @@ var createDenseMatrixClass = /* @__PURE__ */ factory(name7, dependencies8, (_ref
     switch (arguments.length) {
       case 1:
         return _get(this, index2);
+      // intentional fall through
       case 2:
       case 3:
         return _set(this, index2, replacement, defaultValue);
@@ -15849,6 +18093,7 @@ var createIsInteger = /* @__PURE__ */ factory(name9, dependencies10, (_ref) => {
   } = _ref;
   return typed3(name9, {
     number: isInteger,
+    // TODO: what to do with isInteger(add(0.1, 0.2))  ?
     BigNumber: function BigNumber2(x) {
       return x.isInt();
     },
@@ -16205,12 +18450,9 @@ var lgammaG = 5;
 var lgammaN = 7;
 var lgammaSeries = [1.000000000190015, 76.18009172947146, -86.50532032941678, 24.01409824083091, -1.231739572450155, 0.001208650973866179, -5395239384953e-18];
 function lgammaNumber(n) {
-  if (n < 0)
-    return NaN;
-  if (n === 0)
-    return Infinity;
-  if (!isFinite(n))
-    return n;
+  if (n < 0) return NaN;
+  if (n === 0) return Infinity;
+  if (!isFinite(n)) return n;
   if (n < 0.5) {
     return Math.log(Math.PI / Math.sin(Math.PI * n)) - lgammaNumber(1 - n);
   }
@@ -16705,6 +18947,7 @@ var createSparseMatrixClass = /* @__PURE__ */ factory(name18, dependencies19, (_
     switch (arguments.length) {
       case 1:
         return _getsubset(this, index2);
+      // intentional fall through
       case 2:
       case 3:
         return _setsubset(this, index2, replacement, defaultValue);
@@ -17068,10 +19311,8 @@ var createSparseMatrixClass = /* @__PURE__ */ factory(name18, dependencies19, (_
     var columns = this._size[1];
     var args = maxArgumentCount(callback);
     var invoke = function invoke2(v, i2, j) {
-      if (args === 1)
-        return callback(v);
-      if (args === 2)
-        return callback(v, [i2, j]);
+      if (args === 1) return callback(v);
+      if (args === 2) return callback(v, [i2, j]);
       return callback(v, [i2, j], me);
     };
     return _map3(this, 0, rows - 1, 0, columns - 1, invoke, skipZeros);
@@ -17458,8 +19699,7 @@ var createNumber = /* @__PURE__ */ factory(name19, dependencies20, (_ref) => {
       return x;
     },
     string: function string2(x) {
-      if (x === "NaN")
-        return NaN;
+      if (x === "NaN") return NaN;
       var nonDecimalNumberParts = getNonDecimalNumberParts(x);
       if (nonDecimalNumberParts) {
         return makeNumberFromNonDecimalParts(nonDecimalNumberParts);
@@ -17646,6 +19886,7 @@ var createComplex = /* @__PURE__ */ factory(name23, dependencies24, (_ref) => {
     "number, number": function numberNumber(re2, im2) {
       return new Complex3(re2, im2);
     },
+    // TODO: this signature should be redundant
     "BigNumber, BigNumber": function BigNumberBigNumber(re2, im2) {
       return new Complex3(re2.toNumber(), im2.toNumber());
     },
@@ -17795,8 +20036,7 @@ var createMatrixFromFunction = /* @__PURE__ */ factory(name26, dependencies27, (
     m.resize(size2);
     m.forEach(function(_, index2) {
       var val = fn(index2);
-      if (isZero2(val))
-        return;
+      if (isZero2(val)) return;
       m.set(index2, val);
     });
     return m;
@@ -17820,10 +20060,10 @@ var createMatrixFromRows = /* @__PURE__ */ factory(name27, dependencies28, (_ref
     "...Matrix": function Matrix2(arr) {
       return matrix2(_createArray(arr.map((m) => m.toArray())));
     }
+    // TODO implement this properly for SparseMatrix
   });
   function _createArray(arr) {
-    if (arr.length === 0)
-      throw new TypeError("At least one row is needed to construct a matrix.");
+    if (arr.length === 0) throw new TypeError("At least one row is needed to construct a matrix.");
     var N = checkVectorTypeAndReturnLength(arr[0]);
     var result = [];
     for (var row2 of arr) {
@@ -17870,10 +20110,10 @@ var createMatrixFromColumns = /* @__PURE__ */ factory(name28, dependencies29, (_
     "...Matrix": function Matrix2(arr) {
       return matrix2(_createArray(arr.map((m) => m.toArray())));
     }
+    // TODO implement this properly for SparseMatrix
   });
   function _createArray(arr) {
-    if (arr.length === 0)
-      throw new TypeError("At least one column is needed to construct a matrix.");
+    if (arr.length === 0) throw new TypeError("At least one column is needed to construct a matrix.");
     var N = checkVectorTypeAndReturnLength(arr[0]);
     var result = [];
     for (var i2 = 0; i2 < N; i2++) {
@@ -17938,7 +20178,9 @@ var createUnaryMinus = /* @__PURE__ */ factory(name30, dependencies31, (_ref) =>
       res.value = typed3.find(self2, res.valueType())(x.value);
       return res;
     }),
+    // deep map collection, skip zeros since unaryMinus(0) = 0
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true))
+    // TODO: add support for string
   });
 });
 
@@ -17965,6 +20207,7 @@ var createUnaryPlus = /* @__PURE__ */ factory(name31, dependencies32, (_ref) => 
     Unit: function Unit2(x) {
       return x.clone();
     },
+    // deep map collection, skip zeros since unaryPlus(0) = 0
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
     "boolean | string": function booleanString(x) {
       return config4.number === "BigNumber" ? new BigNumber2(+x) : +x;
@@ -17982,6 +20225,7 @@ var createAbs = /* @__PURE__ */ factory(name32, dependencies33, (_ref) => {
   return typed3(name32, {
     number: absNumber,
     "Complex | BigNumber | Fraction | Unit": (x) => x.abs(),
+    // deep map collection, skip zeros since abs(0) = 0
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true))
   });
 });
@@ -18072,8 +20316,7 @@ var createAddScalar = /* @__PURE__ */ factory(name34, dependencies35, (_ref) => 
       if (y.value === null || y.value === void 0) {
         throw new Error("Parameter y contains a unit with undefined value");
       }
-      if (!x.equalBase(y))
-        throw new Error("Units do not match");
+      if (!x.equalBase(y)) throw new Error("Units do not match");
       var res = x.clone();
       res.value = typed3.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
       res.fixPrefix = false;
@@ -18107,8 +20350,7 @@ var createSubtractScalar = /* @__PURE__ */ factory(name35, dependencies36, (_ref
       if (y.value === null || y.value === void 0) {
         throw new Error("Parameter y contains a unit with undefined value");
       }
-      if (!x.equalBase(y))
-        throw new Error("Units do not match");
+      if (!x.equalBase(y)) throw new Error("Units do not match");
       var res = x.clone();
       res.value = typed3.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
       res.fixPrefix = false;
@@ -18133,6 +20375,8 @@ var createCbrt = /* @__PURE__ */ factory(name36, dependencies37, (_ref) => {
   } = _ref;
   return typed3(name36, {
     number: cbrtNumber,
+    // note: signature 'number, boolean' is also supported,
+    //       created by typed as it knows how to convert number to Complex
     Complex: _cbrtComplex,
     "Complex, boolean": _cbrtComplex,
     BigNumber: function BigNumber3(x) {
@@ -18436,8 +20680,7 @@ var createCeil = /* @__PURE__ */ factory(name40, dependencies41, (_ref2) => {
       return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
     }),
     "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
-      if (equalScalar2(x, 0))
-        return zeros3(y.size(), y.storage());
+      if (equalScalar2(x, 0)) return zeros3(y.size(), y.storage());
       if (y.storage() === "dense") {
         return matAlgo14xDs(y, x, self2, true);
       }
@@ -18584,8 +20827,7 @@ var createFix = /* @__PURE__ */ factory(name44, dependencies45, (_ref2) => {
       return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
     }),
     "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
-      if (equalScalar2(x, 0))
-        return zeros3(y.size(), y.storage());
+      if (equalScalar2(x, 0)) return zeros3(y.size(), y.storage());
       if (y.storage() === "dense") {
         return matAlgo14xDs(y, x, self2, true);
       }
@@ -18700,8 +20942,7 @@ var createFloor = /* @__PURE__ */ factory(name45, dependencies46, (_ref2) => {
       return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
     }),
     "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
-      if (equalScalar2(x, 0))
-        return zeros3(y.size(), y.storage());
+      if (equalScalar2(x, 0)) return zeros3(y.size(), y.storage());
       if (y.storage() === "dense") {
         return matAlgo14xDs(y, x, self2, true);
       }
@@ -20234,6 +22475,7 @@ var createMultiply = /* @__PURE__ */ factory(name62, dependencies62, (_ref) => {
     return c;
   }
   return typed3(name62, multiplyScalar2, {
+    // we extend the signatures of multiplyScalar with signatures dealing with matrices
     "Array, Array": typed3.referTo("Matrix, Matrix", (selfMM) => (x, y) => {
       _validateMatrixDimensions(arraySize(x), arraySize(y));
       var m = selfMM(matrix2(x), matrix2(y));
@@ -20409,6 +22651,7 @@ var createSign = /* @__PURE__ */ factory(name64, dependencies64, (_ref) => {
     Fraction: function Fraction3(x) {
       return new _Fraction(x.s, 1);
     },
+    // deep map collection, skip zeros since sign(0) = 0
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
     Unit: typed3.referToSelf((self2) => (x) => {
       if (!x._isDerived() && x.units[0].unit.offset !== 0) {
@@ -20543,6 +22786,7 @@ var createXgcd = /* @__PURE__ */ factory(name68, dependencies68, (_ref) => {
       return config4.matrix === "Array" ? res : matrix2(res);
     },
     "BigNumber, BigNumber": _xgcdBigNumber
+    // TODO: implement support for Fraction
   });
   function _xgcdBigNumber(a, b) {
     var t;
@@ -20599,19 +22843,15 @@ var createInvmod = /* @__PURE__ */ factory(name69, dependencies69, (_ref) => {
     "BigNumber, BigNumber": invmod2
   });
   function invmod2(a, b) {
-    if (!isInteger3(a) || !isInteger3(b))
-      throw new Error("Parameters in function invmod must be integer numbers");
+    if (!isInteger3(a) || !isInteger3(b)) throw new Error("Parameters in function invmod must be integer numbers");
     a = mod3(a, b);
-    if (equal3(b, 0))
-      throw new Error("Divisor must be non zero");
+    if (equal3(b, 0)) throw new Error("Divisor must be non zero");
     var res = xgcd2(a, b);
     res = res.valueOf();
     var [gcd2, inv2] = res;
-    if (!equal3(gcd2, BigNumber2(1)))
-      return NaN;
+    if (!equal3(gcd2, BigNumber2(1))) return NaN;
     inv2 = mod3(inv2, b);
-    if (smaller2(inv2, BigNumber2(0)))
-      inv2 = add3(inv2, b);
+    if (smaller2(inv2, BigNumber2(0))) inv2 = add3(inv2, b);
     return inv2;
   }
 });
@@ -21212,6 +23452,7 @@ var createArg = /* @__PURE__ */ factory(name77, dependencies77, (_ref) => {
     Complex: function Complex3(x) {
       return x.arg();
     },
+    // TODO: implement BigNumber support for function arg
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
   });
 });
@@ -21375,6 +23616,7 @@ var createConcat = /* @__PURE__ */ factory(name84, dependencies84, (_ref) => {
     isInteger: isInteger3
   } = _ref;
   return typed3(name84, {
+    // TODO: change signature to '...Array | Matrix, dim?' when supported
     "...Array | Matrix | number | BigNumber": function ArrayMatrixNumberBigNumber(args) {
       var i2;
       var len = args.length;
@@ -21523,6 +23765,7 @@ var createDiag = /* @__PURE__ */ factory(name88, dependencies88, (_ref) => {
     SparseMatrix: SparseMatrix2
   } = _ref;
   return typed3(name88, {
+    // FIXME: simplify this huge amount of signatures as soon as typed-function supports optional arguments
     Array: function Array2(x) {
       return _diag(x, 0, arraySize(x), null);
     },
@@ -21792,10 +24035,8 @@ var createIdentity = /* @__PURE__ */ factory(name93, dependencies93, (_ref) => {
   }
   function _identity(rows, cols, format5) {
     var Big = isBigNumber(rows) || isBigNumber(cols) ? BigNumber2 : null;
-    if (isBigNumber(rows))
-      rows = rows.toNumber();
-    if (isBigNumber(cols))
-      cols = cols.toNumber();
+    if (isBigNumber(rows)) rows = rows.toNumber();
+    if (isBigNumber(cols)) cols = cols.toNumber();
     if (!isInteger(rows) || rows < 1) {
       throw new Error("Parameters in function identity must be positive integers");
     }
@@ -21916,8 +24157,7 @@ var createDiff = /* @__PURE__ */ factory(name96, dependencies96, (_ref) => {
       }
     },
     "Array | Matrix, number": function ArrayMatrixNumber(arr, dim) {
-      if (!isInteger(dim))
-        throw new RangeError("Dimension must be a whole number");
+      if (!isInteger(dim)) throw new RangeError("Dimension must be a whole number");
       if (isMatrix(arr)) {
         return matrix2(_recursive(arr.toArray(), dim));
       } else {
@@ -21955,10 +24195,8 @@ var createDiff = /* @__PURE__ */ factory(name96, dependencies96, (_ref) => {
     return result;
   }
   function _ElementDiff(obj1, obj2) {
-    if (isMatrix(obj1))
-      obj1 = obj1.toArray();
-    if (isMatrix(obj2))
-      obj2 = obj2.toArray();
+    if (isMatrix(obj1)) obj1 = obj1.toArray();
+    if (isMatrix(obj2)) obj2 = obj2.toArray();
     var obj1IsArray = Array.isArray(obj1);
     var obj2IsArray = Array.isArray(obj2);
     if (obj1IsArray && obj2IsArray) {
@@ -21996,6 +24234,8 @@ var createOnes = /* @__PURE__ */ factory(name97, dependencies97, (_ref) => {
     "": function _() {
       return config4.matrix === "Array" ? _ones([]) : _ones([], "default");
     },
+    // math.ones(m, n, p, ..., format)
+    // TODO: more accurate signature '...number | BigNumber, string' as soon as typed-function supports this
     "...number | BigNumber | string": function numberBigNumberString(size2) {
       var last = size2[size2.length - 1];
       if (typeof last === "string") {
@@ -22081,6 +24321,8 @@ var createRange = /* @__PURE__ */ factory(name98, dependencies98, (_ref) => {
     isPositive: isPositive2
   } = _ref;
   return typed3(name98, {
+    // TODO: simplify signatures when typed-function supports default values and optional arguments
+    // TODO: a number or boolean should not be converted to string here
     string: _strRange,
     "string, boolean": _strRange,
     "number, number": function numberNumber(start, end) {
@@ -22504,6 +24746,7 @@ var createSubset = /* @__PURE__ */ factory(name106, dependencies106, (_ref) => {
     add: add3
   } = _ref;
   return typed3(name106, {
+    // get subset
     "Matrix, Index": function MatrixIndex(value, index2) {
       if (isEmptyIndex(index2)) {
         return matrix2();
@@ -22519,6 +24762,7 @@ var createSubset = /* @__PURE__ */ factory(name106, dependencies106, (_ref) => {
     }),
     "Object, Index": _getObjectProperty,
     "string, Index": _getSubstring,
+    // set subset
     "Matrix, Index, any, any": function MatrixIndexAnyAny(value, index2, replacement, defaultValue) {
       if (isEmptyIndex(index2)) {
         return value;
@@ -22669,6 +24913,7 @@ var createTranspose = /* @__PURE__ */ factory(name107, dependencies107, (_ref) =
     Array: (x) => transposeMatrix(matrix2(x)).valueOf(),
     Matrix: transposeMatrix,
     any: clone
+    // scalars
   });
   function transposeMatrix(x) {
     var size2 = x.size();
@@ -22786,6 +25031,8 @@ var createZeros = /* @__PURE__ */ factory(name109, dependencies109, (_ref) => {
     "": function _() {
       return config4.matrix === "Array" ? _zeros([]) : _zeros([], "default");
     },
+    // math.zeros(m, n, p, ..., format)
+    // TODO: more accurate signature '...number | BigNumber, string' as soon as typed-function supports this
     "...number | BigNumber | string": function numberBigNumberString(size2) {
       var last = size2[size2.length - 1];
       if (typeof last === "string") {
@@ -22870,16 +25117,13 @@ var createFft = /* @__PURE__ */ factory(name110, dependencies110, (_ref) => {
   });
   function _ndFft(arr) {
     var size2 = arraySize(arr);
-    if (size2.length === 1)
-      return _fft(arr, size2[0]);
+    if (size2.length === 1) return _fft(arr, size2[0]);
     return _1dFft(arr.map((slice) => _ndFft(slice, size2.slice(1))), 0);
   }
   function _1dFft(arr, dim) {
     var size2 = arraySize(arr);
-    if (dim !== 0)
-      return new Array(size2[0]).fill(0).map((_, i2) => _1dFft(arr[i2], dim - 1));
-    if (size2.length === 1)
-      return _fft(arr);
+    if (dim !== 0) return new Array(size2[0]).fill(0).map((_, i2) => _1dFft(arr[i2], dim - 1));
+    if (size2.length === 1) return _fft(arr);
     function _transpose(arr2) {
       var size3 = arraySize(arr2);
       return new Array(size3[1]).fill(0).map((_, j) => new Array(size3[0]).fill(0).map((_2, i2) => arr2[i2][j]));
@@ -22908,8 +25152,7 @@ var createFft = /* @__PURE__ */ factory(name110, dependencies110, (_ref) => {
   }
   function _fft(arr) {
     var len = arr.length;
-    if (len === 1)
-      return [arr[0]];
+    if (len === 1) return [arr[0]];
     if (len % 2 === 0) {
       var ret = [..._fft(arr.filter((_, i2) => i2 % 2 === 0), len / 2), ..._fft(arr.filter((_, i2) => i2 % 2 === 1), len / 2)];
       for (var k = 0; k < len / 2; k++) {
@@ -22946,31 +25189,29 @@ var createIfft = /* @__PURE__ */ factory(name111, dependencies111, (_ref) => {
 // node_modules/@babel/runtime/helpers/esm/typeof.js
 function _typeof(o) {
   "@babel/helpers - typeof";
-  return _typeof = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(o2) {
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o2) {
     return typeof o2;
   } : function(o2) {
-    return o2 && typeof Symbol == "function" && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
+    return o2 && "function" == typeof Symbol && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
   }, _typeof(o);
 }
 
 // node_modules/@babel/runtime/helpers/esm/toPrimitive.js
 function toPrimitive(t, r) {
-  if (_typeof(t) != "object" || !t)
-    return t;
+  if ("object" != _typeof(t) || !t) return t;
   var e3 = t[Symbol.toPrimitive];
-  if (e3 !== void 0) {
+  if (void 0 !== e3) {
     var i2 = e3.call(t, r || "default");
-    if (_typeof(i2) != "object")
-      return i2;
+    if ("object" != _typeof(i2)) return i2;
     throw new TypeError("@@toPrimitive must return a primitive value.");
   }
-  return (r === "string" ? String : Number)(t);
+  return ("string" === r ? String : Number)(t);
 }
 
 // node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
 function toPropertyKey(t) {
   var i2 = toPrimitive(t, "string");
-  return _typeof(i2) == "symbol" ? i2 : i2 + "";
+  return "symbol" == _typeof(i2) ? i2 : i2 + "";
 }
 
 // node_modules/@babel/runtime/helpers/esm/defineProperty.js
@@ -22996,7 +25237,7 @@ function ownKeys(e3, r) {
 }
 function _objectSpread(e3) {
   for (var r = 1; r < arguments.length; r++) {
-    var t = arguments[r] != null ? arguments[r] : {};
+    var t = null != arguments[r] ? arguments[r] : {};
     r % 2 ? ownKeys(Object(t), true).forEach(function(r2) {
       _defineProperty(e3, r2, t[r2]);
     }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r2) {
@@ -23222,41 +25463,43 @@ var createErf = /* @__PURE__ */ factory(name113, dependencies113, (_ref) => {
       return sign(x) * (1 - erfc3(y));
     },
     "Array | Matrix": typed3.referToSelf((self2) => (n) => deepMap(n, self2))
+    // TODO: For complex numbers, use the approximation for the Faddeeva function
+    //  from "More Efficient Computation of the Complex Error Function" (AMS)
   });
   function erf1(y) {
     var ysq = y * y;
-    var xnum = P2[0][4] * ysq;
+    var xnum = P3[0][4] * ysq;
     var xden = ysq;
     var i2;
     for (i2 = 0; i2 < 3; i2 += 1) {
-      xnum = (xnum + P2[0][i2]) * ysq;
+      xnum = (xnum + P3[0][i2]) * ysq;
       xden = (xden + Q[0][i2]) * ysq;
     }
-    return y * (xnum + P2[0][3]) / (xden + Q[0][3]);
+    return y * (xnum + P3[0][3]) / (xden + Q[0][3]);
   }
   function erfc2(y) {
-    var xnum = P2[1][8] * y;
+    var xnum = P3[1][8] * y;
     var xden = y;
     var i2;
     for (i2 = 0; i2 < 7; i2 += 1) {
-      xnum = (xnum + P2[1][i2]) * y;
+      xnum = (xnum + P3[1][i2]) * y;
       xden = (xden + Q[1][i2]) * y;
     }
-    var result = (xnum + P2[1][7]) / (xden + Q[1][7]);
+    var result = (xnum + P3[1][7]) / (xden + Q[1][7]);
     var ysq = parseInt(y * 16) / 16;
     var del = (y - ysq) * (y + ysq);
     return Math.exp(-ysq * ysq) * Math.exp(-del) * result;
   }
   function erfc3(y) {
     var ysq = 1 / (y * y);
-    var xnum = P2[2][5] * ysq;
+    var xnum = P3[2][5] * ysq;
     var xden = ysq;
     var i2;
     for (i2 = 0; i2 < 4; i2 += 1) {
-      xnum = (xnum + P2[2][i2]) * ysq;
+      xnum = (xnum + P3[2][i2]) * ysq;
       xden = (xden + Q[2][i2]) * ysq;
     }
-    var result = ysq * (xnum + P2[2][4]) / (xden + Q[2][4]);
+    var result = ysq * (xnum + P3[2][4]) / (xden + Q[2][4]);
     result = (SQRPI - result) / y;
     ysq = parseInt(y * 16) / 16;
     var del = (y - ysq) * (y + ysq);
@@ -23265,7 +25508,7 @@ var createErf = /* @__PURE__ */ factory(name113, dependencies113, (_ref) => {
 });
 var THRESH = 0.46875;
 var SQRPI = 0.5641895835477563;
-var P2 = [[3.1611237438705655, 113.86415415105016, 377.485237685302, 3209.3775891384694, 0.18577770618460315], [0.5641884969886701, 8.883149794388377, 66.11919063714163, 298.6351381974001, 881.952221241769, 1712.0476126340707, 2051.0783778260716, 1230.3393547979972, 21531153547440383e-24], [0.30532663496123236, 0.36034489994980445, 0.12578172611122926, 0.016083785148742275, 6587491615298378e-19, 0.016315387137302097]];
+var P3 = [[3.1611237438705655, 113.86415415105016, 377.485237685302, 3209.3775891384694, 0.18577770618460315], [0.5641884969886701, 8.883149794388377, 66.11919063714163, 298.6351381974001, 881.952221241769, 1712.0476126340707, 2051.0783778260716, 1230.3393547979972, 21531153547440383e-24], [0.30532663496123236, 0.36034489994980445, 0.12578172611122926, 0.016083785148742275, 6587491615298378e-19, 0.016315387137302097]];
 var Q = [[23.601290952344122, 244.02463793444417, 1282.6165260773723, 2844.236833439171], [15.744926110709835, 117.6939508913125, 537.1811018620099, 1621.3895745666903, 3290.7992357334597, 4362.619090143247, 3439.3676741437216, 1230.3393548037495], [2.568520192289822, 1.8729528499234604, 0.5279051029514285, 0.06051834131244132, 0.0023352049762686918]];
 var MAX_NUM = Math.pow(2, 53);
 
@@ -23423,10 +25666,13 @@ var createProd = /* @__PURE__ */ factory(name116, dependencies116, (_ref) => {
     numeric: numeric3
   } = _ref;
   return typed3(name116, {
+    // prod([a, b, c, d, ...])
     "Array | Matrix": _prod,
+    // prod([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
       throw new Error("prod(A, dim) is not yet supported");
     },
+    // prod(a, b, c, d, ...)
     "...": function _(args) {
       return _prod(args);
     }
@@ -23543,6 +25789,7 @@ var createPrint = /* @__PURE__ */ factory(name121, dependencies121, (_ref) => {
     typed: typed3
   } = _ref;
   return typed3(name121, {
+    // note: Matrix will be converted automatically to an Array
     "string, Object | Array": _print,
     "string, Object | Array, number | Object": _print
   });
@@ -23619,10 +25866,8 @@ var createIsPrime = /* @__PURE__ */ factory(name123, dependencies123, (_ref) => 
       if (n.toNumber() * 0 !== 0) {
         return false;
       }
-      if (n.lte(3))
-        return n.gt(1);
-      if (n.mod(2).eq(0) || n.mod(3).eq(0))
-        return false;
+      if (n.lte(3)) return n.gt(1);
+      if (n.mod(2).eq(0) || n.mod(3).eq(0)) return false;
       if (n.lt(Math.pow(2, 32))) {
         var x = n.toNumber();
         for (var i2 = 5; i2 * i2 <= x; i2 += 6) {
@@ -23934,6 +26179,7 @@ var createRound = /* @__PURE__ */ factory(name127, dependencies127, (_ref) => {
       }
       return x.round(n.toNumber());
     },
+    // deep map collection, skip zeros since round(0) = 0
     "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
     "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
       return matAlgo11xS0s(x, y, self2, false);
@@ -24055,14 +26301,10 @@ var createNthRoots = /* @__PURE__ */ factory(name130, dependencies130, (_ref) =>
     return new Complex3(0, -val);
   }];
   function _nthComplexRoots(a, root) {
-    if (root < 0)
-      throw new Error("Root must be greater than zero");
-    if (root === 0)
-      throw new Error("Root must be non-zero");
-    if (root % 1 !== 0)
-      throw new Error("Root must be an integer");
-    if (a === 0 || a.abs() === 0)
-      return [new Complex3(0, 0)];
+    if (root < 0) throw new Error("Root must be greater than zero");
+    if (root === 0) throw new Error("Root must be non-zero");
+    if (root % 1 !== 0) throw new Error("Root must be an integer");
+    if (a === 0 || a.abs() === 0) return [new Complex3(0, 0)];
     var aIsNumeric = typeof a === "number";
     var offset;
     if (aIsNumeric || a.re === 0 || a.im === 0) {
@@ -25047,6 +27289,7 @@ var createRightLogShift = /* @__PURE__ */ factory(name140, dependencies140, (_re
   });
   return typed3(name140, {
     "number, number": rightLogShiftNumber,
+    // 'BigNumber, BigNumber': ..., // TODO: implement BigNumber support for rightLogShift
     "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
       if (equalScalar2(y, 0)) {
         return x.clone();
@@ -25952,10 +28195,13 @@ var createMax = /* @__PURE__ */ factory(name155, dependencies155, (_ref) => {
     larger: larger2
   } = _ref;
   return typed3(name155, {
+    // max([a, b, c, d, ...])
     "Array | Matrix": _max,
+    // max([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
       return reduce(array, dim.valueOf(), _largest);
     },
+    // max(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("Scalar values expected in function max");
@@ -26004,10 +28250,13 @@ var createMin = /* @__PURE__ */ factory(name156, dependencies156, (_ref) => {
     smaller: smaller2
   } = _ref;
   return typed3(name156, {
+    // min([a, b, c, d, ...])
     "Array | Matrix": _min,
+    // min([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
       return reduce(array, dim.valueOf(), _smallest);
     },
+    // min(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("Scalar values expected in function min");
@@ -26099,6 +28348,7 @@ var createImmutableDenseMatrixClass = /* @__PURE__ */ factory(name157, dependenc
         }
         return m;
       }
+      // intentional fall through
       case 2:
       case 3:
         throw new Error("Cannot invoke set subset on an Immutable Matrix instance");
@@ -26191,10 +28441,8 @@ var createIndexClass = /* @__PURE__ */ factory(name158, dependencies158, (_ref) 
       } else if (argIsArray || argIsMatrix) {
         var m = void 0;
         if (getMatrixDataType2(arg2) === "boolean") {
-          if (argIsArray)
-            m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2).valueOf());
-          if (argIsMatrix)
-            m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2._data).valueOf());
+          if (argIsArray) m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2).valueOf());
+          if (argIsMatrix) m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2._data).valueOf());
           sourceSize = arg2.valueOf().length;
         } else {
           m = _createImmutableMatrix(arg2.valueOf());
@@ -26657,7 +28905,7 @@ function ownKeys2(e3, r) {
 }
 function _objectSpread2(e3) {
   for (var r = 1; r < arguments.length; r++) {
-    var t = arguments[r] != null ? arguments[r] : {};
+    var t = null != arguments[r] ? arguments[r] : {};
     r % 2 ? ownKeys2(Object(t), true).forEach(function(r2) {
       _defineProperty(e3, r2, t[r2]);
     }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys2(Object(t)).forEach(function(r2) {
@@ -27376,8 +29624,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
     }
     var power = this.units[0].power;
     var bestDiff = Math.log(absValue / Math.pow(bestPrefix.value * absUnitValue, power)) / Math.LN10 - 1.2;
-    if (bestDiff > -2.200001 && bestDiff < 1.800001)
-      return bestPrefix;
+    if (bestDiff > -2.200001 && bestDiff < 1.800001) return bestPrefix;
     bestDiff = Math.abs(bestDiff);
     var prefixes = this.units[0].unit.prefixes;
     for (var p in prefixes) {
@@ -27399,8 +29646,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
     var ret = [];
     for (var i2 = 0; i2 < parts.length; i2++) {
       x = x.to(parts[i2]);
-      if (i2 === parts.length - 1)
-        break;
+      if (i2 === parts.length - 1) break;
       var xNumeric = x.toNumeric();
       var xRounded = round3(xNumeric);
       var xFixed = void 0;
@@ -28156,6 +30402,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
     dimensions: BASE_DIMENSIONS.map((x) => 0)
   };
   var UNITS = {
+    // length
     meter: {
       name: "meter",
       base: BASE_UNITS.LENGTH,
@@ -28282,6 +30529,8 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 254e-7,
       offset: 0
     },
+    // 1/1000 inch
+    // Surface
     m2: {
       name: "m2",
       base: BASE_UNITS.SURFACE,
@@ -28296,6 +30545,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 64516e-8,
       offset: 0
     },
+    // 645.16 mm2
     sqft: {
       name: "sqft",
       base: BASE_UNITS.SURFACE,
@@ -28303,6 +30553,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.09290304,
       offset: 0
     },
+    // 0.09290304 m2
     sqyd: {
       name: "sqyd",
       base: BASE_UNITS.SURFACE,
@@ -28310,6 +30561,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.83612736,
       offset: 0
     },
+    // 0.83612736 m2
     sqmi: {
       name: "sqmi",
       base: BASE_UNITS.SURFACE,
@@ -28317,6 +30569,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 2589988110336e-6,
       offset: 0
     },
+    // 2.589988110336 km2
     sqrd: {
       name: "sqrd",
       base: BASE_UNITS.SURFACE,
@@ -28324,6 +30577,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 25.29295,
       offset: 0
     },
+    // 25.29295 m2
     sqch: {
       name: "sqch",
       base: BASE_UNITS.SURFACE,
@@ -28331,6 +30585,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 404.6873,
       offset: 0
     },
+    // 404.6873 m2
     sqmil: {
       name: "sqmil",
       base: BASE_UNITS.SURFACE,
@@ -28338,6 +30593,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 64516e-14,
       offset: 0
     },
+    // 6.4516 * 10^-10 m2
     acre: {
       name: "acre",
       base: BASE_UNITS.SURFACE,
@@ -28345,6 +30601,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 4046.86,
       offset: 0
     },
+    // 4046.86 m2
     hectare: {
       name: "hectare",
       base: BASE_UNITS.SURFACE,
@@ -28352,6 +30609,8 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1e4,
       offset: 0
     },
+    // 10000 m2
+    // Volume
     m3: {
       name: "m3",
       base: BASE_UNITS.VOLUME,
@@ -28366,6 +30625,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1e-3,
       offset: 0
     },
+    // litre
     l: {
       name: "l",
       base: BASE_UNITS.VOLUME,
@@ -28373,6 +30633,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1e-3,
       offset: 0
     },
+    // litre
     litre: {
       name: "litre",
       base: BASE_UNITS.VOLUME,
@@ -28387,6 +30648,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 16387064e-12,
       offset: 0
     },
+    // 1.6387064e-5 m3
     cuft: {
       name: "cuft",
       base: BASE_UNITS.VOLUME,
@@ -28394,6 +30656,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.028316846592,
       offset: 0
     },
+    // 28.316 846 592 L
     cuyd: {
       name: "cuyd",
       base: BASE_UNITS.VOLUME,
@@ -28401,6 +30664,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.764554857984,
       offset: 0
     },
+    // 764.554 857 984 L
     teaspoon: {
       name: "teaspoon",
       base: BASE_UNITS.VOLUME,
@@ -28408,6 +30672,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 5e-6,
       offset: 0
     },
+    // 5 mL
     tablespoon: {
       name: "tablespoon",
       base: BASE_UNITS.VOLUME,
@@ -28415,6 +30680,8 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 15e-6,
       offset: 0
     },
+    // 15 mL
+    // {name: 'cup', base: BASE_UNITS.VOLUME, prefixes: PREFIXES.NONE, value: 0.000240, offset: 0}, // 240 mL  // not possible, we have already another cup
     drop: {
       name: "drop",
       base: BASE_UNITS.VOLUME,
@@ -28422,6 +30689,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 5e-8,
       offset: 0
     },
+    // 0.05 mL = 5e-8 m3
     gtt: {
       name: "gtt",
       base: BASE_UNITS.VOLUME,
@@ -28429,6 +30697,8 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 5e-8,
       offset: 0
     },
+    // 0.05 mL = 5e-8 m3
+    // Liquid volume
     minim: {
       name: "minim",
       base: BASE_UNITS.VOLUME,
@@ -28436,6 +30706,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 6161152e-14,
       offset: 0
     },
+    // 0.06161152 mL
     fluiddram: {
       name: "fluiddram",
       base: BASE_UNITS.VOLUME,
@@ -28443,6 +30714,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 36966911e-13,
       offset: 0
     },
+    // 3.696691 mL
     fluidounce: {
       name: "fluidounce",
       base: BASE_UNITS.VOLUME,
@@ -28450,6 +30722,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 2957353e-11,
       offset: 0
     },
+    // 29.57353 mL
     gill: {
       name: "gill",
       base: BASE_UNITS.VOLUME,
@@ -28457,6 +30730,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1182941e-10,
       offset: 0
     },
+    // 118.2941 mL
     cc: {
       name: "cc",
       base: BASE_UNITS.VOLUME,
@@ -28464,6 +30738,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1e-6,
       offset: 0
     },
+    // 1e-6 L
     cup: {
       name: "cup",
       base: BASE_UNITS.VOLUME,
@@ -28471,6 +30746,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 2365882e-10,
       offset: 0
     },
+    // 236.5882 mL
     pint: {
       name: "pint",
       base: BASE_UNITS.VOLUME,
@@ -28478,6 +30754,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 4731765e-10,
       offset: 0
     },
+    // 473.1765 mL
     quart: {
       name: "quart",
       base: BASE_UNITS.VOLUME,
@@ -28485,6 +30762,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 9463529e-10,
       offset: 0
     },
+    // 946.3529 mL
     gallon: {
       name: "gallon",
       base: BASE_UNITS.VOLUME,
@@ -28492,6 +30770,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 3785412e-9,
       offset: 0
     },
+    // 3.785412 L
     beerbarrel: {
       name: "beerbarrel",
       base: BASE_UNITS.VOLUME,
@@ -28499,6 +30778,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.1173478,
       offset: 0
     },
+    // 117.3478 L
     oilbarrel: {
       name: "oilbarrel",
       base: BASE_UNITS.VOLUME,
@@ -28506,6 +30786,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.1589873,
       offset: 0
     },
+    // 158.9873 L
     hogshead: {
       name: "hogshead",
       base: BASE_UNITS.VOLUME,
@@ -28513,6 +30794,8 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.238481,
       offset: 0
     },
+    // 238.4810 L
+    // {name: 'min', base: BASE_UNITS.VOLUME, prefixes: PREFIXES.NONE, value: 0.00000006161152, offset: 0}, // 0.06161152 mL // min is already in use as minute
     fldr: {
       name: "fldr",
       base: BASE_UNITS.VOLUME,
@@ -28520,6 +30803,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 36966911e-13,
       offset: 0
     },
+    // 3.696691 mL
     floz: {
       name: "floz",
       base: BASE_UNITS.VOLUME,
@@ -28527,6 +30811,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 2957353e-11,
       offset: 0
     },
+    // 29.57353 mL
     gi: {
       name: "gi",
       base: BASE_UNITS.VOLUME,
@@ -28534,6 +30819,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1182941e-10,
       offset: 0
     },
+    // 118.2941 mL
     cp: {
       name: "cp",
       base: BASE_UNITS.VOLUME,
@@ -28541,6 +30827,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 2365882e-10,
       offset: 0
     },
+    // 236.5882 mL
     pt: {
       name: "pt",
       base: BASE_UNITS.VOLUME,
@@ -28548,6 +30835,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 4731765e-10,
       offset: 0
     },
+    // 473.1765 mL
     qt: {
       name: "qt",
       base: BASE_UNITS.VOLUME,
@@ -28555,6 +30843,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 9463529e-10,
       offset: 0
     },
+    // 946.3529 mL
     gal: {
       name: "gal",
       base: BASE_UNITS.VOLUME,
@@ -28562,6 +30851,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 3785412e-9,
       offset: 0
     },
+    // 3.785412 L
     bbl: {
       name: "bbl",
       base: BASE_UNITS.VOLUME,
@@ -28569,6 +30859,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.1173478,
       offset: 0
     },
+    // 117.3478 L
     obl: {
       name: "obl",
       base: BASE_UNITS.VOLUME,
@@ -28576,6 +30867,9 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 0.1589873,
       offset: 0
     },
+    // 158.9873 L
+    // {name: 'hogshead', base: BASE_UNITS.VOLUME, prefixes: PREFIXES.NONE, value: 0.2384810, offset: 0}, // 238.4810 L // TODO: hh?
+    // Mass
     g: {
       name: "g",
       base: BASE_UNITS.MASS,
@@ -28695,6 +30989,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 45.359237,
       offset: 0
     },
+    // Time
     s: {
       name: "s",
       base: BASE_UNITS.TIME,
@@ -28763,6 +31058,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.TIME,
       prefixes: PREFIXES.NONE,
       value: 2629800,
+      // 1/12th of Julian year
       offset: 0
     },
     year: {
@@ -28770,6 +31066,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.TIME,
       prefixes: PREFIXES.NONE,
       value: 31557600,
+      // Julian year
       offset: 0
     },
     decade: {
@@ -28777,6 +31074,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.TIME,
       prefixes: PREFIXES.NONE,
       value: 315576e3,
+      // Julian decade
       offset: 0
     },
     century: {
@@ -28784,6 +31082,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.TIME,
       prefixes: PREFIXES.NONE,
       value: 315576e4,
+      // Julian century
       offset: 0
     },
     millennium: {
@@ -28791,8 +31090,10 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.TIME,
       prefixes: PREFIXES.NONE,
       value: 315576e5,
+      // Julian millennium
       offset: 0
     },
+    // Frequency
     hertz: {
       name: "Hertz",
       base: BASE_UNITS.FREQUENCY,
@@ -28809,6 +31110,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       offset: 0,
       reciprocal: true
     },
+    // Angle
     rad: {
       name: "rad",
       base: BASE_UNITS.ANGLE,
@@ -28823,11 +31125,13 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // deg = rad / (2*pi) * 360 = rad / 0.017453292519943295769236907684888
     deg: {
       name: "deg",
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.SHORT,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
     degree: {
@@ -28835,13 +31139,16 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.LONG,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
+    // grad = rad / (2*pi) * 400  = rad / 0.015707963267948966192313216916399
     grad: {
       name: "grad",
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.SHORT,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
     gradian: {
@@ -28849,29 +31156,37 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.LONG,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
+    // cycle = rad / (2*pi) = rad / 6.2831853071795864769252867665793
     cycle: {
       name: "cycle",
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.NONE,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
+    // arcsec = rad / (3600 * (360 / 2 * pi)) = rad / 0.0000048481368110953599358991410235795
     arcsec: {
       name: "arcsec",
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.NONE,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
+    // arcmin = rad / (60 * (360 / 2 * pi)) = rad / 0.00029088820866572159615394846141477
     arcmin: {
       name: "arcmin",
       base: BASE_UNITS.ANGLE,
       prefixes: PREFIXES.NONE,
       value: null,
+      // will be filled in by calculateAngleValues()
       offset: 0
     },
+    // Electric current
     A: {
       name: "A",
       base: BASE_UNITS.CURRENT,
@@ -28886,6 +31201,10 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Temperature
+    // K(C) = °C + 273.15
+    // K(F) = (°F + 459.67) * (5 / 9)
+    // K(R) = °R * (5 / 9)
     K: {
       name: "K",
       base: BASE_UNITS.TEMPERATURE,
@@ -28942,6 +31261,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: new _Fraction(5, 9),
       offset: 0
     },
+    // amount of substance
     mol: {
       name: "mol",
       base: BASE_UNITS.AMOUNT_OF_SUBSTANCE,
@@ -28956,6 +31276,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // luminous intensity
     cd: {
       name: "cd",
       base: BASE_UNITS.LUMINOUS_INTENSITY,
@@ -28970,6 +31291,10 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // TODO: units STERADIAN
+    // {name: 'sr', base: BASE_UNITS.STERADIAN, prefixes: PREFIXES.NONE, value: 1, offset: 0},
+    // {name: 'steradian', base: BASE_UNITS.STERADIAN, prefixes: PREFIXES.NONE, value: 1, offset: 0},
+    // Force
     N: {
       name: "N",
       base: BASE_UNITS.FORCE,
@@ -29026,6 +31351,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 9.80665,
       offset: 0
     },
+    // Energy
     J: {
       name: "J",
       base: BASE_UNITS.ENERGY,
@@ -29044,6 +31370,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       name: "erg",
       base: BASE_UNITS.ENERGY,
       prefixes: PREFIXES.SHORTLONG,
+      // Both kiloerg and kerg are acceptable
       value: 1e-7,
       offset: 0
     },
@@ -29075,6 +31402,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1602176565e-28,
       offset: 0
     },
+    // Power
     W: {
       name: "W",
       base: BASE_UNITS.POWER,
@@ -29096,6 +31424,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 745.6998715386,
       offset: 0
     },
+    // Electrical power units
     VAR: {
       name: "VAR",
       base: BASE_UNITS.POWER,
@@ -29110,6 +31439,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Pressure
     Pa: {
       name: "Pa",
       base: BASE_UNITS.PRESSURE,
@@ -29166,6 +31496,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 98.0665,
       offset: 0
     },
+    // Electric charge
     coulomb: {
       name: "coulomb",
       base: BASE_UNITS.ELECTRIC_CHARGE,
@@ -29180,6 +31511,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Electric capacitance
     farad: {
       name: "farad",
       base: BASE_UNITS.ELECTRIC_CAPACITANCE,
@@ -29194,6 +31526,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Electric potential
     volt: {
       name: "volt",
       base: BASE_UNITS.ELECTRIC_POTENTIAL,
@@ -29208,13 +31541,26 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Electric resistance
     ohm: {
       name: "ohm",
       base: BASE_UNITS.ELECTRIC_RESISTANCE,
       prefixes: PREFIXES.SHORTLONG,
+      // Both Mohm and megaohm are acceptable
       value: 1,
       offset: 0
     },
+    /*
+     * Unicode breaks in browsers if charset is not specified
+    Ω: {
+      name: 'Ω',
+      base: BASE_UNITS.ELECTRIC_RESISTANCE,
+      prefixes: PREFIXES.SHORT,
+      value: 1,
+      offset: 0
+    },
+    */
+    // Electric inductance
     henry: {
       name: "henry",
       base: BASE_UNITS.ELECTRIC_INDUCTANCE,
@@ -29229,6 +31575,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Electric conductance
     siemens: {
       name: "siemens",
       base: BASE_UNITS.ELECTRIC_CONDUCTANCE,
@@ -29243,6 +31590,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Magnetic flux
     weber: {
       name: "weber",
       base: BASE_UNITS.MAGNETIC_FLUX,
@@ -29257,6 +31605,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Magnetic flux density
     tesla: {
       name: "tesla",
       base: BASE_UNITS.MAGNETIC_FLUX_DENSITY,
@@ -29271,6 +31620,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       value: 1,
       offset: 0
     },
+    // Binary
     b: {
       name: "b",
       base: BASE_UNITS.BIT,
@@ -29421,6 +31771,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
   }
   var UNIT_SYSTEMS = {
     si: {
+      // Base units
       NONE: {
         unit: UNIT_NONE,
         prefix: PREFIXES.NONE[""]
@@ -29461,6 +31812,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
         unit: UNITS.bits,
         prefix: PREFIXES.SHORT[""]
       },
+      // Derived units
       FORCE: {
         unit: UNITS.N,
         prefix: PREFIXES.SHORT[""]
@@ -29581,8 +31933,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
   };
   Unit2.typeConverters = {
     BigNumber: function BigNumber2(x) {
-      if (x !== null && x !== void 0 && x.isFraction)
-        return new _BigNumber(x.n).div(x.d).times(x.s);
+      if (x !== null && x !== void 0 && x.isFraction) return new _BigNumber(x.n).div(x.d).times(x.s);
       return new _BigNumber(x + "");
     },
     Fraction: function Fraction3(x) {
@@ -29592,8 +31943,7 @@ var createUnitClass = /* @__PURE__ */ factory(name161, dependencies161, (_ref) =
       return x;
     },
     number: function number2(x) {
-      if (x !== null && x !== void 0 && x.isFraction)
-        return _number(x);
+      if (x !== null && x !== void 0 && x.isFraction) return _number(x);
       return x;
     }
   };
@@ -29890,22 +32240,27 @@ var createCreateUnit = /* @__PURE__ */ factory(name164, dependencies164, (_ref) 
     Unit: Unit2
   } = _ref;
   return typed3(name164, {
+    // General function signature. First parameter is an object where each property is the definition of a new unit. The object keys are the unit names and the values are the definitions. The values can be objects, strings, or Units. If a property is an empty object or an empty string, a new base unit is created. The second parameter is the options.
     "Object, Object": function ObjectObject(obj, options) {
       return Unit2.createUnit(obj, options);
     },
+    // Same as above but without the options.
     Object: function Object2(obj) {
       return Unit2.createUnit(obj, {});
     },
+    // Shortcut method for creating one unit.
     "string, Unit | string | Object, Object": function stringUnitStringObjectObject(name310, def, options) {
       var obj = {};
       obj[name310] = def;
       return Unit2.createUnit(obj, options);
     },
+    // Same as above but without the options.
     "string, Unit | string | Object": function stringUnitStringObject(name310, def) {
       var obj = {};
       obj[name310] = def;
       return Unit2.createUnit(obj, {});
     },
+    // Without a definition, creates a base unit.
     string: function string2(name310) {
       var obj = {};
       obj[name310] = {};
@@ -30217,6 +32572,10 @@ var createAtan2 = /* @__PURE__ */ factory(name176, dependencies176, (_ref) => {
   });
   return typed3(name176, {
     "number, number": Math.atan2,
+    // Complex numbers doesn't seem to have a reasonable implementation of
+    // atan2(). Even Matlab removed the support, after they only calculated
+    // the atan only on base of the real part of the numbers and ignored
+    // the imaginary.
     "BigNumber, BigNumber": (y, x) => BigNumber2.atan2(y, x)
   }, matrixAlgorithmSuite({
     scalar: "number | BigNumber",
@@ -31080,10 +33439,8 @@ var createDot = /* @__PURE__ */ factory(name203, dependencies203, (_ref) => {
     } else {
       throw new RangeError("Expected a column vector, instead got a matrix of size (" + ySize.join(", ") + ")");
     }
-    if (xLen !== yLen)
-      throw new RangeError("Vectors must have equal length (" + xLen + " != " + yLen + ")");
-    if (xLen === 0)
-      throw new RangeError("Cannot calculate the dot product of empty vectors");
+    if (xLen !== yLen) throw new RangeError("Vectors must have equal length (" + xLen + " != " + yLen + ")");
+    if (xLen === 0) throw new RangeError("Cannot calculate the dot product of empty vectors");
     return xLen;
   }
   function _denseDot(a, b) {
@@ -31291,9 +33648,22 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
     get isNode() {
       return true;
     }
+    /**
+     * Evaluate the node
+     * @param {Object} [scope]  Scope to read/write variables
+     * @return {*}              Returns the result
+     */
     evaluate(scope) {
       return this.compile().evaluate(scope);
     }
+    /**
+     * Compile the node into an optimized, evauatable JavaScript function
+     * @return {{evaluate: function([Object])}} object
+     *                Returns an object with a function 'evaluate',
+     *                which can be invoked as expr.evaluate([scope: Object]),
+     *                where scope is an optional object with
+     *                variables.
+     */
     compile() {
       var expr = this._compile(mathWithTransform2, {});
       var args = {};
@@ -31307,21 +33677,56 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
         evaluate: evaluate2
       };
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       throw new Error("Method _compile must be implemented by type " + this.type);
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       throw new Error("Cannot run forEach on a Node interface");
     }
+    /**
+     * Create a new Node whose children are the results of calling the
+     * provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {OperatorNode} Returns a transformed copy of the node
+     */
     map(callback) {
       throw new Error("Cannot run map on a Node interface");
     }
+    /**
+     * Validate whether an object is a Node, for use with map
+     * @param {Node} node
+     * @returns {Node} Returns the input if it's a node, else throws an Error
+     * @protected
+     */
     _ifNode(node) {
       if (!isNode(node)) {
         throw new TypeError("Callback function must return a Node");
       }
       return node;
     }
+    /**
+     * Recursively traverse all nodes in a node tree. Executes given callback for
+     * this node and each of its child nodes.
+     * @param {function(node: Node, path: string, parent: Node)} callback
+     *          A callback called for every node in the node tree.
+     */
     traverse(callback) {
       callback(this, null, null);
       function _traverse(node, callback2) {
@@ -31332,6 +33737,28 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       }
       _traverse(this, callback);
     }
+    /**
+     * Recursively transform a node tree via a transform function.
+     *
+     * For example, to replace all nodes of type SymbolNode having name 'x' with
+     * a ConstantNode with value 2:
+     *
+     *     const res = Node.transform(function (node, path, parent) {
+     *       if (node && node.isSymbolNode) && (node.name === 'x')) {
+     *         return new ConstantNode(2)
+     *       }
+     *       else {
+     *         return node
+     *       }
+     *     })
+     *
+     * @param {function(node: Node, path: string, parent: Node) : Node} callback
+     *          A mapping function accepting a node, and returning
+     *          a replacement for the node or the original node. The "signature"
+     *          of the callback must be:
+     *          callback(node: Node, index: string, parent: Node) : Node
+     * @return {Node} Returns the original node or its replacement
+     */
     transform(callback) {
       function _transform(child, path, parent) {
         var replacement = callback(child, path, parent);
@@ -31342,6 +33769,21 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       }
       return _transform(this, null, null);
     }
+    /**
+     * Find any node in the node tree matching given filter function. For
+     * example, to find all nodes of type SymbolNode having name 'x':
+     *
+     *     const results = Node.filter(function (node) {
+     *       return (node && node.isSymbolNode) && (node.name === 'x')
+     *     })
+     *
+     * @param {function(node: Node, path: string, parent: Node) : Node} callback
+     *            A test function returning true when a node matches, and false
+     *            otherwise. Function signature:
+     *            callback(node: Node, index: string, parent: Node) : boolean
+     * @return {Node[]} nodes
+     *            An array with nodes matching given filter criteria
+     */
     filter(callback) {
       var nodes = [];
       this.traverse(function(node, path, parent) {
@@ -31351,17 +33793,46 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       });
       return nodes;
     }
+    /**
+     * Create a shallow clone of this node
+     * @return {Node}
+     */
     clone() {
       throw new Error("Cannot clone a Node interface");
     }
+    /**
+     * Create a deep clone of this node
+     * @return {Node}
+     */
     cloneDeep() {
       return this.map(function(node) {
         return node.cloneDeep();
       });
     }
+    /**
+     * Deep compare this node with another node.
+     * @param {Node} other
+     * @return {boolean} Returns true when both nodes are of the same type and
+     *                   contain the same values (as do their childs)
+     */
     equals(other) {
       return other ? this.type === other.type && deepStrictEqual(this, other) : false;
     }
+    /**
+     * Get string representation. (wrapper function)
+     *
+     * This function can get an object of the following form:
+     * {
+     *    handler: //This can be a callback function of the form
+     *             // "function callback(node, options)"or
+     *             // a map that maps function names (used in FunctionNodes)
+     *             // to callbacks
+     *    parenthesis: "keep" //the parenthesis option (This is optional)
+     * }
+     *
+     * @param {Object} [options]
+     * @return {string}
+     */
     toString(options) {
       var customString = this._getCustomString(options);
       if (typeof customString !== "undefined") {
@@ -31369,9 +33840,30 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       }
       return this._toString(options);
     }
+    /**
+     * Get a JSON representation of the node
+     * Both .toJSON() and the static .fromJSON(json) should be implemented by all
+     * implementations of Node
+     * @returns {Object}
+     */
     toJSON() {
       throw new Error("Cannot serialize object: toJSON not implemented by " + this.type);
     }
+    /**
+     * Get HTML representation. (wrapper function)
+     *
+     * This function can get an object of the following form:
+     * {
+     *    handler: //This can be a callback function of the form
+     *             // "function callback(node, options)" or
+     *             // a map that maps function names (used in FunctionNodes)
+     *             // to callbacks
+     *    parenthesis: "keep" //the parenthesis option (This is optional)
+     * }
+     *
+     * @param {Object} [options]
+     * @return {string}
+     */
     toHTML(options) {
       var customString = this._getCustomString(options);
       if (typeof customString !== "undefined") {
@@ -31379,9 +33871,30 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       }
       return this.toHTML(options);
     }
+    /**
+     * Internal function to generate the string output.
+     * This has to be implemented by every Node
+     *
+     * @throws {Error}
+     */
     _toString() {
       throw new Error("_toString not implemented for " + this.type);
     }
+    /**
+     * Get LaTeX representation. (wrapper function)
+     *
+     * This function can get an object of the following form:
+     * {
+     *    handler: //This can be a callback function of the form
+     *             // "function callback(node, options)"or
+     *             // a map that maps function names (used in FunctionNodes)
+     *             // to callbacks
+     *    parenthesis: "keep" //the parenthesis option (This is optional)
+     * }
+     *
+     * @param {Object} [options]
+     * @return {string}
+     */
     toTex(options) {
       var customString = this._getCustomString(options);
       if (typeof customString !== "undefined") {
@@ -31389,9 +33902,19 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
       }
       return this._toTex(options);
     }
+    /**
+     * Internal function to generate the LaTeX output.
+     * This has to be implemented by every Node
+     *
+     * @param {Object} [options]
+     * @throws {Error}
+     */
     _toTex(options) {
       throw new Error("_toTex not implemented for " + this.type);
     }
+    /**
+     * Helper used by `to...` functions.
+     */
     _getCustomString(options) {
       if (options && typeof options === "object") {
         switch (typeof options.handler) {
@@ -31405,9 +33928,17 @@ var createNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
         }
       }
     }
+    /**
+     * Get identifier.
+     * @return {string}
+     */
     getIdentifier() {
       return this.type;
     }
+    /**
+     * Get the content of the current Node.
+     * @return {Node} node
+     **/
     getContent() {
       return this;
     }
@@ -31468,6 +33999,15 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
     return !(isAccessorNode(node) || isArrayNode(node) || isConstantNode(node) || isFunctionNode(node) || isObjectNode(node) || isParenthesisNode(node) || isSymbolNode(node));
   }
   class AccessorNode2 extends Node2 {
+    /**
+     * @constructor AccessorNode
+     * @extends {Node}
+     * Access an object property or get a matrix subset
+     *
+     * @param {Node} object                 The object from which to retrieve
+     *                                      a property or subset.
+     * @param {IndexNode} index             IndexNode containing ranges
+     */
     constructor(object, index2) {
       super();
       if (!isNode(object)) {
@@ -31479,6 +34019,7 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
       this.object = object;
       this.index = index2;
     }
+    // readonly property name
     get name() {
       if (this.index) {
         return this.index.isObjectProperty() ? this.index.getObjectProperty() : "";
@@ -31492,6 +34033,19 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
     get isAccessorNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalObject = this.object._compile(math2, argNames);
       var evalIndex = this.index._compile(math2, argNames);
@@ -31508,16 +34062,35 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.object, "object", this);
       callback(this.index, "index", this);
     }
+    /**
+     * Create a new AccessorNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {AccessorNode} Returns a transformed copy of the node
+     */
     map(callback) {
       return new AccessorNode2(this._ifNode(callback(this.object, "object", this)), this._ifNode(callback(this.index, "index", this)));
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {AccessorNode}
+     */
     clone() {
       return new AccessorNode2(this.object, this.index);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string}
+     */
     _toString(options) {
       var object = this.object.toString(options);
       if (needParenthesis(this.object)) {
@@ -31525,6 +34098,11 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
       }
       return object + this.index.toString(options);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string}
+     */
     toHTML(options) {
       var object = this.object.toHTML(options);
       if (needParenthesis(this.object)) {
@@ -31532,6 +34110,11 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
       }
       return object + this.index.toHTML(options);
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string}
+     */
     _toTex(options) {
       var object = this.object.toTex(options);
       if (needParenthesis(this.object)) {
@@ -31539,6 +34122,10 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
       }
       return object + this.index.toTex(options);
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name207,
@@ -31546,6 +34133,14 @@ var createAccessorNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref
         index: this.index
       };
     }
+    /**
+     * Instantiate an AccessorNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "AccessorNode", object: ..., index: ...}`,
+     *     where mathjs is optional
+     * @returns {AccessorNode}
+     */
     static fromJSON(json) {
       return new AccessorNode2(json.object, json.index);
     }
@@ -31565,6 +34160,12 @@ var createArrayNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) =
     Node: Node2
   } = _ref;
   class ArrayNode2 extends Node2 {
+    /**
+     * @constructor ArrayNode
+     * @extends {Node}
+     * Holds an 1-dimensional array with items
+     * @param {Node[]} [items]   1 dimensional array with items
+     */
     constructor(items) {
       super();
       this.items = items || [];
@@ -31578,6 +34179,19 @@ var createArrayNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) =
     get isArrayNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalItems = map(this.items, function(item) {
         return item._compile(math2, argNames);
@@ -31598,12 +34212,22 @@ var createArrayNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) =
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       for (var i2 = 0; i2 < this.items.length; i2++) {
         var node = this.items[i2];
         callback(node, "items[" + i2 + "]", this);
       }
     }
+    /**
+     * Create a new ArrayNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {ArrayNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var items = [];
       for (var i2 = 0; i2 < this.items.length; i2++) {
@@ -31611,30 +34235,62 @@ var createArrayNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) =
       }
       return new ArrayNode2(items);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {ArrayNode}
+     */
     clone() {
       return new ArrayNode2(this.items.slice(0));
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toString(options) {
       var items = this.items.map(function(node) {
         return node.toString(options);
       });
       return "[" + items.join(", ") + "]";
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name208,
         items: this.items
       };
     }
+    /**
+     * Instantiate an ArrayNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "ArrayNode", items: [...]}`,
+     *                       where mathjs is optional
+     * @returns {ArrayNode}
+     */
     static fromJSON(json) {
       return new ArrayNode2(json.items);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toHTML(options) {
       var items = this.items.map(function(node) {
         return node.toHTML(options);
       });
       return '<span class="math-parenthesis math-square-parenthesis">[</span>' + items.join('<span class="math-separator">,</span>') + '<span class="math-parenthesis math-square-parenthesis">]</span>';
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       function itemsToTex(items, nested) {
         var mixedItems = items.some(isArrayNode) && !items.every(isArrayNode);
@@ -31694,51 +34350,62 @@ function assignFactory(_ref) {
 
 // node_modules/mathjs/lib/esm/expression/operators.js
 var properties = [{
+  // assignment
   AssignmentNode: {},
   FunctionAssignmentNode: {}
 }, {
+  // conditional expression
   ConditionalNode: {
     latexLeftParens: false,
     latexRightParens: false,
     latexParens: false
+    // conditionals don't need parentheses in LaTeX because
+    // they are 2 dimensional
   }
 }, {
+  // logical or
   "OperatorNode:or": {
     op: "or",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // logical xor
   "OperatorNode:xor": {
     op: "xor",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // logical and
   "OperatorNode:and": {
     op: "and",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // bitwise or
   "OperatorNode:bitOr": {
     op: "|",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // bitwise xor
   "OperatorNode:bitXor": {
     op: "^|",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // bitwise and
   "OperatorNode:bitAnd": {
     op: "&",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // relational operators
   "OperatorNode:equal": {
     op: "==",
     associativity: "left",
@@ -31774,6 +34441,7 @@ var properties = [{
     associativeWith: []
   }
 }, {
+  // bitshift operators
   "OperatorNode:leftShift": {
     op: "<<",
     associativity: "left",
@@ -31790,14 +34458,17 @@ var properties = [{
     associativeWith: []
   }
 }, {
+  // unit conversion
   "OperatorNode:to": {
     op: "to",
     associativity: "left",
     associativeWith: []
   }
 }, {
+  // range
   RangeNode: {}
 }, {
+  // addition, subtraction
   "OperatorNode:add": {
     op: "+",
     associativity: "left",
@@ -31809,6 +34480,7 @@ var properties = [{
     associativeWith: []
   }
 }, {
+  // multiply, divide, modulus
   "OperatorNode:multiply": {
     op: "*",
     associativity: "left",
@@ -31821,6 +34493,9 @@ var properties = [{
     latexLeftParens: false,
     latexRightParens: false,
     latexParens: false
+    // fractions don't require parentheses because
+    // they're 2 dimensional, so parens aren't needed
+    // in LaTeX
   },
   "OperatorNode:dotMultiply": {
     op: ".*",
@@ -31838,11 +34513,13 @@ var properties = [{
     associativeWith: []
   }
 }, {
+  // Repeat multiplication for implicit multiplication
   "OperatorNode:multiply": {
     associativity: "left",
     associativeWith: ["OperatorNode:multiply", "OperatorNode:divide", "Operator:dotMultiply", "Operator:dotDivide"]
   }
 }, {
+  // unary prefix operators
   "OperatorNode:unaryPlus": {
     op: "+",
     associativity: "right"
@@ -31860,11 +34537,15 @@ var properties = [{
     associativity: "right"
   }
 }, {
+  // exponentiation
   "OperatorNode:pow": {
     op: "^",
     associativity: "right",
     associativeWith: [],
     latexRightParens: false
+    // the exponent doesn't need parentheses in
+    // LaTeX because it's 2 dimensional
+    // (it's on top)
   },
   "OperatorNode:dotPow": {
     op: ".^",
@@ -31872,22 +34553,22 @@ var properties = [{
     associativeWith: []
   }
 }, {
+  // factorial
   "OperatorNode:factorial": {
     op: "!",
     associativity: "left"
   }
 }, {
+  // matrix transpose
   "OperatorNode:ctranspose": {
     op: "'",
     associativity: "left"
   }
 }];
 function unwrapParen(_node, parenthesis) {
-  if (!parenthesis || parenthesis !== "auto")
-    return _node;
+  if (!parenthesis || parenthesis !== "auto") return _node;
   var node = _node;
-  while (isParenthesisNode(node))
-    node = node.content;
+  while (isParenthesisNode(node)) node = node.content;
   return node;
 }
 function getPrecedence(_node, parenthesis, implicit, parent) {
@@ -31968,6 +34649,7 @@ var name209 = "AssignmentNode";
 var dependencies209 = [
   "subset",
   "?matrix",
+  // FIXME: should not be needed at all, should be handled by subset
   "Node"
 ];
 var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_ref) => {
@@ -31992,6 +34674,37 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
     return parenthesis === "all" || exprPrecedence !== null && exprPrecedence <= precedence;
   }
   class AssignmentNode2 extends Node2 {
+    /**
+     * @constructor AssignmentNode
+     * @extends {Node}
+     *
+     * Define a symbol, like `a=3.2`, update a property like `a.b=3.2`, or
+     * replace a subset of a matrix like `A[2,2]=42`.
+     *
+     * Syntax:
+     *
+     *     new AssignmentNode(symbol, value)
+     *     new AssignmentNode(object, index, value)
+     *
+     * Usage:
+     *
+     *    new AssignmentNode(new SymbolNode('a'), new ConstantNode(2))  // a=2
+     *    new AssignmentNode(new SymbolNode('a'),
+     *                       new IndexNode('b'),
+     *                       new ConstantNode(2))   // a.b=2
+     *    new AssignmentNode(new SymbolNode('a'),
+     *                       new IndexNode(1, 2),
+     *                       new ConstantNode(3))  // a[1,2]=3
+     *
+     * @param {SymbolNode | AccessorNode} object
+     *     Object on which to assign a value
+     * @param {IndexNode} [index=null]
+     *     Index, property name or matrix index. Optional. If not provided
+     *     and `object` is a SymbolNode, the property is assigned to the
+     *     global scope.
+     * @param {Node} value
+     *     The value to be assigned
+     */
     constructor(object, index2, value) {
       super();
       this.object = object;
@@ -32010,6 +34723,8 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
         throw new TypeError('Node expected as "value"');
       }
     }
+    // class name for typing purposes:
+    // readonly property name
     get name() {
       if (this.index) {
         return this.index.isObjectProperty() ? this.index.getObjectProperty() : "";
@@ -32023,6 +34738,19 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
     get isAssignmentNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalObject = this.object._compile(math2, argNames);
       var evalIndex = this.index ? this.index._compile(math2, argNames) : null;
@@ -32079,6 +34807,10 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
         }
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.object, "object", this);
       if (this.index) {
@@ -32086,15 +34818,30 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
       }
       callback(this.value, "value", this);
     }
+    /**
+     * Create a new AssignmentNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {AssignmentNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var object = this._ifNode(callback(this.object, "object", this));
       var index2 = this.index ? this._ifNode(callback(this.index, "index", this)) : null;
       var value = this._ifNode(callback(this.value, "value", this));
       return new AssignmentNode2(object, index2, value);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {AssignmentNode}
+     */
     clone() {
       return new AssignmentNode2(this.object, this.index, this.value);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string}
+     */
     _toString(options) {
       var object = this.object.toString(options);
       var index2 = this.index ? this.index.toString(options) : "";
@@ -32104,6 +34851,10 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
       }
       return object + index2 + " = " + value;
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name209,
@@ -32112,9 +34863,22 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
         value: this.value
       };
     }
+    /**
+     * Instantiate an AssignmentNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "AssignmentNode", object: ..., index: ..., value: ...}`,
+     *     where mathjs is optional
+     * @returns {AssignmentNode}
+     */
     static fromJSON(json) {
       return new AssignmentNode2(json.object, json.index, json.value);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string}
+     */
     toHTML(options) {
       var object = this.object.toHTML(options);
       var index2 = this.index ? this.index.toHTML(options) : "";
@@ -32124,6 +34888,11 @@ var createAssignmentNode = /* @__PURE__ */ factory(name209, dependencies209, (_r
       }
       return object + index2 + '<span class="math-operator math-assignment-operator math-variable-assignment-operator math-binary-operator">=</span>' + value;
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string}
+     */
     _toTex(options) {
       var object = this.object.toTex(options);
       var index2 = this.index ? this.index.toTex(options) : "";
@@ -32150,15 +34919,23 @@ var createBlockNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) =
     Node: Node2
   } = _ref;
   class BlockNode2 extends Node2 {
+    /**
+     * @constructor BlockNode
+     * @extends {Node}
+     * Holds a set with blocks
+     * @param {Array.<{node: Node} | {node: Node, visible: boolean}>} blocks
+     *            An array with blocks, where a block is constructed as an
+     *            Object with properties block, which is a Node, and visible,
+     *            which is a boolean. The property visible is optional and
+     *            is true by default
+     */
     constructor(blocks) {
       super();
-      if (!Array.isArray(blocks))
-        throw new Error("Array expected");
+      if (!Array.isArray(blocks)) throw new Error("Array expected");
       this.blocks = blocks.map(function(block) {
         var node = block && block.node;
         var visible = block && block.visible !== void 0 ? block.visible : true;
-        if (!isNode(node))
-          throw new TypeError('Property "node" must be a Node');
+        if (!isNode(node)) throw new TypeError('Property "node" must be a Node');
         if (typeof visible !== "boolean") {
           throw new TypeError('Property "visible" must be a boolean');
         }
@@ -32174,6 +34951,19 @@ var createBlockNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) =
     get isBlockNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalBlocks = map(this.blocks, function(block) {
         return {
@@ -32192,11 +34982,21 @@ var createBlockNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) =
         return new ResultSet2(results);
       };
     }
+    /**
+     * Execute a callback for each of the child blocks of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       for (var i2 = 0; i2 < this.blocks.length; i2++) {
         callback(this.blocks[i2].node, "blocks[" + i2 + "].node", this);
       }
     }
+    /**
+     * Create a new BlockNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {BlockNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var blocks = [];
       for (var i2 = 0; i2 < this.blocks.length; i2++) {
@@ -32209,6 +35009,10 @@ var createBlockNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) =
       }
       return new BlockNode2(blocks);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {BlockNode}
+     */
     clone() {
       var blocks = this.blocks.map(function(block) {
         return {
@@ -32218,25 +35022,54 @@ var createBlockNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) =
       });
       return new BlockNode2(blocks);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toString(options) {
       return this.blocks.map(function(param) {
         return param.node.toString(options) + (param.visible ? "" : ";");
       }).join("\n");
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name210,
         blocks: this.blocks
       };
     }
+    /**
+     * Instantiate an BlockNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "BlockNode", blocks: [{node: ..., visible: false}, ...]}`,
+     *     where mathjs is optional
+     * @returns {BlockNode}
+     */
     static fromJSON(json) {
       return new BlockNode2(json.blocks);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toHTML(options) {
       return this.blocks.map(function(param) {
         return param.node.toHTML(options) + (param.visible ? "" : '<span class="math-separator">;</span>');
       }).join('<span class="math-separator"><br /></span>');
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       return this.blocks.map(function(param) {
         return param.node.toTex(options) + (param.visible ? "" : ";");
@@ -32278,6 +35111,16 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
     throw new TypeError('Unsupported type of condition "' + typeOf(condition) + '"');
   }
   class ConditionalNode2 extends Node2 {
+    /**
+     * A lazy evaluating conditional operator: 'condition ? trueExpr : falseExpr'
+     *
+     * @param {Node} condition   Condition, must result in a boolean
+     * @param {Node} trueExpr    Expression evaluated when condition is true
+     * @param {Node} falseExpr   Expression evaluated when condition is true
+     *
+     * @constructor ConditionalNode
+     * @extends {Node}
+     */
     constructor(condition, trueExpr, falseExpr) {
       super();
       if (!isNode(condition)) {
@@ -32299,6 +35142,19 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
     get isConditionalNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalCondition = this.condition._compile(math2, argNames);
       var evalTrueExpr = this.trueExpr._compile(math2, argNames);
@@ -32307,17 +35163,36 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
         return testCondition(evalCondition(scope, args, context)) ? evalTrueExpr(scope, args, context) : evalFalseExpr(scope, args, context);
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.condition, "condition", this);
       callback(this.trueExpr, "trueExpr", this);
       callback(this.falseExpr, "falseExpr", this);
     }
+    /**
+     * Create a new ConditionalNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {ConditionalNode} Returns a transformed copy of the node
+     */
     map(callback) {
       return new ConditionalNode2(this._ifNode(callback(this.condition, "condition", this)), this._ifNode(callback(this.trueExpr, "trueExpr", this)), this._ifNode(callback(this.falseExpr, "falseExpr", this)));
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {ConditionalNode}
+     */
     clone() {
       return new ConditionalNode2(this.condition, this.trueExpr, this.falseExpr);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var precedence = getPrecedence(this, parenthesis, options && options.implicit);
@@ -32338,6 +35213,10 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
       }
       return condition + " ? " + trueExpr + " : " + falseExpr;
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name211,
@@ -32346,9 +35225,27 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
         falseExpr: this.falseExpr
       };
     }
+    /**
+     * Instantiate an ConditionalNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     ```
+     *     {"mathjs": "ConditionalNode",
+     *      "condition": ...,
+     *      "trueExpr": ...,
+     *      "falseExpr": ...}
+     *     ```
+     *     where mathjs is optional
+     * @returns {ConditionalNode}
+     */
     static fromJSON(json) {
       return new ConditionalNode2(json.condition, json.trueExpr, json.falseExpr);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var precedence = getPrecedence(this, parenthesis, options && options.implicit);
@@ -32369,6 +35266,11 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
       }
       return condition + '<span class="math-operator math-conditional-operator">?</span>' + trueExpr + '<span class="math-operator math-conditional-operator">:</span>' + falseExpr;
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       return "\\begin{cases} {" + this.trueExpr.toTex(options) + "}, &\\quad{\\text{if }\\;" + this.condition.toTex(options) + "}\\\\{" + this.falseExpr.toTex(options) + "}, &\\quad{\\text{otherwise}}\\end{cases}";
     }
@@ -32383,6 +35285,7 @@ var createConditionalNode = /* @__PURE__ */ factory(name211, dependencies211, (_
 // node_modules/mathjs/lib/esm/utils/latex.js
 var import_escape_latex = __toESM(require_dist(), 1);
 var latexSymbols = {
+  // GREEK LETTERS
   Alpha: "A",
   alpha: "\\alpha",
   Beta: "B",
@@ -32438,9 +35341,12 @@ var latexSymbols = {
   psi: "\\psi",
   Omega: "\\Omega",
   omega: "\\omega",
+  // logic
   true: "\\mathrm{True}",
   false: "\\mathrm{False}",
+  // other
   i: "i",
+  // TODO use \i ??
   inf: "\\infty",
   Inf: "\\infty",
   infinity: "\\infty",
@@ -32455,14 +35361,19 @@ var latexOperators = {
   factorial: "!",
   pow: "^",
   dotPow: ".^\\wedge",
+  // TODO find ideal solution
   unaryPlus: "+",
   unaryMinus: "-",
   bitNot: "\\~",
+  // TODO find ideal solution
   not: "\\neg",
   multiply: "\\cdot",
   divide: "\\frac",
+  // TODO how to handle that properly?
   dotMultiply: ".\\cdot",
+  // TODO find ideal solution
   dotDivide: ".:",
+  // TODO find ideal solution
   mod: "\\mod",
   add: "+",
   subtract: "-",
@@ -32484,6 +35395,7 @@ var latexOperators = {
   or: "\\vee"
 };
 var latexFunctions = {
+  // arithmetic
   abs: {
     1: "\\left|${args[0]}\\right|"
   },
@@ -32544,6 +35456,7 @@ var latexFunctions = {
   norm: {
     1: "\\left\\|${args[0]}\\right\\|",
     2: void 0
+    // use default template
   },
   nthRoot: {
     2: "\\sqrt[${args[1]}]{${args[0]}}"
@@ -32557,6 +35470,7 @@ var latexFunctions = {
   round: {
     1: "\\left\\lfloor${args[0]}\\right\\rceil",
     2: void 0
+    // use default template
   },
   sign: {
     1: "\\mathrm{${name}}\\left(${args[0]}\\right)"
@@ -32576,6 +35490,7 @@ var latexFunctions = {
   unaryPlus: {
     1: "".concat(latexOperators.unaryPlus, "\\left(${args[0]}\\right)")
   },
+  // bitwise
   bitAnd: {
     2: "\\left(${args[0]}".concat(latexOperators.bitAnd, "${args[1]}\\right)")
   },
@@ -32597,6 +35512,7 @@ var latexFunctions = {
   rightLogShift: {
     2: "\\left(${args[0]}".concat(latexOperators.rightLogShift, "${args[1]}\\right)")
   },
+  // combinatorics
   bellNumbers: {
     1: "\\mathrm{B}_{${args[0]}}"
   },
@@ -32606,6 +35522,7 @@ var latexFunctions = {
   stirlingS2: {
     2: "\\mathrm{S}\\left(${args}\\right)"
   },
+  // complex
   arg: {
     1: "\\arg\\left(${args[0]}\\right)"
   },
@@ -32618,6 +35535,7 @@ var latexFunctions = {
   re: {
     1: "\\Re\\left\\lbrace${args[0]}\\right\\rbrace"
   },
+  // logical
   and: {
     2: "\\left(${args[0]}".concat(latexOperators.and, "${args[1]}\\right)")
   },
@@ -32630,6 +35548,7 @@ var latexFunctions = {
   xor: {
     2: "\\left(${args[0]}".concat(latexOperators.xor, "${args[1]}\\right)")
   },
+  // matrix
   cross: {
     2: "\\left(${args[0]}\\right)\\times\\left(${args[1]}\\right)"
   },
@@ -32660,6 +35579,7 @@ var latexFunctions = {
   transpose: {
     1: "\\left(${args[0]}\\right)".concat(latexOperators.transpose)
   },
+  // probability
   combinations: {
     2: "\\binom{${args[0]}}{${args[1]}}"
   },
@@ -32675,6 +35595,7 @@ var latexFunctions = {
   lgamma: {
     1: "\\ln\\Gamma\\left(${args[0]}\\right)"
   },
+  // relational
   equal: {
     2: "\\left(${args[0]}".concat(latexOperators.equal, "${args[1]}\\right)")
   },
@@ -32693,12 +35614,15 @@ var latexFunctions = {
   unequal: {
     2: "\\left(${args[0]}".concat(latexOperators.unequal, "${args[1]}\\right)")
   },
+  // special
   erf: {
     1: "erf\\left(${args[0]}\\right)"
   },
+  // statistics
   max: "\\max\\left(${args}\\right)",
   min: "\\min\\left(${args}\\right)",
   variance: "\\mathrm{Var}\\left(${args}\\right)",
+  // trigonometry
   acos: {
     1: "\\cos^{-1}\\left(${args[0]}\\right)"
   },
@@ -32774,12 +35698,15 @@ var latexFunctions = {
   tanh: {
     1: "\\tanh\\left(${args[0]}\\right)"
   },
+  // unit
   to: {
     2: "\\left(${args[0]}".concat(latexOperators.to, "${args[1]}\\right)")
   },
+  // utils
   numeric: function numeric(node, options) {
     return node.args[0].toTex();
   },
+  // type
   number: {
     0: "0",
     1: "\\left(${args[0]}\\right)",
@@ -32843,6 +35770,18 @@ var createConstantNode = /* @__PURE__ */ factory(name212, dependencies212, (_ref
     Node: Node2
   } = _ref;
   class ConstantNode2 extends Node2 {
+    /**
+     * A ConstantNode holds a constant value like a number or string.
+     *
+     * Usage:
+     *
+     *     new ConstantNode(2.3)
+     *     new ConstantNode('hello')
+     *
+     * @param {*} value    Value can be any type (number, BigNumber, string, ...)
+     * @constructor ConstantNode
+     * @extends {Node}
+     */
     constructor(value) {
       super();
       this.value = value;
@@ -32853,23 +35792,60 @@ var createConstantNode = /* @__PURE__ */ factory(name212, dependencies212, (_ref
     get isConstantNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var value = this.value;
       return function evalConstantNode() {
         return value;
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
     }
+    /**
+     * Create a new ConstantNode with children produced by the given callback.
+     * Trivial because there are no children.
+     * @param {function(child: Node, path: string, parent: Node) : Node} callback
+     * @returns {ConstantNode} Returns a clone of the node
+     */
     map(callback) {
       return this.clone();
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {ConstantNode}
+     */
     clone() {
       return new ConstantNode2(this.value);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       return format3(this.value, options);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var value = this._toString(options);
       switch (typeOf(this.value)) {
@@ -32889,15 +35865,31 @@ var createConstantNode = /* @__PURE__ */ factory(name212, dependencies212, (_ref
           return '<span class="math-symbol">' + value + "</span>";
       }
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name212,
         value: this.value
       };
     }
+    /**
+     * Instantiate a ConstantNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "SymbolNode", value: 2.3}`,
+     *                       where mathjs is optional
+     * @returns {ConstantNode}
+     */
     static fromJSON(json) {
       return new ConstantNode2(json.value);
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var value = this._toString(options);
       switch (typeOf(this.value)) {
@@ -32943,6 +35935,18 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
     return parenthesis === "all" || exprPrecedence !== null && exprPrecedence <= precedence;
   }
   class FunctionAssignmentNode2 extends Node2 {
+    /**
+     * @constructor FunctionAssignmentNode
+     * @extends {Node}
+     * Function assignment
+     *
+     * @param {string} name           Function name
+     * @param {string[] | Array.<{name: string, type: string}>} params
+     *                                Array with function parameter names, or an
+     *                                array with objects containing the name
+     *                                and type of the parameter
+     * @param {Node} expr             The function expression
+     */
     constructor(name310, params, expr) {
       super();
       if (typeof name310 !== "string") {
@@ -32981,6 +35985,19 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
     get isFunctionAssignmentNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var childArgNames = Object.create(argNames);
       forEach(this.params, function(param) {
@@ -33006,16 +36023,36 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
         return fn;
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.expr, "expr", this);
     }
+    /**
+     * Create a new FunctionAssignmentNode whose children are the results of
+     * calling the provided callback function for each child of the original
+     * node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {FunctionAssignmentNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var expr = this._ifNode(callback(this.expr, "expr", this));
       return new FunctionAssignmentNode2(this.name, this.params.slice(0), expr);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {FunctionAssignmentNode}
+     */
     clone() {
       return new FunctionAssignmentNode2(this.name, this.params.slice(0), this.expr);
     }
+    /**
+     * get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var expr = this.expr.toString(options);
@@ -33024,6 +36061,10 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
       }
       return this.name + "(" + this.params.join(", ") + ") = " + expr;
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       var types = this.types;
       return {
@@ -33038,9 +36079,25 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
         expr: this.expr
       };
     }
+    /**
+     * Instantiate an FunctionAssignmentNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     ```
+     *     {"mathjs": "FunctionAssignmentNode",
+     *      name: ..., params: ..., expr: ...}
+     *     ```
+     *     where mathjs is optional
+     * @returns {FunctionAssignmentNode}
+     */
     static fromJSON(json) {
       return new FunctionAssignmentNode2(json.name, json.params, json.expr);
     }
+    /**
+     * get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var params = [];
@@ -33053,6 +36110,11 @@ var createFunctionAssignmentNode = /* @__PURE__ */ factory(name213, dependencies
       }
       return '<span class="math-function">' + escape(this.name) + '</span><span class="math-parenthesis math-round-parenthesis">(</span>' + params.join('<span class="math-separator">,</span>') + '<span class="math-parenthesis math-round-parenthesis">)</span><span class="math-operator math-assignment-operator math-variable-assignment-operator math-binary-operator">=</span>' + expr;
     }
+    /**
+     * get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var expr = this.expr.toTex(options);
@@ -33078,6 +36140,20 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
     size: size2
   } = _ref;
   class IndexNode2 extends Node2 {
+    /**
+     * @constructor IndexNode
+     * @extends Node
+     *
+     * Describes a subset of a matrix or an object property.
+     * Cannot be used on its own, needs to be used within an AccessorNode or
+     * AssignmentNode.
+     *
+     * @param {Node[]} dimensions
+     * @param {boolean} [dotNotation=false]
+     *     Optional property describing whether this index was written using dot
+     *     notation like `a.b`, or using bracket notation like `a["b"]`
+     *     (which is the default). This property is used for string conversion.
+     */
     constructor(dimensions, dotNotation) {
       super();
       this.dimensions = dimensions;
@@ -33095,6 +36171,19 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
     get isIndexNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalDimensions = map(this.dimensions, function(dimension, i2) {
         var needsEnd = dimension.filter((node) => node.isSymbolNode && node.name === "end").length > 0;
@@ -33123,11 +36212,21 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
         return index2(...dimensions);
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       for (var i2 = 0; i2 < this.dimensions.length; i2++) {
         callback(this.dimensions[i2], "dimensions[" + i2 + "]", this);
       }
     }
+    /**
+     * Create a new IndexNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {IndexNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var dimensions = [];
       for (var i2 = 0; i2 < this.dimensions.length; i2++) {
@@ -33135,18 +36234,40 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
       }
       return new IndexNode2(dimensions, this.dotNotation);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {IndexNode}
+     */
     clone() {
       return new IndexNode2(this.dimensions.slice(0), this.dotNotation);
     }
+    /**
+     * Test whether this IndexNode contains a single property name
+     * @return {boolean}
+     */
     isObjectProperty() {
       return this.dimensions.length === 1 && isConstantNode(this.dimensions[0]) && typeof this.dimensions[0].value === "string";
     }
+    /**
+     * Returns the property name if IndexNode contains a property.
+     * If not, returns null.
+     * @return {string | null}
+     */
     getObjectProperty() {
       return this.isObjectProperty() ? this.dimensions[0].value : null;
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       return this.dotNotation ? "." + this.getObjectProperty() : "[" + this.dimensions.join(", ") + "]";
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name214,
@@ -33154,9 +36275,22 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
         dotNotation: this.dotNotation
       };
     }
+    /**
+     * Instantiate an IndexNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "IndexNode", dimensions: [...], dotNotation: false}`,
+     *     where mathjs is optional
+     * @returns {IndexNode}
+     */
     static fromJSON(json) {
       return new IndexNode2(json.dimensions, json.dotNotation);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var dimensions = [];
       for (var i2 = 0; i2 < this.dimensions.length; i2++) {
@@ -33168,6 +36302,11 @@ var createIndexNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) =
         return '<span class="math-parenthesis math-square-parenthesis">[</span>' + dimensions.join('<span class="math-separator">,</span>') + '<span class="math-parenthesis math-square-parenthesis">]</span>';
       }
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var dimensions = this.dimensions.map(function(range2) {
         return range2.toTex(options);
@@ -33190,6 +36329,12 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
     Node: Node2
   } = _ref;
   class ObjectNode2 extends Node2 {
+    /**
+     * @constructor ObjectNode
+     * @extends {Node}
+     * Holds an object with keys/values
+     * @param {Object.<string, Node>} [properties]   object with key/value pairs
+     */
     constructor(properties2) {
       super();
       this.properties = properties2 || {};
@@ -33207,6 +36352,19 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
     get isObjectNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var evalEntries = {};
       for (var key in this.properties) {
@@ -33227,6 +36385,10 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
         return obj;
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       for (var key in this.properties) {
         if (hasOwnProperty(this.properties, key)) {
@@ -33234,6 +36396,12 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
         }
       }
     }
+    /**
+     * Create a new ObjectNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {ObjectNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var properties2 = {};
       for (var key in this.properties) {
@@ -33243,6 +36411,10 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
       }
       return new ObjectNode2(properties2);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {ObjectNode}
+     */
     clone() {
       var properties2 = {};
       for (var key in this.properties) {
@@ -33252,6 +36424,12 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
       }
       return new ObjectNode2(properties2);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toString(options) {
       var entries = [];
       for (var key in this.properties) {
@@ -33261,15 +36439,32 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
       }
       return "{" + entries.join(", ") + "}";
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name215,
         properties: this.properties
       };
     }
+    /**
+     * Instantiate an OperatorNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "ObjectNode", "properties": {...}}`,
+     *                       where mathjs is optional
+     * @returns {ObjectNode}
+     */
     static fromJSON(json) {
       return new ObjectNode2(json.properties);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toHTML(options) {
       var entries = [];
       for (var key in this.properties) {
@@ -33279,6 +36474,11 @@ var createObjectNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) 
       }
       return '<span class="math-parenthesis math-curly-parenthesis">{</span>' + entries.join('<span class="math-separator">,</span>') + '<span class="math-parenthesis math-curly-parenthesis">}</span>';
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var entries = [];
       for (var key in this.properties) {
@@ -33307,11 +36507,9 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
   function startsWithConstant(expr, parenthesis) {
     var curNode = expr;
     if (parenthesis === "auto") {
-      while (isParenthesisNode(curNode))
-        curNode = curNode.content;
+      while (isParenthesisNode(curNode)) curNode = curNode.content;
     }
-    if (isConstantNode(curNode))
-      return true;
+    if (isConstantNode(curNode)) return true;
     if (isOperatorNode(curNode)) {
       return startsWithConstant(curNode.args[0], parenthesis);
     }
@@ -33323,6 +36521,7 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
     if (parenthesis === "all" || args.length > 2 && root.getIdentifier() !== "OperatorNode:add" && root.getIdentifier() !== "OperatorNode:multiply") {
       return args.map(function(arg2) {
         switch (arg2.getContent().type) {
+          // Nodes that don't need extra parentheses
           case "ArrayNode":
           case "ConstantNode":
           case "SymbolNode":
@@ -33458,6 +36657,17 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
     return result;
   }
   class OperatorNode2 extends Node2 {
+    /**
+     * @constructor OperatorNode
+     * @extends {Node}
+     * An operator with two arguments, like 2+3
+     *
+     * @param {string} op           Operator name, for example '+'
+     * @param {string} fn           Function name, for example 'add'
+     * @param {Node[]} args         Operator arguments
+     * @param {boolean} [implicit]  Is this an implicit multiplication?
+     * @param {boolean} [isPercentage] Is this an percentage Operation?
+     */
     constructor(op, fn, args, implicit, isPercentage) {
       super();
       if (typeof op !== "string") {
@@ -33481,6 +36691,19 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
     get isOperatorNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       if (typeof this.fn !== "string" || !isSafeMethod(math2, this.fn)) {
         if (!math2[this.fn]) {
@@ -33512,11 +36735,21 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       for (var i2 = 0; i2 < this.args.length; i2++) {
         callback(this.args[i2], "args[" + i2 + "]", this);
       }
     }
+    /**
+     * Create a new OperatorNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {OperatorNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var args = [];
       for (var i2 = 0; i2 < this.args.length; i2++) {
@@ -33524,15 +36757,36 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
       }
       return new OperatorNode2(this.op, this.fn, args, this.implicit, this.isPercentage);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {OperatorNode}
+     */
     clone() {
       return new OperatorNode2(this.op, this.fn, this.args.slice(0), this.implicit, this.isPercentage);
     }
+    /**
+     * Check whether this is an unary OperatorNode:
+     * has exactly one argument, like `-a`.
+     * @return {boolean}
+     *     Returns true when an unary operator node, false otherwise.
+     */
     isUnary() {
       return this.args.length === 1;
     }
+    /**
+     * Check whether this is a binary OperatorNode:
+     * has exactly two arguments, like `a + b`.
+     * @return {boolean}
+     *     Returns true when a binary operator node, false otherwise.
+     */
     isBinary() {
       return this.args.length === 2;
     }
+    /**
+     * Get string representation.
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var implicit = options && options.implicit ? options.implicit : "hide";
@@ -33580,6 +36834,10 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
         return this.fn + "(" + this.args.join(", ") + ")";
       }
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name216,
@@ -33590,9 +36848,27 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
         isPercentage: this.isPercentage
       };
     }
+    /**
+     * Instantiate an OperatorNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     ```
+     *     {"mathjs": "OperatorNode",
+     *      "op": "+", "fn": "add", "args": [...],
+     *      "implicit": false,
+     *      "isPercentage":false}
+     *     ```
+     *     where mathjs is optional
+     * @returns {OperatorNode}
+     */
     static fromJSON(json) {
       return new OperatorNode2(json.op, json.fn, json.args, json.implicit, json.isPercentage);
     }
+    /**
+     * Get HTML representation.
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var implicit = options && options.implicit ? options.implicit : "hide";
@@ -33640,6 +36916,11 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
         }
       }
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var implicit = options && options.implicit ? options.implicit : "hide";
@@ -33684,6 +36965,7 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
             rhsTex = "{" + rhsTex + "}";
             switch (lhsIdentifier) {
               case "ConditionalNode":
+              //
               case "OperatorNode:divide":
                 lhsTex = "\\left(".concat(lhsTex, "\\right)");
             }
@@ -33712,6 +36994,10 @@ var createOperatorNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref
         }).join(",") + "\\right)";
       }
     }
+    /**
+     * Get identifier.
+     * @return {string}
+     */
     getIdentifier() {
       return this.type + ":" + this.fn;
     }
@@ -33731,6 +37017,13 @@ var createParenthesisNode = /* @__PURE__ */ factory(name217, dependencies217, (_
     Node: Node2
   } = _ref;
   class ParenthesisNode2 extends Node2 {
+    /**
+     * @constructor ParenthesisNode
+     * @extends {Node}
+     * A parenthesis node describes manual parenthesis from the user input
+     * @param {Node} content
+     * @extends {Node}
+     */
     constructor(content) {
       super();
       if (!isNode(content)) {
@@ -33744,43 +37037,104 @@ var createParenthesisNode = /* @__PURE__ */ factory(name217, dependencies217, (_
     get isParenthesisNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       return this.content._compile(math2, argNames);
     }
+    /**
+     * Get the content of the current Node.
+     * @return {Node} content
+     * @override
+     **/
     getContent() {
       return this.content.getContent();
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.content, "content", this);
     }
+    /**
+     * Create a new ParenthesisNode whose child is the result of calling
+     * the provided callback function on the child of this node.
+     * @param {function(child: Node, path: string, parent: Node) : Node} callback
+     * @returns {ParenthesisNode} Returns a clone of the node
+     */
     map(callback) {
       var content = callback(this.content, "content", this);
       return new ParenthesisNode2(content);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {ParenthesisNode}
+     */
     clone() {
       return new ParenthesisNode2(this.content);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toString(options) {
       if (!options || options && !options.parenthesis || options && options.parenthesis === "keep") {
         return "(" + this.content.toString(options) + ")";
       }
       return this.content.toString(options);
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name217,
         content: this.content
       };
     }
+    /**
+     * Instantiate an ParenthesisNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "ParenthesisNode", "content": ...}`,
+     *                       where mathjs is optional
+     * @returns {ParenthesisNode}
+     */
     static fromJSON(json) {
       return new ParenthesisNode2(json.content);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toHTML(options) {
       if (!options || options && !options.parenthesis || options && options.parenthesis === "keep") {
         return '<span class="math-parenthesis math-round-parenthesis">(</span>' + this.content.toHTML(options) + '<span class="math-parenthesis math-round-parenthesis">)</span>';
       }
       return this.content.toHTML(options);
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toTex(options) {
       if (!options || options && !options.parenthesis || options && options.parenthesis === "keep") {
         return "\\left(".concat(this.content.toTex(options), "\\right)");
@@ -33816,16 +37170,20 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
     return parens;
   }
   class RangeNode2 extends Node2 {
+    /**
+     * @constructor RangeNode
+     * @extends {Node}
+     * create a range
+     * @param {Node} start  included lower-bound
+     * @param {Node} end    included upper-bound
+     * @param {Node} [step] optional step
+     */
     constructor(start, end, step) {
       super();
-      if (!isNode(start))
-        throw new TypeError("Node expected");
-      if (!isNode(end))
-        throw new TypeError("Node expected");
-      if (step && !isNode(step))
-        throw new TypeError("Node expected");
-      if (arguments.length > 3)
-        throw new Error("Too many arguments");
+      if (!isNode(start)) throw new TypeError("Node expected");
+      if (!isNode(end)) throw new TypeError("Node expected");
+      if (step && !isNode(step)) throw new TypeError("Node expected");
+      if (arguments.length > 3) throw new Error("Too many arguments");
       this.start = start;
       this.end = end;
       this.step = step || null;
@@ -33836,12 +37194,30 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
     get isRangeNode() {
       return true;
     }
+    /**
+     * Check whether the RangeNode needs the `end` symbol to be defined.
+     * This end is the size of the Matrix in current dimension.
+     * @return {boolean}
+     */
     needsEnd() {
       var endSymbols = this.filter(function(node) {
         return isSymbolNode(node) && node.name === "end";
       });
       return endSymbols.length > 0;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var range2 = math2.range;
       var evalStart = this.start._compile(math2, argNames);
@@ -33857,6 +37233,10 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.start, "start", this);
       callback(this.end, "end", this);
@@ -33864,12 +37244,27 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
         callback(this.step, "step", this);
       }
     }
+    /**
+     * Create a new RangeNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {RangeNode} Returns a transformed copy of the node
+     */
     map(callback) {
       return new RangeNode2(this._ifNode(callback(this.start, "start", this)), this._ifNode(callback(this.end, "end", this)), this.step && this._ifNode(callback(this.step, "step", this)));
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {RangeNode}
+     */
     clone() {
       return new RangeNode2(this.start, this.end, this.step && this.step);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
@@ -33893,6 +37288,10 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
       str += ":" + end;
       return str;
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name218,
@@ -33901,9 +37300,22 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
         step: this.step
       };
     }
+    /**
+     * Instantiate an RangeNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "RangeNode", "start": ..., "end": ..., "step": ...}`,
+     *     where mathjs is optional
+     * @returns {RangeNode}
+     */
     static fromJSON(json) {
       return new RangeNode2(json.start, json.end, json.step);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
@@ -33927,6 +37339,11 @@ var createRangeNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) =
       str += '<span class="math-operator math-range-operator">:</span>' + end;
       return str;
     }
+    /**
+     * Get LaTeX representation
+     * @params {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
@@ -33972,6 +37389,17 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
     largerEq: ">="
   };
   class RelationalNode2 extends Node2 {
+    /**
+     * A node representing a chained conditional expression, such as 'x > y > z'
+     *
+     * @param {String[]} conditionals
+     *     An array of conditional operators used to compare the parameters
+     * @param {Node[]} params
+     *     The parameters that will be compared
+     *
+     * @constructor RelationalNode
+     * @extends {Node}
+     */
     constructor(conditionals, params) {
       super();
       if (!Array.isArray(conditionals)) {
@@ -33992,6 +37420,19 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
     get isRelationalNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math2, argNames) {
       var self2 = this;
       var compiled = this.params.map((p) => p._compile(math2, argNames));
@@ -34009,15 +37450,34 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
         return true;
       };
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       this.params.forEach((n, i2) => callback(n, "params[" + i2 + "]", this), this);
     }
+    /**
+     * Create a new RelationalNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {RelationalNode} Returns a transformed copy of the node
+     */
     map(callback) {
       return new RelationalNode2(this.conditionals.slice(), this.params.map((n, i2) => this._ifNode(callback(n, "params[" + i2 + "]", this)), this));
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {RelationalNode}
+     */
     clone() {
       return new RelationalNode2(this.conditionals, this.params);
     }
+    /**
+     * Get string representation.
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var precedence = getPrecedence(this, parenthesis, options && options.implicit);
@@ -34032,6 +37492,10 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
       }
       return ret;
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name219,
@@ -34039,9 +37503,22 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
         params: this.params
       };
     }
+    /**
+     * Instantiate a RelationalNode from its JSON representation
+     * @param {Object} json
+     *     An object structured like
+     *     `{"mathjs": "RelationalNode", "conditionals": ..., "params": ...}`,
+     *     where mathjs is optional
+     * @returns {RelationalNode}
+     */
     static fromJSON(json) {
       return new RelationalNode2(json.conditionals, json.params);
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var precedence = getPrecedence(this, parenthesis, options && options.implicit);
@@ -34055,6 +37532,11 @@ var createRelationalNode = /* @__PURE__ */ factory(name219, dependencies219, (_r
       }
       return ret;
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
       var precedence = getPrecedence(this, parenthesis, options && options.implicit);
@@ -34089,6 +37571,13 @@ var createSymbolNode = /* @__PURE__ */ factory(name220, dependencies220, (_ref) 
     return Unit2 ? Unit2.isValuelessUnit(name310) : false;
   }
   class SymbolNode2 extends Node2 {
+    /**
+     * @constructor SymbolNode
+     * @extends {Node}
+     * A symbol node can hold and resolve a symbol
+     * @param {string} name
+     * @extends {Node}
+     */
     constructor(name310) {
       super();
       if (typeof name310 !== "string") {
@@ -34102,6 +37591,19 @@ var createSymbolNode = /* @__PURE__ */ factory(name220, dependencies220, (_ref) 
     get isSymbolNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math3, argNames) {
       var name310 = this.name;
       if (argNames[name310] === true) {
@@ -34119,20 +37621,50 @@ var createSymbolNode = /* @__PURE__ */ factory(name220, dependencies220, (_ref) 
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
     }
+    /**
+     * Create a new SymbolNode with children produced by the given callback.
+     * Trivial since a SymbolNode has no children
+     * @param {function(child: Node, path: string, parent: Node) : Node} callback
+     * @returns {SymbolNode} Returns a clone of the node
+     */
     map(callback) {
       return this.clone();
     }
+    /**
+     * Throws an error 'Undefined symbol {name}'
+     * @param {string} name
+     */
     static onUndefinedSymbol(name310) {
       throw new Error("Undefined symbol " + name310);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {SymbolNode}
+     */
     clone() {
       return new SymbolNode2(this.name);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toString(options) {
       return this.name;
     }
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toHTML(options) {
       var name310 = escape(this.name);
       if (name310 === "true" || name310 === "false") {
@@ -34150,15 +37682,32 @@ var createSymbolNode = /* @__PURE__ */ factory(name220, dependencies220, (_ref) 
       }
       return '<span class="math-symbol">' + name310 + "</span>";
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: "SymbolNode",
         name: this.name
       };
     }
+    /**
+     * Instantiate a SymbolNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "SymbolNode", name: "x"}`,
+     *                       where mathjs is optional
+     * @returns {SymbolNode}
+     */
     static fromJSON(json) {
       return new SymbolNode2(json.name);
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     _toTex(options) {
       var isUnit2 = false;
       if (typeof math2[this.name] === "undefined" && isValuelessUnit(this.name)) {
@@ -34253,19 +37802,28 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
     return latex;
   }
   class FunctionNode2 extends Node2 {
+    /**
+     * @constructor FunctionNode
+     * @extends {./Node}
+     * invoke a list with arguments on a node
+     * @param {./Node | string} fn
+     *     Item resolving to a function on which to invoke
+     *     the arguments, typically a SymboNode or AccessorNode
+     * @param {./Node[]} args
+     */
     constructor(fn, args) {
       super();
       if (typeof fn === "string") {
         fn = new SymbolNode2(fn);
       }
-      if (!isNode(fn))
-        throw new TypeError('Node expected as parameter "fn"');
+      if (!isNode(fn)) throw new TypeError('Node expected as parameter "fn"');
       if (!Array.isArray(args) || !args.every(isNode)) {
         throw new TypeError('Array containing Nodes expected for parameter "args"');
       }
       this.fn = fn;
       this.args = args || [];
     }
+    // readonly property name
     get name() {
       return this.fn.name || "";
     }
@@ -34275,6 +37833,19 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
     get isFunctionNode() {
       return true;
     }
+    /**
+     * Compile a node into a JavaScript function.
+     * This basically pre-calculates as much as possible and only leaves open
+     * calculations which depend on a dynamic scope with variables.
+     * @param {Object} math     Math.js namespace with functions and constants.
+     * @param {Object} argNames An object with argument names as key and `true`
+     *                          as value. Used in the SymbolNode to optimize
+     *                          for arguments from user assigned functions
+     *                          (see FunctionAssignmentNode) or special symbols
+     *                          like `end` (see IndexNode).
+     * @return {function} Returns a function which can be called like:
+     *                        evalNode(scope: Object, args: Object, context: *)
+     */
     _compile(math3, argNames) {
       var evalArgs = this.args.map((arg2) => arg2._compile(math3, argNames));
       if (isSymbolNode(this.fn)) {
@@ -34377,12 +37948,22 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
         };
       }
     }
+    /**
+     * Execute a callback for each of the child nodes of this node
+     * @param {function(child: Node, path: string, parent: Node)} callback
+     */
     forEach(callback) {
       callback(this.fn, "fn", this);
       for (var i2 = 0; i2 < this.args.length; i2++) {
         callback(this.args[i2], "args[" + i2 + "]", this);
       }
     }
+    /**
+     * Create a new FunctionNode whose children are the results of calling
+     * the provided callback function for each child of the original node.
+     * @param {function(child: Node, path: string, parent: Node): Node} callback
+     * @returns {FunctionNode} Returns a transformed copy of the node
+     */
     map(callback) {
       var fn = this._ifNode(callback(this.fn, "fn", this));
       var args = [];
@@ -34391,9 +37972,29 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
       }
       return new FunctionNode2(fn, args);
     }
+    /**
+     * Create a clone of this node, a shallow copy
+     * @return {FunctionNode}
+     */
     clone() {
       return new FunctionNode2(this.fn, this.args.slice(0));
     }
+    /**
+     * Throws an error 'Undefined function {name}'
+     * @param {string} name
+     */
+    /**
+     * Get string representation. (wrapper function)
+     * This overrides parts of Node's toString function.
+     * If callback is an object containing callbacks, it
+     * calls the correct callback for the current node,
+     * otherwise it falls back to calling Node's toString
+     * function.
+     *
+     * @param {Object} options
+     * @return {string} str
+     * @override
+     */
     toString(options) {
       var customString;
       var name310 = this.fn.toString(options);
@@ -34405,6 +38006,11 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
       }
       return super.toString(options);
     }
+    /**
+     * Get string representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toString(options) {
       var args = this.args.map(function(arg2) {
         return arg2.toString(options);
@@ -34412,6 +38018,10 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
       var fn = isFunctionAssignmentNode(this.fn) ? "(" + this.fn.toString(options) + ")" : this.fn.toString(options);
       return fn + "(" + args.join(", ") + ")";
     }
+    /**
+     * Get a JSON representation of the node
+     * @returns {Object}
+     */
     toJSON() {
       return {
         mathjs: name221,
@@ -34419,12 +38029,35 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
         args: this.args
       };
     }
+    /**
+     * Instantiate an AssignmentNode from its JSON representation
+     * @param {Object} json  An object structured like
+     *                       `{"mathjs": "FunctionNode", fn: ..., args: ...}`,
+     *                       where mathjs is optional
+     * @returns {FunctionNode}
+     */
+    /**
+     * Get HTML representation
+     * @param {Object} options
+     * @return {string} str
+     */
     toHTML(options) {
       var args = this.args.map(function(arg2) {
         return arg2.toHTML(options);
       });
       return '<span class="math-function">' + escape(this.fn) + '</span><span class="math-paranthesis math-round-parenthesis">(</span>' + args.join('<span class="math-separator">,</span>') + '<span class="math-paranthesis math-round-parenthesis">)</span>';
     }
+    /**
+     * Get LaTeX representation. (wrapper function)
+     * This overrides parts of Node's toTex function.
+     * If callback is an object containing callbacks, it
+     * calls the correct callback for the current node,
+     * otherwise it falls back to calling Node's toTex
+     * function.
+     *
+     * @param {Object} options
+     * @return {string}
+     */
     toTex(options) {
       var customTex;
       if (options && typeof options.handler === "object" && hasOwnProperty(options.handler, this.name)) {
@@ -34435,6 +38068,11 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
       }
       return super.toTex(options);
     }
+    /**
+     * Get LaTeX representation
+     * @param {Object} options
+     * @return {string} str
+     */
     _toTex(options) {
       var args = this.args.map(function(arg2) {
         return arg2.toTex(options);
@@ -34469,6 +38107,10 @@ var createFunctionNode = /* @__PURE__ */ factory(name221, dependencies221, (_ref
       }
       return expandTemplate(defaultTemplate, this, options);
     }
+    /**
+     * Get identifier.
+     * @return {string}
+     */
     getIdentifier() {
       return this.type + ":" + this.name;
     }
@@ -34511,7 +38153,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     RelationalNode: RelationalNode2,
     SymbolNode: SymbolNode2
   } = _ref;
-  var parse2 = typed3(name222, {
+  var parse3 = typed3(name222, {
     string: function string2(expression) {
       return parseStart(expression, {});
     },
@@ -34528,8 +38170,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
     var extraNodes = options.nodes !== void 0 ? options.nodes : {};
     return deepMap(expressions, function(elem) {
-      if (typeof elem !== "string")
-        throw new TypeError("String expected");
+      if (typeof elem !== "string") throw new TypeError("String expected");
       return parseStart(elem, extraNodes);
     });
   }
@@ -34604,17 +38245,26 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     n: "\n",
     r: "\r",
     t: "	"
+    // note that \u is handled separately in parseStringToken()
   };
   function initialState() {
     return {
       extraNodes: {},
+      // current extra nodes, must be careful not to mutate
       expression: "",
+      // current expression
       comment: "",
+      // last parsed comment
       index: 0,
+      // current index in expr
       token: "",
+      // current token
       tokenType: TOKENTYPE.NULL,
+      // type of the token
       nestingLevel: 0,
+      // level of nesting inside parameters, used to ignore newline characters
       conditionalLevel: null
+      // when a conditional is being parsed, the level of the conditional is stored here
     };
   }
   function currentString(state, length) {
@@ -34643,7 +38293,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
           next(state);
         }
       }
-      if (parse2.isWhitespace(currentCharacter(state), state.nestingLevel)) {
+      if (parse3.isWhitespace(currentCharacter(state), state.nestingLevel)) {
         next(state);
       } else {
         break;
@@ -34683,7 +38333,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
       next(state);
       return;
     }
-    if (parse2.isDigitDot(c1)) {
+    if (parse3.isDigitDot(c1)) {
       state.tokenType = TOKENTYPE.NUMBER;
       var _c = currentString(state, 2);
       if (_c === "0b" || _c === "0o" || _c === "0x") {
@@ -34691,21 +38341,21 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
         next(state);
         state.token += currentCharacter(state);
         next(state);
-        while (parse2.isHexDigit(currentCharacter(state))) {
+        while (parse3.isHexDigit(currentCharacter(state))) {
           state.token += currentCharacter(state);
           next(state);
         }
         if (currentCharacter(state) === ".") {
           state.token += ".";
           next(state);
-          while (parse2.isHexDigit(currentCharacter(state))) {
+          while (parse3.isHexDigit(currentCharacter(state))) {
             state.token += currentCharacter(state);
             next(state);
           }
         } else if (currentCharacter(state) === "i") {
           state.token += "i";
           next(state);
-          while (parse2.isDigit(currentCharacter(state))) {
+          while (parse3.isDigit(currentCharacter(state))) {
             state.token += currentCharacter(state);
             next(state);
           }
@@ -34715,40 +38365,40 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
       if (currentCharacter(state) === ".") {
         state.token += currentCharacter(state);
         next(state);
-        if (!parse2.isDigit(currentCharacter(state))) {
+        if (!parse3.isDigit(currentCharacter(state))) {
           state.tokenType = TOKENTYPE.DELIMITER;
           return;
         }
       } else {
-        while (parse2.isDigit(currentCharacter(state))) {
+        while (parse3.isDigit(currentCharacter(state))) {
           state.token += currentCharacter(state);
           next(state);
         }
-        if (parse2.isDecimalMark(currentCharacter(state), nextCharacter(state))) {
+        if (parse3.isDecimalMark(currentCharacter(state), nextCharacter(state))) {
           state.token += currentCharacter(state);
           next(state);
         }
       }
-      while (parse2.isDigit(currentCharacter(state))) {
+      while (parse3.isDigit(currentCharacter(state))) {
         state.token += currentCharacter(state);
         next(state);
       }
       if (currentCharacter(state) === "E" || currentCharacter(state) === "e") {
-        if (parse2.isDigit(nextCharacter(state)) || nextCharacter(state) === "-" || nextCharacter(state) === "+") {
+        if (parse3.isDigit(nextCharacter(state)) || nextCharacter(state) === "-" || nextCharacter(state) === "+") {
           state.token += currentCharacter(state);
           next(state);
           if (currentCharacter(state) === "+" || currentCharacter(state) === "-") {
             state.token += currentCharacter(state);
             next(state);
           }
-          if (!parse2.isDigit(currentCharacter(state))) {
+          if (!parse3.isDigit(currentCharacter(state))) {
             throw createSyntaxError(state, 'Digit expected, got "' + currentCharacter(state) + '"');
           }
-          while (parse2.isDigit(currentCharacter(state))) {
+          while (parse3.isDigit(currentCharacter(state))) {
             state.token += currentCharacter(state);
             next(state);
           }
-          if (parse2.isDecimalMark(currentCharacter(state), nextCharacter(state))) {
+          if (parse3.isDecimalMark(currentCharacter(state), nextCharacter(state))) {
             throw createSyntaxError(state, 'Digit expected, got "' + currentCharacter(state) + '"');
           }
         } else if (nextCharacter(state) === ".") {
@@ -34758,8 +38408,8 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
       }
       return;
     }
-    if (parse2.isAlpha(currentCharacter(state), prevCharacter(state), nextCharacter(state))) {
-      while (parse2.isAlpha(currentCharacter(state), prevCharacter(state), nextCharacter(state)) || parse2.isDigit(currentCharacter(state))) {
+    if (parse3.isAlpha(currentCharacter(state), prevCharacter(state), nextCharacter(state))) {
+      while (parse3.isAlpha(currentCharacter(state), prevCharacter(state), nextCharacter(state)) || parse3.isDigit(currentCharacter(state))) {
         state.token += currentCharacter(state);
         next(state);
       }
@@ -34788,28 +38438,28 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
   function closeParams(state) {
     state.nestingLevel--;
   }
-  parse2.isAlpha = function isAlpha(c, cPrev, cNext) {
-    return parse2.isValidLatinOrGreek(c) || parse2.isValidMathSymbol(c, cNext) || parse2.isValidMathSymbol(cPrev, c);
+  parse3.isAlpha = function isAlpha(c, cPrev, cNext) {
+    return parse3.isValidLatinOrGreek(c) || parse3.isValidMathSymbol(c, cNext) || parse3.isValidMathSymbol(cPrev, c);
   };
-  parse2.isValidLatinOrGreek = function isValidLatinOrGreek(c) {
+  parse3.isValidLatinOrGreek = function isValidLatinOrGreek(c) {
     return /^[a-zA-Z_$\u00C0-\u02AF\u0370-\u03FF\u2100-\u214F]$/.test(c);
   };
-  parse2.isValidMathSymbol = function isValidMathSymbol(high, low) {
+  parse3.isValidMathSymbol = function isValidMathSymbol(high, low) {
     return /^[\uD835]$/.test(high) && /^[\uDC00-\uDFFF]$/.test(low) && /^[^\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDFCC\uDFCD]$/.test(low);
   };
-  parse2.isWhitespace = function isWhitespace(c, nestingLevel) {
+  parse3.isWhitespace = function isWhitespace(c, nestingLevel) {
     return c === " " || c === "	" || c === "\n" && nestingLevel > 0;
   };
-  parse2.isDecimalMark = function isDecimalMark(c, cNext) {
+  parse3.isDecimalMark = function isDecimalMark(c, cNext) {
     return c === "." && cNext !== "/" && cNext !== "*" && cNext !== "^";
   };
-  parse2.isDigitDot = function isDigitDot(c) {
+  parse3.isDigitDot = function isDigitDot(c) {
     return c >= "0" && c <= "9" || c === ".";
   };
-  parse2.isDigit = function isDigit(c) {
+  parse3.isDigit = function isDigit(c) {
     return c >= "0" && c <= "9";
   };
-  parse2.isHexDigit = function isHexDigit(c) {
+  parse3.isHexDigit = function isHexDigit(c) {
     return c >= "0" && c <= "9" || c >= "a" && c <= "f" || c >= "A" && c <= "F";
   };
   function parseStart(expression, extraNodes) {
@@ -34914,8 +38564,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
       getTokenSkipNewline(state);
       var condition = node;
       var trueExpr = parseAssignment(state);
-      if (state.token !== ":")
-        throw createSyntaxError(state, "False part of conditional expression expected");
+      if (state.token !== ":") throw createSyntaxError(state, "False part of conditional expression expected");
       state.conditionalLevel = null;
       getTokenSkipNewline(state);
       var falseExpr = parseAssignment(state);
@@ -35023,6 +38672,7 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     var operators = {
       to: "to",
       in: "to"
+      // alias of 'to'
     };
     while (hasOwnProperty(operators, state.token)) {
       name310 = state.token;
@@ -35114,7 +38764,13 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     while (true) {
       if (state.tokenType === TOKENTYPE.SYMBOL || state.token === "in" && isConstantNode(node) || state.tokenType === TOKENTYPE.NUMBER && !isConstantNode(last) && (!isOperatorNode(last) || last.op === "!") || state.token === "(") {
         last = parseRule2(state);
-        node = new OperatorNode2("*", "multiply", [node, last], true);
+        node = new OperatorNode2(
+          "*",
+          "multiply",
+          [node, last],
+          true
+          /* implicit */
+        );
       } else {
         break;
       }
@@ -35497,9 +39153,9 @@ var createParse = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
   typed3.addConversion({
     from: "string",
     to: "Node",
-    convert: parse2
+    convert: parse3
   });
-  return parse2;
+  return parse3;
 });
 
 // node_modules/mathjs/lib/esm/expression/function/compile.js
@@ -35508,15 +39164,15 @@ var dependencies223 = ["typed", "parse"];
 var createCompile = /* @__PURE__ */ factory(name223, dependencies223, (_ref) => {
   var {
     typed: typed3,
-    parse: parse2
+    parse: parse3
   } = _ref;
   return typed3(name223, {
     string: function string2(expr) {
-      return parse2(expr).compile();
+      return parse3(expr).compile();
     },
     "Array | Matrix": function ArrayMatrix(expr) {
       return deepMap(expr, function(entry) {
-        return parse2(entry).compile();
+        return parse3(entry).compile();
       });
     }
   });
@@ -35528,25 +39184,25 @@ var dependencies224 = ["typed", "parse"];
 var createEvaluate = /* @__PURE__ */ factory(name224, dependencies224, (_ref) => {
   var {
     typed: typed3,
-    parse: parse2
+    parse: parse3
   } = _ref;
   return typed3(name224, {
     string: function string2(expr) {
       var scope = createEmptyMap();
-      return parse2(expr).compile().evaluate(scope);
+      return parse3(expr).compile().evaluate(scope);
     },
     "string, Map | Object": function stringMapObject(expr, scope) {
-      return parse2(expr).compile().evaluate(scope);
+      return parse3(expr).compile().evaluate(scope);
     },
     "Array | Matrix": function ArrayMatrix(expr) {
       var scope = createEmptyMap();
       return deepMap(expr, function(entry) {
-        return parse2(entry).compile().evaluate(scope);
+        return parse3(entry).compile().evaluate(scope);
       });
     },
     "Array | Matrix, Map | Object": function ArrayMatrixMapObject(expr, scope) {
       return deepMap(expr, function(entry) {
-        return parse2(entry).compile().evaluate(scope);
+        return parse3(entry).compile().evaluate(scope);
       });
     }
   });
@@ -36161,7 +39817,7 @@ var createCsAmd = /* @__PURE__ */ factory(name229, dependencies229, (_ref) => {
     var cindex = cm._index;
     var cptr = cm._ptr;
     var cnz = cptr[n];
-    var P3 = [];
+    var P4 = [];
     var W = [];
     var len = 0;
     var nv = n + 1;
@@ -36171,14 +39827,13 @@ var createCsAmd = /* @__PURE__ */ factory(name229, dependencies229, (_ref) => {
     var degree = 5 * (n + 1);
     var w = 6 * (n + 1);
     var hhead = 7 * (n + 1);
-    var last = P3;
+    var last = P4;
     var mark = _initializeQuotientGraph(n, cptr, W, len, head, last, next, hhead, nv, w, elen, degree);
     var nel = _initializeDegreeLists(n, cptr, W, degree, elen, w, dense, nv, head, last, next);
     var mindeg = 0;
     var i2, j, k, k1, k2, e3, pj, ln2, nvi, pk, eln, p1, p2, pn, h, d;
     while (nel < n) {
-      for (k = -1; mindeg < n && (k = W[head + mindeg]) === -1; mindeg++)
-        ;
+      for (k = -1; mindeg < n && (k = W[head + mindeg]) === -1; mindeg++) ;
       if (W[next + k] !== -1) {
         last[W[next + k]] = -1;
       }
@@ -36389,11 +40044,11 @@ var createCsAmd = /* @__PURE__ */ factory(name229, dependencies229, (_ref) => {
     }
     for (k = 0, i2 = 0; i2 <= n; i2++) {
       if (cptr[i2] === -1) {
-        k = csTdfs(i2, k, W, head, next, P3, w);
+        k = csTdfs(i2, k, W, head, next, P4, w);
       }
     }
-    P3.splice(P3.length - 1, 1);
-    return P3;
+    P4.splice(P4.length - 1, 1);
+    return P4;
   };
   function _createTargetMatrix(order, a, m, n, dense) {
     var at = transpose2(a);
@@ -36499,8 +40154,7 @@ function csLeaf(i2, j, w, first, maxfirst, prevleaf, ancestor) {
     q = i2;
   } else {
     jleaf = 2;
-    for (q = jprev; q !== w[ancestor + q]; q = w[ancestor + q])
-      ;
+    for (q = jprev; q !== w[ancestor + q]; q = w[ancestor + q]) ;
     for (s = jprev; s !== q; s = sparent) {
       sparent = w[ancestor + s];
       w[ancestor + s] = q;
@@ -37117,8 +40771,7 @@ var createPolynomialRoot = /* @__PURE__ */ factory(name236, dependencies236, (_r
           var denom = multiply2(2, a);
           var d1 = multiply2(b, b);
           var d2 = multiply2(4, a, c);
-          if (equalScalar2(d1, d2))
-            return [divide3(unaryMinus2(b), denom)];
+          if (equalScalar2(d1, d2)) return [divide3(unaryMinus2(b), denom)];
           var discriminant = sqrt3(subtract2(d1, d2));
           return [divide3(subtract2(discriminant, b), denom), divide3(subtract2(unaryMinus2(discriminant), b), denom)];
         }
@@ -37139,7 +40792,9 @@ var createPolynomialRoot = /* @__PURE__ */ factory(name236, dependencies236, (_r
           if (equalScalar2(discriminant1, discriminant2)) {
             return [
               divide3(subtract2(multiply2(4, _a, _b, _c), add3(multiply2(9, _a, _a, d), multiply2(_b, _b, _b))), multiply2(_a, Delta0)),
+              // simple root
               divide3(subtract2(multiply2(9, _a, d), multiply2(_b, _c)), multiply2(2, Delta0))
+              // double root
             ];
           }
           var Ccubed;
@@ -37169,14 +40824,13 @@ var name237 = "Help";
 var dependencies237 = ["parse"];
 var createHelpClass = /* @__PURE__ */ factory(name237, dependencies237, (_ref) => {
   var {
-    parse: parse2
+    parse: parse3
   } = _ref;
   function Help2(doc) {
     if (!(this instanceof Help2)) {
       throw new SyntaxError("Constructor must be called with the new operator");
     }
-    if (!doc)
-      throw new Error('Argument "doc" missing');
+    if (!doc) throw new Error('Argument "doc" missing');
     this.doc = doc;
   }
   Help2.prototype.type = "Help";
@@ -37204,7 +40858,7 @@ var createHelpClass = /* @__PURE__ */ factory(name237, dependencies237, (_ref) =
         desc += "    " + expr + "\n";
         var res = void 0;
         try {
-          res = parse2(expr).compile().evaluate(scope);
+          res = parse3(expr).compile().evaluate(scope);
         } catch (e3) {
           res = e3;
         }
@@ -37336,6 +40990,7 @@ var createChainClass = /* @__PURE__ */ factory(name238, dependencies238, (_ref) 
     json: true,
     error: true,
     isChain: true
+    // conflicts with the property isChain of a Chain instance
   };
   Chain2.createProxy(math2);
   if (on) {
@@ -39782,6 +43437,7 @@ var solveODEDocs = {
 
 // node_modules/mathjs/lib/esm/expression/embeddedDocs/embeddedDocs.js
 var embeddedDocs = {
+  // construction functions
   bignumber: bignumberDocs,
   boolean: booleanDocs,
   complex: complexDocs,
@@ -39794,6 +43450,7 @@ var embeddedDocs = {
   splitUnit: splitUnitDocs,
   string: stringDocs,
   unit: unitDocs,
+  // constants
   e: eDocs,
   E: eDocs,
   false: falseDocs,
@@ -39813,6 +43470,8 @@ var embeddedDocs = {
   tau: tauDocs,
   true: trueDocs,
   version: versionDocs,
+  // physical constants
+  // TODO: more detailed docs for physical constants
   speedOfLight: {
     description: "Speed of light in vacuum",
     examples: ["speedOfLight"]
@@ -39861,6 +43520,7 @@ var embeddedDocs = {
     description: "Inverse conductance quantum",
     examples: ["inverseConductanceQuantum"]
   },
+  // josephson: {description: 'Josephson constant', examples: ['josephson']},
   magneticFluxQuantum: {
     description: "Magnetic flux quantum",
     examples: ["magneticFluxQuantum"]
@@ -39981,6 +43641,7 @@ var embeddedDocs = {
     description: "Wien displacement law constant",
     examples: ["wienDisplacement"]
   },
+  // spectralRadiance: {description: 'First radiation constant for spectral radiance', examples: ['spectralRadiance']},
   molarMass: {
     description: "Molar mass constant",
     examples: ["molarMass"]
@@ -40013,6 +43674,7 @@ var embeddedDocs = {
     description: "Planck temperature",
     examples: ["planckTemperature"]
   },
+  // functions - algebra
   derivative: derivativeDocs,
   lsolve: lsolveDocs,
   lsolveAll: lsolveAllDocs,
@@ -40030,6 +43692,7 @@ var embeddedDocs = {
   usolve: usolveDocs,
   usolveAll: usolveAllDocs,
   qr: qrDocs,
+  // functions - arithmetic
   abs: absDocs,
   add: addDocs,
   cbrt: cbrtDocs,
@@ -40067,6 +43730,7 @@ var embeddedDocs = {
   unaryPlus: unaryPlusDocs,
   xgcd: xgcdDocs,
   invmod: invmodDocs,
+  // functions - bitwise
   bitAnd: bitAndDocs,
   bitNot: bitNotDocs,
   bitOr: bitOrDocs,
@@ -40074,25 +43738,32 @@ var embeddedDocs = {
   leftShift: leftShiftDocs,
   rightArithShift: rightArithShiftDocs,
   rightLogShift: rightLogShiftDocs,
+  // functions - combinatorics
   bellNumbers: bellNumbersDocs,
   catalan: catalanDocs,
   composition: compositionDocs,
   stirlingS2: stirlingS2Docs,
+  // functions - core
   config: configDocs,
   import: importDocs,
   typed: typedDocs,
+  // functions - complex
   arg: argDocs,
   conj: conjDocs,
   re: reDocs,
   im: imDocs,
+  // functions - expression
   evaluate: evaluateDocs,
   help: helpDocs,
+  // functions - geometry
   distance: distanceDocs,
   intersect: intersectDocs,
+  // functions - logical
   and: andDocs,
   not: notDocs,
   or: orDocs,
   xor: xorDocs,
+  // functions - matrix
   concat: concatDocs,
   count: countDocs,
   cross: crossDocs,
@@ -40135,9 +43806,12 @@ var embeddedDocs = {
   sylvester: sylvesterDocs,
   schur: schurDocs,
   lyap: lyapDocs,
+  // functions - numeric
   solveODE: solveODEDocs,
+  // functions - probability
   combinations: combinationsDocs,
   combinationsWithRep: combinationsWithRepDocs,
+  // distribution: distributionDocs,
   factorial: factorialDocs,
   gamma: gammaDocs,
   kldivergence: kldivergenceDocs,
@@ -40147,6 +43821,7 @@ var embeddedDocs = {
   pickRandom: pickRandomDocs,
   random: randomDocs,
   randomInt: randomIntDocs,
+  // functions - relational
   compare: compareDocs,
   compareNatural: compareNaturalDocs,
   compareText: compareTextDocs,
@@ -40158,6 +43833,7 @@ var embeddedDocs = {
   smaller: smallerDocs,
   smallerEq: smallerEqDocs,
   unequal: unequalDocs,
+  // functions - set
   setCartesian: setCartesianDocs,
   setDifference: setDifferenceDocs,
   setDistinct: setDistinctDocs,
@@ -40168,10 +43844,13 @@ var embeddedDocs = {
   setSize: setSizeDocs,
   setSymDifference: setSymDifferenceDocs,
   setUnion: setUnionDocs,
+  // functions - signal
   zpk2tf: zpk2tfDocs,
   freqz: freqzDocs,
+  // functions - special
   erf: erfDocs,
   zeta: zetaDocs,
+  // functions - statistics
   cumsum: cumSumDocs,
   mad: madDocs,
   max: maxDocs,
@@ -40185,6 +43864,7 @@ var embeddedDocs = {
   sum: sumDocs,
   variance: varianceDocs,
   corr: corrDocs,
+  // functions - trigonometry
   acos: acosDocs,
   acosh: acoshDocs,
   acot: acotDocs,
@@ -40210,7 +43890,9 @@ var embeddedDocs = {
   sinh: sinhDocs,
   tan: tanDocs,
   tanh: tanhDocs,
+  // functions - units
   to: toDocs,
+  // functions - utils
   clone: cloneDocs,
   format: formatDocs,
   bin: binDocs,
@@ -40355,8 +44037,7 @@ var createDet = /* @__PURE__ */ factory(name241, dependencies241, (_ref) => {
               break;
             }
           }
-          if (_k === rows)
-            return matrix3[k_][k];
+          if (_k === rows) return matrix3[k_][k];
         }
         var piv = matrix3[k_][k];
         var piv_ = k === 0 ? 1 : matrix3[rowIndices[k - 1]][k - 1];
@@ -40520,16 +44201,14 @@ var createPinv = /* @__PURE__ */ factory(name243, dependencies243, (_ref) => {
       var size2 = isMatrix(x) ? x.size() : arraySize(x);
       switch (size2.length) {
         case 1:
-          if (_isZeros(x))
-            return ctranspose2(x);
+          if (_isZeros(x)) return ctranspose2(x);
           if (size2[0] === 1) {
             return inv2(x);
           } else {
             return dotDivide2(ctranspose2(x), dot2(x, x));
           }
         case 2: {
-          if (_isZeros(x))
-            return ctranspose2(x);
+          if (_isZeros(x)) return ctranspose2(x);
           var rows = size2[0];
           var cols = size2[1];
           if (rows === cols) {
@@ -40553,8 +44232,7 @@ var createPinv = /* @__PURE__ */ factory(name243, dependencies243, (_ref) => {
       }
     },
     any: function any(x) {
-      if (equal3(x, 0))
-        return clone(x);
+      if (equal3(x, 0)) return clone(x);
       return divideScalar2(1, x);
     }
   });
@@ -40591,8 +44269,7 @@ var createPinv = /* @__PURE__ */ factory(name243, dependencies243, (_ref) => {
         M[r][j] = dotDivide2(M[r][j], val);
       }
       for (var _i = 0; _i < rows; _i++) {
-        if (_i === r)
-          continue;
+        if (_i === r) continue;
         val = M[_i][lead];
         for (var _j = 0; _j < cols; _j++) {
           M[_i][_j] = add3(M[_i][_j], multiply2(-1, multiply2(val, M[r][_j])));
@@ -40682,8 +44359,7 @@ function createComplexEigs(_ref) {
         var colNorm = realzero;
         var rowNorm = realzero;
         for (var j = 0; j < N; j++) {
-          if (i2 === j)
-            continue;
+          if (i2 === j) continue;
           var c = abs3(arr[i2][j]);
           colNorm = addScalar2(colNorm, c);
           rowNorm = addScalar2(rowNorm, c);
@@ -41820,6 +45496,7 @@ var createDivide = /* @__PURE__ */ factory(name250, dependencies250, (_ref) => {
     typed: typed3
   });
   return typed3("divide", extend({
+    // we extend the signatures of divideScalar with signatures dealing with matrices
     "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(x, y) {
       return multiply2(x, inv2(y));
     },
@@ -42166,11 +45843,9 @@ var createIntersect = /* @__PURE__ */ factory(name252, dependencies252, (_ref) =
     }
   }
   function _coerceArr(arr) {
-    if (arr.length === 1)
-      return arr[0];
+    if (arr.length === 1) return arr[0];
     if (arr.length > 1 && Array.isArray(arr[0])) {
-      if (arr.every((el) => Array.isArray(el) && el.length === 1))
-        return flatten3(arr);
+      if (arr.every((el) => Array.isArray(el) && el.length === 1)) return flatten3(arr);
     }
     return arr;
   }
@@ -42189,8 +45864,7 @@ var createIntersect = /* @__PURE__ */ factory(name252, dependencies252, (_ref) =
     var d1 = subtract2(o1, p1b);
     var d2 = subtract2(o2, p2b);
     var det2 = subtract2(multiplyScalar2(d1[0], d2[1]), multiplyScalar2(d2[0], d1[1]));
-    if (isZero2(det2))
-      return null;
+    if (isZero2(det2)) return null;
     if (smaller2(abs3(det2), config4.epsilon)) {
       return null;
     }
@@ -42215,8 +45889,7 @@ var createIntersect = /* @__PURE__ */ factory(name252, dependencies252, (_ref) =
     var d2121 = _intersect3dHelper(x2, x1, x2, x1, y2, y1, y2, y1, z2, z1, z2, z1);
     var numerator = subtract2(multiplyScalar2(d1343, d4321), multiplyScalar2(d1321, d4343));
     var denominator = subtract2(multiplyScalar2(d2121, d4343), multiplyScalar2(d4321, d4321));
-    if (isZero2(denominator))
-      return null;
+    if (isZero2(denominator)) return null;
     var ta = divideScalar2(numerator, denominator);
     var tb = divideScalar2(addScalar2(d1343, multiplyScalar2(ta, d4321)), d4343);
     var pax = addScalar2(x1, multiplyScalar2(ta, subtract2(x2, x1)));
@@ -42259,8 +45932,11 @@ var createSum = /* @__PURE__ */ factory(name253, dependencies253, (_ref) => {
     numeric: numeric3
   } = _ref;
   return typed3(name253, {
+    // sum([a, b, c, d, ...])
     "Array | Matrix": _sum,
+    // sum([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": _nsumDim,
+    // sum(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("Scalar values expected in function sum");
@@ -42305,14 +45981,17 @@ var createCumSum = /* @__PURE__ */ factory(name254, dependencies254, (_ref) => {
     unaryPlus: unaryPlus2
   } = _ref;
   return typed3(name254, {
+    // sum([a, b, c, d, ...])
     Array: _cumsum,
     Matrix: function Matrix2(matrix2) {
       return matrix2.create(_cumsum(matrix2.valueOf()));
     },
+    // sum([a, b, c, d, ...], dim)
     "Array, number | BigNumber": _ncumSumDim,
     "Matrix, number | BigNumber": function MatrixNumberBigNumber(matrix2, dim) {
       return matrix2.create(_ncumSumDim(matrix2.valueOf(), dim));
     },
+    // cumsum(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("All values expected to be scalar in function cumsum");
@@ -42382,8 +46061,11 @@ var createMean = /* @__PURE__ */ factory(name255, dependencies255, (_ref) => {
     divide: divide3
   } = _ref;
   return typed3(name255, {
+    // mean([a, b, c, d, ...])
     "Array | Matrix": _mean,
+    // mean([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": _nmeanDim,
+    // mean(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("Scalar values expected in function mean");
@@ -42465,10 +46147,13 @@ var createMedian = /* @__PURE__ */ factory(name256, dependencies256, (_ref) => {
     }
   });
   return typed3(name256, {
+    // median([a, b, c, d, ...])
     "Array | Matrix": _median,
+    // median([a, b, c, d, ...], dim)
     "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
       throw new Error("median(A, dim) is not yet supported");
     },
+    // median(a, b, c, d, ...)
     "...": function _(args) {
       if (containsCollections(args)) {
         throw new TypeError("Scalar values expected in function median");
@@ -42490,7 +46175,9 @@ var createMad = /* @__PURE__ */ factory(name257, dependencies257, (_ref) => {
     subtract: subtract2
   } = _ref;
   return typed3(name257, {
+    // mad([a, b, c, d, ...])
     "Array | Matrix": _mad,
+    // mad(a, b, c, d, ...)
     "...": function _(args) {
       return _mad(args);
     }
@@ -42530,14 +46217,19 @@ var createVariance = /* @__PURE__ */ factory(name258, dependencies258, (_ref) =>
     isNaN: isNaN3
   } = _ref;
   return typed3(name258, {
+    // variance([a, b, c, d, ...])
     "Array | Matrix": function ArrayMatrix(array) {
       return _var(array, DEFAULT_NORMALIZATION);
     },
+    // variance([a, b, c, d, ...], normalization)
     "Array | Matrix, string": _var,
+    // variance([a, b, c, c, ...], dim)
     "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
       return _varDim(array, dim, DEFAULT_NORMALIZATION);
     },
+    // variance([a, b, c, c, ...], dim, normalization)
     "Array | Matrix, number | BigNumber, string": _varDim,
+    // variance(a, b, c, d, ...)
     "...": function _(args) {
       return _var(args, DEFAULT_NORMALIZATION);
     }
@@ -42556,8 +46248,7 @@ var createVariance = /* @__PURE__ */ factory(name258, dependencies258, (_ref) =>
         throw improveErrorMessage(err, "variance", value);
       }
     });
-    if (num === 0)
-      throw new Error("Cannot calculate variance of an empty array");
+    if (num === 0) throw new Error("Cannot calculate variance of an empty array");
     var mean2 = divide3(sum3, num);
     sum3 = void 0;
     deepForEach(array, function(value) {
@@ -42702,10 +46393,15 @@ var createStd = /* @__PURE__ */ factory(name260, dependencies260, (_ref) => {
     variance: variance2
   } = _ref;
   return typed3(name260, {
+    // std([a, b, c, d, ...])
     "Array | Matrix": _std,
+    // std([a, b, c, d, ...], normalization)
     "Array | Matrix, string": _std,
+    // std([a, b, c, c, ...], dim)
     "Array | Matrix, number | BigNumber": _std,
+    // std([a, b, c, c, ...], dim, normalization)
     "Array | Matrix, number | BigNumber, string": _std,
+    // std(a, b, c, d, ...)
     "...": function _(args) {
       return _std(args);
     }
@@ -42820,6 +46516,7 @@ var createCombinations = /* @__PURE__ */ factory(name262, dependencies262, (_ref
       }
       return result;
     }
+    // TODO: implement support for collection in combinations
   });
 });
 function isPositiveInteger(n) {
@@ -43012,8 +46709,7 @@ var createLgamma = /* @__PURE__ */ factory(name265, dependencies265, (_ref) => {
     while (z.re <= SMALL_RE) {
       shiftprod = shiftprod.mul(z);
       var nsb = shiftprod.im < 0 ? 1 : 0;
-      if (nsb !== 0 && sb === 0)
-        signflips++;
+      if (nsb !== 0 && sb === 0) signflips++;
       sb = nsb;
       z = z.add(1);
     }
@@ -43172,6 +46868,7 @@ var createPermutations = /* @__PURE__ */ factory(name269, dependencies269, (_ref
       }
       return result;
     }
+    // TODO: implement support for collection in permutations
   });
 });
 function isPositiveInteger3(n) {
@@ -43417,8 +47114,7 @@ var createStirlingS2 = /* @__PURE__ */ factory(name273, dependencies273, (_ref) 
         if (!cache[m]) {
           cache[m] = [m === 0 ? make(1) : make(0)];
         }
-        if (m === 0)
-          continue;
+        if (m === 0) continue;
         var row2 = cache[m];
         var prev = cache[m - 1];
         for (var i2 = row2.length; i2 <= m && i2 <= nk; ++i2) {
@@ -43512,7 +47208,7 @@ var name277 = "leafCount";
 var dependencies277 = ["parse", "typed"];
 var createLeafCount = /* @__PURE__ */ factory(name277, dependencies277, (_ref) => {
   var {
-    parse: parse2,
+    parse: parse3,
     typed: typed3
   } = _ref;
   function countLeaves(node) {
@@ -43559,7 +47255,7 @@ function ownKeys3(e3, r) {
 }
 function _objectSpread3(e3) {
   for (var r = 1; r < arguments.length; r++) {
-    var t = arguments[r] != null ? arguments[r] : {};
+    var t = null != arguments[r] ? arguments[r] : {};
     r % 2 ? ownKeys3(Object(t), true).forEach(function(r2) {
       _defineProperty(e3, r2, t[r2]);
     }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys3(Object(t)).forEach(function(r2) {
@@ -43580,42 +47276,49 @@ var createUtil = /* @__PURE__ */ factory(name278, dependencies278, (_ref) => {
   var F = false;
   var defaultName = "defaultF";
   var defaultContext = {
+    /*      */
     add: {
       trivial: T,
       total: T,
       commutative: T,
       associative: T
     },
+    /**/
     unaryPlus: {
       trivial: T,
       total: T,
       commutative: T,
       associative: T
     },
+    /* */
     subtract: {
       trivial: F,
       total: T,
       commutative: F,
       associative: F
     },
+    /* */
     multiply: {
       trivial: T,
       total: T,
       commutative: T,
       associative: T
     },
+    /*   */
     divide: {
       trivial: F,
       total: T,
       commutative: F,
       associative: F
     },
+    /*    */
     paren: {
       trivial: T,
       total: T,
       commutative: T,
       associative: F
     },
+    /* */
     defaultF: {
       trivial: F,
       total: T,
@@ -43800,7 +47503,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
   var {
     config: config4,
     typed: typed3,
-    parse: parse2,
+    parse: parse3,
     add: add3,
     subtract: subtract2,
     multiply: multiply2,
@@ -43884,15 +47587,29 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     SQRT1_2: true,
     SQRT2: true,
     tau: true
+    // null: false,
+    // undefined: false,
+    // version: false,
   };
   simplify2.rules = [
     simplifyCore2,
+    // { l: 'n+0', r: 'n' },     // simplifyCore
+    // { l: 'n^0', r: '1' },     // simplifyCore
+    // { l: '0*n', r: '0' },     // simplifyCore
+    // { l: 'n/n', r: '1'},      // simplifyCore
+    // { l: 'n^1', r: 'n' },     // simplifyCore
+    // { l: '+n1', r:'n1' },     // simplifyCore
+    // { l: 'n--n1', r:'n+n1' }, // simplifyCore
     {
       l: "log(e)",
       r: "1"
     },
+    // temporary rules
+    // Note initially we tend constants to the right because like-term
+    // collection prefers the left, and we would rather collect nonconstants
     {
       s: "n-n1 -> n+-n1",
+      // temporarily replace 'subtract' so we can further flatten the 'add' operator
       assuming: {
         subtract: {
           total: true
@@ -43901,6 +47618,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "n-n -> 0",
+      // partial alternative when we can't always subtract
       assuming: {
         subtract: {
           total: false
@@ -43909,6 +47627,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "-(cl*v) -> v * (-cl)",
+      // make non-constant terms positive
       assuming: {
         multiply: {
           commutative: true
@@ -43920,6 +47639,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "-(cl*v) -> (-cl) * v",
+      // non-commutative version, part 1
       assuming: {
         multiply: {
           commutative: false
@@ -43931,6 +47651,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "-(v*cl) -> v * (-cl)",
+      // non-commutative version, part 2
       assuming: {
         multiply: {
           commutative: false
@@ -43948,15 +47669,18 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       l: "-v",
       r: "v * (-1)"
     },
+    // finish making non-constant terms positive
     {
       l: "(n1 + n2)*(-1)",
       r: "n1*(-1) + n2*(-1)",
       repeat: true
     },
+    // expand negations to achieve as much sign cancellation as possible
     {
       l: "n/n1^n2",
       r: "n*n1^-n2"
     },
+    // temporarily replace 'divide' so we can further flatten the 'multiply' operator
     {
       l: "n/n1",
       r: "n*n1^-1"
@@ -43977,6 +47701,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
         }
       }
     },
+    // expand nested exponentiation
     {
       s: "(n ^ n1) ^ n2 -> n ^ (n1 * n2)",
       assuming: {
@@ -43984,7 +47709,9 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           total: true
         }
       }
+      // 1/(1/n) = n needs 1/n to exist
     },
+    // collect like factors; into a sum, only do this for nonconstants
     {
       l: " vd   * ( vd   * n1 + n2)",
       r: "vd^2       * n1 +  vd   * n2"
@@ -43996,6 +47723,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           total: true
         }
       }
+      // v*1/v = v^(1+-1) needs 1/v
     },
     {
       s: "vd^n3 * ( vd   * n1 + n2)   ->  vd^(n3+1)  * n1 + vd^n3 * n2",
@@ -44024,6 +47752,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           total: true
         }
       }
+      // n*1/n = n^(-1+1) needs 1/n
     },
     {
       s: "n^n1 * n^n2 -> n^(n1+n2)",
@@ -44032,8 +47761,15 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           total: true
         }
       }
+      // ditto for n^2*1/n^2
     },
+    // Unfortunately, to deal with more complicated cancellations, it
+    // becomes necessary to simplify constants twice per pass. It's not
+    // terribly expensive compared to matching rules, so this should not
+    // pose a performance problem.
     simplifyConstant2,
+    // First: before collecting like terms
+    // collect like terms
     {
       s: "n+n -> 2*n",
       assuming: {
@@ -44041,6 +47777,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           total: true
         }
       }
+      // 2 = 1 + 1 needs to exist
     },
     {
       l: "n+-n",
@@ -44050,10 +47787,12 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       l: "vd*n + vd",
       r: "vd*(n+1)"
     },
+    // NOTE: leftmost position is special:
     {
       l: "n3*n1 + n3*n2",
       r: "n3*(n1+n2)"
     },
+    // All sub-monomials tried there.
     {
       l: "n3^(-n4)*n1 +   n3  * n2",
       r: "n3^(-n4)*(n1 + n3^(n4+1) *n2)"
@@ -44062,6 +47801,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       l: "n3^(-n4)*n1 + n3^n5 * n2",
       r: "n3^(-n4)*(n1 + n3^(n4+n5)*n2)"
     },
+    // noncommutative additional cases (term collection & factoring)
     {
       s: "n*vd + vd -> (n+1)*vd",
       assuming: {
@@ -44134,6 +47874,8 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       }
     },
     simplifyConstant2,
+    // Second: before returning expressions to "standard form"
+    // make factors positive (and undo 'make non-constant terms positive')
     {
       s: "(-n)*n1 -> -(n*n1)",
       assuming: {
@@ -44144,6 +47886,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "n1*(-n) -> -(n1*n)",
+      // in case * non-commutative
       assuming: {
         subtract: {
           total: true
@@ -44153,6 +47896,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
         }
       }
     },
+    // final ordering of constants
     {
       s: "ce+ve -> ve+ce",
       assuming: {
@@ -44179,21 +47923,26 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
         }
       }
     },
+    // undo temporary rules
+    // { l: '(-1) * n', r: '-n' }, // #811 added test which proved this is redundant
     {
       l: "n+-n1",
       r: "n-n1"
     },
+    // undo replace 'subtract'
     {
       l: "n+-(n1)",
       r: "n-(n1)"
     },
     {
       s: "n*(n1^-1) -> n/n1",
+      // undo replace 'divide'; for * commutative
       assuming: {
         multiply: {
           commutative: true
         }
       }
+      // o.w. / not conventional
     },
     {
       s: "n*n1^-n2 -> n/n1^n2",
@@ -44202,6 +47951,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           commutative: true
         }
       }
+      // o.w. / not conventional
     },
     {
       s: "n^-1 -> 1/n",
@@ -44210,13 +47960,16 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           commutative: true
         }
       }
+      // o.w. / not conventional
     },
     {
       l: "n^1",
       r: "n"
     },
+    // can be produced by power cancellation
     {
       s: "n*(n1/n2) -> (n*n1)/n2",
+      // '*' before '/'
       assuming: {
         multiply: {
           associative: true
@@ -44225,6 +47978,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
     },
     {
       s: "n-(n1+n2) -> n-n1-n2",
+      // '-' before '+'
       assuming: {
         addition: {
           associative: true,
@@ -44232,6 +47986,10 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
         }
       }
     },
+    // { l: '(n1/n2)/n3', r: 'n1/(n2*n3)' },
+    // { l: '(n*n1)/(n*n2)', r: 'n1/n2' },
+    // simplifyConstant can leave an extra factor of 1, which can always
+    // be eliminated, since the identity always commutes
     {
       l: "1*n",
       r: "n",
@@ -44268,21 +48026,20 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       newRule.l = ruleObject.l;
       newRule.r = ruleObject.r;
     }
-    newRule.l = removeParens(parse2(newRule.l));
-    newRule.r = removeParens(parse2(newRule.r));
+    newRule.l = removeParens(parse3(newRule.l));
+    newRule.r = removeParens(parse3(newRule.r));
     for (var prop of ["imposeContext", "repeat", "assuming"]) {
       if (prop in ruleObject) {
         newRule[prop] = ruleObject[prop];
       }
     }
     if (ruleObject.evaluate) {
-      newRule.evaluate = parse2(ruleObject.evaluate);
+      newRule.evaluate = parse3(ruleObject.evaluate);
     }
     if (isAssociative(newRule.l, context)) {
       var nonCommutative = !isCommutative(newRule.l, context);
       var leftExpandsym;
-      if (nonCommutative)
-        leftExpandsym = _getExpandPlaceholderSymbol();
+      if (nonCommutative) leftExpandsym = _getExpandPlaceholderSymbol();
       var makeNode = createMakeNodeFunction(newRule.l);
       var expandsym = _getExpandPlaceholderSymbol();
       newRule.expanded = {};
@@ -44312,6 +48069,7 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           rule = {
             s: rule
           };
+        /* falls through */
         case "object":
           newRule = _canonicalizeRule(rule, context);
           break;
@@ -44344,14 +48102,12 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
       visited[str] = true;
       _lastsym = 0;
       var laststr = str;
-      if (debug)
-        console.log("Working on: ", str);
+      if (debug) console.log("Working on: ", str);
       for (var i2 = 0; i2 < rules.length; i2++) {
         var rulestr = "";
         if (typeof rules[i2] === "function") {
           res = rules[i2](res, options);
-          if (debug)
-            rulestr = rules[i2].name;
+          if (debug) rulestr = rules[i2].name;
         } else {
           flatten3(res, options.context);
           res = applyRule(res, rules[i2], options.context);
@@ -44592,7 +48348,8 @@ var createSimplify = /* @__PURE__ */ factory(name279, dependencies279, (_ref) =>
           childMatches.push(childMatch);
         }
         if (childMatches.length !== rule.args.length) {
-          if (!isCommutative(node, context) || rule.args.length === 1) {
+          if (!isCommutative(node, context) || // exact match in order needed
+          rule.args.length === 1) {
             return [];
           }
           if (rule.args.length > 2) {
@@ -44851,9 +48608,11 @@ var createSimplifyConstant = /* @__PURE__ */ factory(name280, dependencies280, (
     "Fraction, Object": function FractionObject(s, options) {
       return s;
     },
+    // we don't need options here
     "BigNumber, Object": function BigNumberObject(s, options) {
       return s;
     },
+    // we don't need options here
     "number, Object": function numberObject(s, options) {
       return _exactFraction(s, options);
     },
@@ -44983,8 +48742,7 @@ var createSimplifyConstant = /* @__PURE__ */ factory(name280, dependencies280, (
           case "string":
             return node.value;
           default:
-            if (!isNaN(node.value))
-              return _toNumber(node.value, options);
+            if (!isNaN(node.value)) return _toNumber(node.value, options);
         }
         return node;
       case "FunctionNode":
@@ -45014,6 +48772,7 @@ var createSimplifyConstant = /* @__PURE__ */ factory(name280, dependencies280, (
           } else {
           }
         }
+      /* falls through */
       case "OperatorNode": {
         var fn = node.fn.toString();
         var _args;
@@ -45077,10 +48836,15 @@ var createSimplifyConstant = /* @__PURE__ */ factory(name280, dependencies280, (
         return new ObjectNode2(foldProps);
       }
       case "AssignmentNode":
+      /* falls through */
       case "BlockNode":
+      /* falls through */
       case "FunctionAssignmentNode":
+      /* falls through */
       case "RangeNode":
+      /* falls through */
       case "ConditionalNode":
+      /* falls through */
       default:
         throw new Error("Unimplemented node type in simplifyConstant: ".concat(node.type));
     }
@@ -45094,7 +48858,7 @@ var dependencies281 = ["typed", "parse", "equal", "isZero", "add", "subtract", "
 var createSimplifyCore = /* @__PURE__ */ factory(name281, dependencies281, (_ref) => {
   var {
     typed: typed3,
-    parse: parse2,
+    parse: parse3,
     equal: equal3,
     isZero: isZero2,
     add: add3,
@@ -45188,8 +48952,7 @@ var createSimplifyCore = /* @__PURE__ */ factory(name281, dependencies281, (_ref
           }
         }
       }
-      if (finish)
-        return new OperatorNode2(node.op, node.fn, [a0]);
+      if (finish) return new OperatorNode2(node.op, node.fn, [a0]);
     }
     if (isOperatorNode(node) && node.isBinary()) {
       var _a = _simplifyCore(node.args[0], options);
@@ -45259,16 +49022,14 @@ var createSimplifyCore = /* @__PURE__ */ factory(name281, dependencies281, (_ref
       if (node.op === "and") {
         if (isConstantNode(_a)) {
           if (_a.value) {
-            if (isAlwaysBoolean(a1))
-              return a1;
+            if (isAlwaysBoolean(a1)) return a1;
           } else {
             return nodeF;
           }
         }
         if (isConstantNode(a1)) {
           if (a1.value) {
-            if (isAlwaysBoolean(_a))
-              return _a;
+            if (isAlwaysBoolean(_a)) return _a;
           } else {
             return nodeF;
           }
@@ -45279,16 +49040,14 @@ var createSimplifyCore = /* @__PURE__ */ factory(name281, dependencies281, (_ref
           if (_a.value) {
             return nodeT;
           } else {
-            if (isAlwaysBoolean(a1))
-              return a1;
+            if (isAlwaysBoolean(a1)) return a1;
           }
         }
         if (isConstantNode(a1)) {
           if (a1.value) {
             return nodeT;
           } else {
-            if (isAlwaysBoolean(_a))
-              return _a;
+            if (isAlwaysBoolean(_a)) return _a;
           }
         }
       }
@@ -45327,7 +49086,7 @@ var dependencies282 = ["typed", "parse", "ConstantNode", "FunctionNode", "Operat
 var createResolve = /* @__PURE__ */ factory(name282, dependencies282, (_ref) => {
   var {
     typed: typed3,
-    parse: parse2,
+    parse: parse3,
     ConstantNode: ConstantNode2,
     FunctionNode: FunctionNode2,
     OperatorNode: OperatorNode2,
@@ -45349,7 +49108,7 @@ var createResolve = /* @__PURE__ */ factory(name282, dependencies282, (_ref) => 
         nextWithin.add(node.name);
         return _resolve(value, scope, nextWithin);
       } else if (typeof value === "number") {
-        return parse2(String(value));
+        return parse3(String(value));
       } else if (value !== void 0) {
         return new ConstantNode2(value);
       } else {
@@ -45374,6 +49133,9 @@ var createResolve = /* @__PURE__ */ factory(name282, dependencies282, (_ref) => 
     Node: _resolve,
     "Node, Map | null | undefined": _resolve,
     "Node, Object": (n, scope) => _resolve(n, createMap(scope)),
+    // For arrays and matrices, we map `self` rather than `_resolve`
+    // because resolve is fairly expensive anyway, and this way
+    // we get nice error messages if one entry in the array has wrong type.
     "Array | Matrix": typed3.referToSelf((self2) => (A) => A.map((n) => self2(n))),
     "Array | Matrix, null | undefined": typed3.referToSelf((self2) => (A) => A.map((n) => self2(n))),
     "Array, Object": typed3.referTo("Array,Map", (selfAM) => (A, scope) => selfAM(A, createMap(scope))),
@@ -45387,7 +49149,7 @@ var name283 = "symbolicEqual";
 var dependencies283 = ["parse", "simplify", "typed", "OperatorNode"];
 var createSymbolicEqual = /* @__PURE__ */ factory(name283, dependencies283, (_ref) => {
   var {
-    parse: parse2,
+    parse: parse3,
     simplify: simplify2,
     typed: typed3,
     OperatorNode: OperatorNode2
@@ -45411,7 +49173,7 @@ var createDerivative = /* @__PURE__ */ factory(name284, dependencies284, (_ref) 
   var {
     typed: typed3,
     config: config4,
-    parse: parse2,
+    parse: parse3,
     simplify: simplify2,
     equal: equal3,
     isZero: isZero2,
@@ -45434,16 +49196,27 @@ var createDerivative = /* @__PURE__ */ factory(name284, dependencies284, (_ref) 
   typed3.addConversion({
     from: "identifier",
     to: "SymbolNode",
-    convert: parse2
+    convert: parse3
   });
   var derivative2 = typed3(name284, {
     "Node, SymbolNode": plainDerivative,
     "Node, SymbolNode, Object": plainDerivative
+    /* TODO: implement and test syntax with order of derivatives -> implement as an option {order: number}
+    'Node, SymbolNode, ConstantNode': function (expr, variable, {order}) {
+      let res = expr
+      for (let i = 0; i < order; i++) {
+        let constNodes = {}
+        constTag(constNodes, expr, variable.name)
+        res = _derivative(res, constNodes)
+      }
+      return res
+    }
+    */
   });
   typed3.removeConversion({
     from: "identifier",
     to: "SymbolNode",
-    convert: parse2
+    convert: parse3
   });
   derivative2._simplify = true;
   derivative2.toTex = function(deriv) {
@@ -45452,14 +49225,14 @@ var createDerivative = /* @__PURE__ */ factory(name284, dependencies284, (_ref) 
   var _derivTex = typed3("_derivTex", {
     "Node, SymbolNode": function NodeSymbolNode(expr, x) {
       if (isConstantNode(expr) && typeOf(expr.value) === "string") {
-        return _derivTex(parse2(expr.value).toString(), x.toString(), 1);
+        return _derivTex(parse3(expr.value).toString(), x.toString(), 1);
       } else {
         return _derivTex(expr.toTex(), x.toString(), 1);
       }
     },
     "Node, ConstantNode": function NodeConstantNode(expr, x) {
       if (typeOf(x.value) === "string") {
-        return _derivTex(expr, parse2(x.value));
+        return _derivTex(expr, parse3(x.value));
       } else {
         throw new Error("The second parameter to 'derivative' is a non-string constant");
       }
@@ -45562,6 +49335,7 @@ var createDerivative = /* @__PURE__ */ factory(name284, dependencies284, (_ref) 
           break;
         case "log10":
           arg1 = createConstantNode2(10);
+        /* fall through! */
         case "log":
           if (!arg1 && node.args.length === 1) {
             funcDerivative = arg0.clone();
@@ -45678,6 +49452,7 @@ var createDerivative = /* @__PURE__ */ factory(name284, dependencies284, (_ref) 
           funcDerivative = new OperatorNode2("/", "divide", [new FunctionNode2(new SymbolNode2("abs"), [arg0.clone()]), arg0.clone()]);
           break;
         case "gamma":
+        // Needs digamma function, d/dx(gamma(x)) = gamma(x)digamma(x)
         default:
           throw new Error('Function "' + node.name + '" is not supported by derivative, or a wrong number of arguments is passed');
       }
@@ -45797,7 +49572,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
     multiply: multiply2,
     divide: divide3,
     pow: pow3,
-    parse: parse2,
+    parse: parse3,
     simplifyConstant: simplifyConstant2,
     simplifyCore: simplifyCore2,
     simplify: simplify2,
@@ -45872,8 +49647,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
         retRationalize.denominator = null;
       }
     }
-    if (!detailed)
-      return expr;
+    if (!detailed) return expr;
     retRationalize.coefficients = coefficients;
     retRationalize.variables = polyRet.variables;
     retRationalize.expression = expr;
@@ -45932,6 +49706,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
   function rulesRationalize() {
     var oldRules = [
       simplifyCore2,
+      // sCore
       {
         l: "n+n",
         r: "2*n"
@@ -45941,6 +49716,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
         r: "0"
       },
       simplifyConstant2,
+      // sConstant
       {
         l: "n*(n1^-1)",
         r: "n/n1"
@@ -45967,90 +49743,112 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
         l: "(-n1)/(-n2)",
         r: "n1/n2"
       },
+      // Unary division
       {
         l: "(-n1)*(-n2)",
         r: "n1*n2"
       },
+      // Unary multiplication
       {
         l: "n1--n2",
         r: "n1+n2"
       },
+      // '--' elimination
       {
         l: "n1-n2",
         r: "n1+(-n2)"
       },
+      // Subtraction turn into add with un�ry minus
       {
         l: "(n1+n2)*n3",
         r: "(n1*n3 + n2*n3)"
       },
+      // Distributive 1
       {
         l: "n1*(n2+n3)",
         r: "(n1*n2+n1*n3)"
       },
+      // Distributive 2
       {
         l: "c1*n + c2*n",
         r: "(c1+c2)*n"
       },
+      // Joining constants
       {
         l: "c1*n + n",
         r: "(c1+1)*n"
       },
+      // Joining constants
       {
         l: "c1*n - c2*n",
         r: "(c1-c2)*n"
       },
+      // Joining constants
       {
         l: "c1*n - n",
         r: "(c1-1)*n"
       },
+      // Joining constants
       {
         l: "v/c",
         r: "(1/c)*v"
       },
+      // variable/constant (new!)
       {
         l: "v/-c",
         r: "-(1/c)*v"
       },
+      // variable/constant (new!)
       {
         l: "-v*-c",
         r: "c*v"
       },
+      // Inversion constant and variable 1
       {
         l: "-v*c",
         r: "-c*v"
       },
+      // Inversion constant and variable 2
       {
         l: "v*-c",
         r: "-c*v"
       },
+      // Inversion constant and variable 3
       {
         l: "v*c",
         r: "c*v"
       },
+      // Inversion constant and variable 4
       {
         l: "-(-n1*n2)",
         r: "(n1*n2)"
       },
+      // Unary propagation
       {
         l: "-(n1*n2)",
         r: "(-n1*n2)"
       },
+      // Unary propagation
       {
         l: "-(-n1+n2)",
         r: "(n1-n2)"
       },
+      // Unary propagation
       {
         l: "-(n1+n2)",
         r: "(-n1-n2)"
       },
+      // Unary propagation
       {
         l: "(n1^n2)^n3",
         r: "(n1^(n2*n3))"
       },
+      // Power to Power
       {
         l: "-(-n1/n2)",
         r: "(n1/n2)"
       },
+      // Division and Unary
       {
         l: "-(n1/n2)",
         r: "(-n1/n2)"
@@ -46061,10 +49859,12 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
         l: "(n1/n2 + n3/n4)",
         r: "((n1*n4 + n3*n2)/(n2*n4))"
       },
+      // Sum of fractions
       {
         l: "(n1/n2 + n3)",
         r: "((n1 + n3*n2)/n2)"
       },
+      // Sum fraction with number 1
       {
         l: "(n1 + n2/n3)",
         r: "((n1*n3 + n2)/n3)"
@@ -46075,6 +49875,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
         l: "(n1/(n2/n3))",
         r: "((n1*n3)/n2)"
       },
+      // Division simplification
       {
         l: "(n1/n2/n3)",
         r: "(n1/(n2*n3))"
@@ -46087,83 +49888,104 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
     setRules.firstRulesAgain = oldRules.concat(rulesFirst);
     setRules.finalRules = [
       simplifyCore2,
+      // simplify.rules[0]
       {
         l: "n*-n",
         r: "-n^2"
       },
+      // Joining multiply with power 1
       {
         l: "n*n",
         r: "n^2"
       },
+      // Joining multiply with power 2
       simplifyConstant2,
+      // simplify.rules[14] old 3rd index in oldRules
       {
         l: "n*-n^n1",
         r: "-n^(n1+1)"
       },
+      // Joining multiply with power 3
       {
         l: "n*n^n1",
         r: "n^(n1+1)"
       },
+      // Joining multiply with power 4
       {
         l: "n^n1*-n^n2",
         r: "-n^(n1+n2)"
       },
+      // Joining multiply with power 5
       {
         l: "n^n1*n^n2",
         r: "n^(n1+n2)"
       },
+      // Joining multiply with power 6
       {
         l: "n^n1*-n",
         r: "-n^(n1+1)"
       },
+      // Joining multiply with power 7
       {
         l: "n^n1*n",
         r: "n^(n1+1)"
       },
+      // Joining multiply with power 8
       {
         l: "n^n1/-n",
         r: "-n^(n1-1)"
       },
+      // Joining multiply with power 8
       {
         l: "n^n1/n",
         r: "n^(n1-1)"
       },
+      // Joining division with power 1
       {
         l: "n/-n^n1",
         r: "-n^(1-n1)"
       },
+      // Joining division with power 2
       {
         l: "n/n^n1",
         r: "n^(1-n1)"
       },
+      // Joining division with power 3
       {
         l: "n^n1/-n^n2",
         r: "n^(n1-n2)"
       },
+      // Joining division with power 4
       {
         l: "n^n1/n^n2",
         r: "n^(n1-n2)"
       },
+      // Joining division with power 5
       {
         l: "n1+(-n2*n3)",
         r: "n1-n2*n3"
       },
+      // Solving useless parenthesis 1
       {
         l: "v*(-c)",
         r: "-c*v"
       },
+      // Solving useless unary 2
       {
         l: "n1+-n2",
         r: "n1-n2"
       },
+      // Solving +- together (new!)
       {
         l: "v*c",
         r: "c*v"
       },
+      // inversion constant with variable
       {
         l: "(n1^n2)^n3",
         r: "(n1^(n2*n3))"
       }
+      // Power to Power
     ];
     return setRules;
   }
@@ -46223,8 +50045,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
     var first = true;
     var no;
     for (var i2 = maxExpo; i2 >= 0; i2--) {
-      if (coefficients[i2] === 0)
-        continue;
+      if (coefficients[i2] === 0) continue;
       var n16 = new ConstantNode2(first ? coefficients[i2] : Math.abs(coefficients[i2]));
       var op = coefficients[i2] < 0 ? "-" : "+";
       if (i2 > 0) {
@@ -46260,8 +50081,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
       if (tp === "FunctionNode") {
         throw new Error("There is an unsolved function call");
       } else if (tp === "OperatorNode") {
-        if ("+-*^".indexOf(node2.op) === -1)
-          throw new Error("Operator " + node2.op + " invalid");
+        if ("+-*^".indexOf(node2.op) === -1) throw new Error("Operator " + node2.op + " invalid");
         if (noPai !== null) {
           if ((node2.fn === "unaryMinus" || node2.fn === "pow") && noPai.fn !== "add" && noPai.fn !== "subtract" && noPai.fn !== "multiply") {
             throw new Error("Invalid " + node2.op + " placing");
@@ -46277,8 +50097,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
           o2.fire = node2.op;
         }
         for (var _i = 0; _i < node2.args.length; _i++) {
-          if (node2.fn === "unaryMinus")
-            o2.oper = "-";
+          if (node2.fn === "unaryMinus") o2.oper = "-";
           if (node2.op === "+" || node2.fn === "subtract") {
             o2.fire = "";
             o2.cte = 1;
@@ -46303,8 +50122,7 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
           throw new Error("In multiply the variable should be the second parameter");
         }
         if (o2.fire === "" || o2.fire === "*") {
-          if (maxExpo < 1)
-            coefficients[1] = 0;
+          if (maxExpo < 1) coefficients[1] = 0;
           coefficients[1] += o2.cte * (o2.oper === "+" ? 1 : -1);
           maxExpo = Math.max(1, maxExpo);
         }
@@ -46315,15 +50133,12 @@ var createRationalize = /* @__PURE__ */ factory(name285, dependencies285, (_ref)
           return;
         }
         if (noPai.op === "^") {
-          if (o2.noFil !== 1)
-            throw new Error("Constant cannot be powered");
+          if (o2.noFil !== 1) throw new Error("Constant cannot be powered");
           if (!isInteger(valor) || valor <= 0) {
             throw new Error("Non-integer exponent is not allowed");
           }
-          for (var _i2 = maxExpo + 1; _i2 < valor; _i2++)
-            coefficients[_i2] = 0;
-          if (valor > maxExpo)
-            coefficients[valor] = 0;
+          for (var _i2 = maxExpo + 1; _i2 < valor; _i2++) coefficients[_i2] = 0;
+          if (valor > maxExpo) coefficients[valor] = 0;
           coefficients[valor] += o2.cte * (o2.oper === "+" ? 1 : -1);
           maxExpo = Math.max(valor, maxExpo);
           return;
@@ -46375,14 +50190,12 @@ var createZpk2tf = /* @__PURE__ */ factory(name286, dependencies286, (_ref) => {
     var den = [Complex3(1, 0)];
     for (var i2 = 0; i2 < z.length; i2++) {
       var zero = z[i2];
-      if (typeof zero === "number")
-        zero = Complex3(zero, 0);
+      if (typeof zero === "number") zero = Complex3(zero, 0);
       num = _multiply(num, [Complex3(1, 0), Complex3(-zero.re, -zero.im)]);
     }
     for (var _i = 0; _i < p.length; _i++) {
       var pole = p[_i];
-      if (typeof pole === "number")
-        pole = Complex3(pole, 0);
+      if (typeof pole === "number") pole = Complex3(pole, 0);
       den = _multiply(den, [Complex3(1, 0), Complex3(-pole.re, -pole.im)]);
     }
     for (var _i2 = 0; _i2 < num.length; _i2++) {
@@ -46606,13 +50419,18 @@ var createLOG10E = /* @__PURE__ */ recreateFactory("LOG10E", ["config", "?BigNum
   } = _ref10;
   return config4.number === "BigNumber" ? new BigNumber2(1).div(new BigNumber2(10).ln()) : Math.LOG10E;
 });
-var createSQRT1_2 = /* @__PURE__ */ recreateFactory("SQRT1_2", ["config", "?BigNumber"], (_ref11) => {
-  var {
-    config: config4,
-    BigNumber: BigNumber2
-  } = _ref11;
-  return config4.number === "BigNumber" ? new BigNumber2("0.5").sqrt() : Math.SQRT1_2;
-});
+var createSQRT1_2 = /* @__PURE__ */ recreateFactory(
+  // eslint-disable-line camelcase
+  "SQRT1_2",
+  ["config", "?BigNumber"],
+  (_ref11) => {
+    var {
+      config: config4,
+      BigNumber: BigNumber2
+    } = _ref11;
+    return config4.number === "BigNumber" ? new BigNumber2("0.5").sqrt() : Math.SQRT1_2;
+  }
+);
 var createSQRT2 = /* @__PURE__ */ recreateFactory("SQRT2", ["config", "?BigNumber"], (_ref12) => {
   var {
     config: config4,
@@ -47794,7 +51612,7 @@ var bin = /* @__PURE__ */ createBin({
 var combinationsWithRep = /* @__PURE__ */ createCombinationsWithRep({
   typed: typed2
 });
-var cosh3 = /* @__PURE__ */ createCosh({
+var cosh4 = /* @__PURE__ */ createCosh({
   typed: typed2
 });
 var csch = /* @__PURE__ */ createCsch({
@@ -47815,7 +51633,7 @@ var sech = /* @__PURE__ */ createSech({
   BigNumber,
   typed: typed2
 });
-var sinh3 = /* @__PURE__ */ createSinh({
+var sinh4 = /* @__PURE__ */ createSinh({
   typed: typed2
 });
 var sparse = /* @__PURE__ */ createSparse({
@@ -48217,7 +52035,7 @@ var gcd = /* @__PURE__ */ createGcd({
   typed: typed2,
   zeros: zeros2
 });
-var hypot2 = /* @__PURE__ */ createHypot({
+var hypot3 = /* @__PURE__ */ createHypot({
   abs: abs2,
   addScalar,
   divideScalar,
@@ -49323,7 +53141,7 @@ var FunctionNode = createFunctionNode({
   SymbolNode,
   math
 });
-var parse = createParse({
+var parse2 = createParse({
   AccessorNode,
   ArrayNode,
   AssignmentNode,
@@ -49348,7 +53166,7 @@ var resolve = createResolve({
   FunctionNode,
   OperatorNode,
   ParenthesisNode,
-  parse,
+  parse: parse2,
   typed: typed2
 });
 var simplifyConstant = createSimplifyConstant({
@@ -49368,14 +53186,14 @@ var simplifyConstant = createSimplifyConstant({
   typed: typed2
 });
 var compile = createCompile({
-  parse,
+  parse: parse2,
   typed: typed2
 });
 var Help = createHelpClass({
-  parse
+  parse: parse2
 });
 var leafCount = createLeafCount({
-  parse,
+  parse: parse2,
   typed: typed2
 });
 var simplifyCore = createSimplifyCore({
@@ -49393,13 +53211,13 @@ var simplifyCore = createSimplifyCore({
   equal,
   isZero,
   multiply,
-  parse,
+  parse: parse2,
   pow: pow2,
   subtract,
   typed: typed2
 });
 var evaluate = createEvaluate({
-  parse,
+  parse: parse2,
   typed: typed2
 });
 var help = createHelp({
@@ -49430,7 +53248,7 @@ var simplify = createSimplify({
   mathWithTransform,
   matrix,
   multiply,
-  parse,
+  parse: parse2,
   pow: pow2,
   resolve,
   simplifyConstant,
@@ -49440,7 +53258,7 @@ var simplify = createSimplify({
 });
 var symbolicEqual = createSymbolicEqual({
   OperatorNode,
-  parse,
+  parse: parse2,
   simplify,
   typed: typed2
 });
@@ -49468,7 +53286,7 @@ var rationalize = createRationalize({
   mathWithTransform,
   matrix,
   multiply,
-  parse,
+  parse: parse2,
   pow: pow2,
   simplify,
   simplifyConstant,
@@ -49486,7 +53304,7 @@ var derivative = createDerivative({
   equal,
   isZero,
   numeric: numeric2,
-  parse,
+  parse: parse2,
   simplify,
   typed: typed2
 });
@@ -49581,13 +53399,13 @@ _extends(math, {
   bin,
   chain,
   combinationsWithRep,
-  cosh: cosh3,
+  cosh: cosh4,
   csch,
   isNaN: isNaN2,
   isPrime,
   randomInt,
   sech,
-  sinh: sinh3,
+  sinh: sinh4,
   sparse,
   sqrt: sqrt2,
   tanh: tanh3,
@@ -49651,7 +53469,7 @@ _extends(math, {
   equalText,
   floor: floor2,
   gcd,
-  hypot: hypot2,
+  hypot: hypot3,
   larger,
   log: log3,
   lsolveAll,
@@ -49752,7 +53570,7 @@ _extends(math, {
   magneticFluxQuantum,
   molarMassC12,
   multinomial,
-  parse,
+  parse: parse2,
   permutations,
   planckMass,
   polynomialRoot,
@@ -52612,6 +56430,7 @@ var rydbergDependencies = {
 
 // node_modules/mathjs/lib/esm/entry/dependenciesAny/dependenciesSQRT1_2.generated.js
 var SQRT1_2Dependencies = {
+  // eslint-disable-line camelcase
   BigNumberDependencies,
   createSQRT1_2
 };
@@ -53259,7 +57078,8 @@ function importFactory(typed3, load, math2, importedFactories) {
     return !hasOwnProperty(unsafe, name310);
   }
   function factoryAllowedInExpressions(factory2) {
-    return factory2.fn.indexOf(".") === -1 && !hasOwnProperty(unsafe, factory2.fn) && (!factory2.meta || !factory2.meta.isClass);
+    return factory2.fn.indexOf(".") === -1 && // FIXME: make checking on path redundant, check on meta data instead
+    !hasOwnProperty(unsafe, factory2.fn) && (!factory2.meta || !factory2.meta.isClass);
   }
   function isTransformFunctionFactory(factory2) {
     return factory2 !== void 0 && factory2.meta !== void 0 && factory2.meta.isTransformFunction === true || false;
@@ -53271,6 +57091,7 @@ function importFactory(typed3, load, math2, importedFactories) {
     error: true,
     json: true,
     chain: true
+    // chain method not supported. Note that there is a unit chain too.
   };
   return mathImport;
 }
@@ -53282,6 +57103,7 @@ function create(factories, config4) {
     throw new Error("ES5 not supported by this JavaScript engine. Please load the es5-shim and es5-sham library for compatibility.");
   }
   var math2 = mixin({
+    // only here for backward compatibility for legacy factory functions
     isNumber,
     isComplex,
     isBigNumber,
@@ -53524,7 +57346,7 @@ function replaceStringsInTextFromMap(text, stringReplaceMap) {
   }
   return text;
 }
-function getMetadataForFileAtPath(sourcePath) {
+function getMetadataForFileAtPath(sourcePath, app) {
   const f_path = sourcePath;
   const handle = app.vault.getAbstractFileByPath(f_path);
   const f_handle = handle instanceof import_obsidian.TFile ? handle : void 0;
@@ -53542,24 +57364,33 @@ function getMetadataForFileAtPath(sourcePath) {
   const metadata = { ...frontmatter, ...dataviewMetadata, ...numeralsPageScopeMetadata };
   return metadata;
 }
-function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type, settings, numberFormat, preProcessors) {
+function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type, settings, numberFormat, preProcessors, app) {
   var _a;
   const blockRenderStyle = type ? type : settings.defaultRenderStyle;
-  const { rawRows, processedSource, emitter_lines, insertion_lines } = preProcessBlockForNumeralsDirectives(source, preProcessors);
+  const { rawRows, processedSource, blockInfo } = preProcessBlockForNumeralsDirectives(source, preProcessors);
+  const {
+    emitter_lines,
+    insertion_lines,
+    hidden_lines,
+    shouldHideNonEmitterLines
+  } = blockInfo;
   applyBlockStyles({
     el,
     settings,
     blockRenderStyle,
     hasEmitters: emitter_lines.length > 0
   });
-  const scope = getScopeFromFrontmatter(metadata, void 0, settings.forceProcessAllFrontmatter, preProcessors);
-  const { results, inputs, errorMsg, errorInput } = evaluateMathFromSourceStrings(processedSource, scope);
+  const scope = getScopeFromFrontmatter(
+    metadata,
+    void 0,
+    settings.forceProcessAllFrontmatter,
+    preProcessors
+  );
+  const { results, inputs, errorMsg, errorInput } = evaluateMathFromSourceStrings(
+    processedSource,
+    scope
+  );
   for (let i2 = 0; i2 < inputs.length; i2++) {
-    const line = el.createEl("div", { cls: "numerals-line" });
-    const emptyLine = results[i2] === void 0;
-    if (emitter_lines.includes(i2)) {
-      line.toggleClass("numerals-emitter", true);
-    }
     if (insertion_lines.includes(i2)) {
       const sectionInfo = ctx.getSectionInfo(el);
       const lineStart = sectionInfo == null ? void 0 : sectionInfo.lineStart;
@@ -53575,6 +57406,14 @@ function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type
           }, 0);
         }
       }
+    }
+    if (hidden_lines.includes(i2) || shouldHideNonEmitterLines && !emitter_lines.includes(i2)) {
+      continue;
+    }
+    const line = el.createEl("div", { cls: "numerals-line" });
+    const emptyLine = results[i2] === void 0;
+    if (emitter_lines.includes(i2)) {
+      line.toggleClass("numerals-emitter", true);
     }
     if (settings.hideEmitterMarkupInInput) {
       rawRows[i2] = rawRows[i2].replace(/^([^#\r\n]*?)([\t ]*=>[\t ]*)(\$\{.*\})?(.*)$/gm, "$1$4");
@@ -53604,7 +57443,7 @@ function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type
         const resultContent = !emptyLine ? "" : "\xA0";
         resultElement = line.createEl("span", { text: resultContent, cls: "numerals-result" });
         if (!emptyLine) {
-          const preprocess_input_tex = parse(inputs[i2]).toTex();
+          const preprocess_input_tex = parse2(inputs[i2]).toTex();
           let input_tex;
           input_tex = replaceSumMagicVariableInProcessedWithSumDirectiveFromRaw(preprocess_input_tex, rawRows[i2], "@Sum()");
           input_tex = unescapeSubscripts(input_tex);
@@ -53616,7 +57455,7 @@ function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type
           for (const processor of preProcessors) {
             processedResult = processedResult.replace(processor.regex, processor.replaceStr);
           }
-          let texResult = parse(processedResult).toTex();
+          let texResult = parse2(processedResult).toTex();
           texResult = texCurrencyReplacement(texResult);
           mathjaxLoop(resultTexElement, texResult);
         }
@@ -53626,8 +57465,13 @@ function processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type
         const inputText = emptyLine ? rawRows[i2] : "";
         inputElement = line.createEl("span", { text: inputText, cls: "numerals-input" });
         if (!emptyLine) {
-          const input_html = parse(inputs[i2]).toHTML();
-          const input_elements = htmlToElements(replaceSumMagicVariableInProcessedWithSumDirectiveFromRaw(input_html, rawRows[i2]));
+          const input_html = parse2(inputs[i2]).toHTML();
+          const input_elements = htmlToElements(
+            replaceSumMagicVariableInProcessedWithSumDirectiveFromRaw(
+              input_html,
+              rawRows[i2]
+            )
+          );
           inputElement.appendChild(input_elements);
         }
         const formattedResult = !emptyLine ? settings.resultSeparator + format4(results[i2], numberFormat) : "\xA0";
@@ -53739,6 +57583,8 @@ function preProcessBlockForNumeralsDirectives(source, preProcessors) {
   let processedSource = source;
   const emitter_lines = [];
   const insertion_lines = [];
+  const hidden_lines = [];
+  let shouldHideNonEmitterLines = false;
   for (let i2 = 0; i2 < rawRows.length; i2++) {
     if (rawRows[i2].match(/^[^#\r\n]*=>.*$/)) {
       emitter_lines.push(i2);
@@ -53747,19 +57593,32 @@ function preProcessBlockForNumeralsDirectives(source, preProcessors) {
     if (insertionMatch) {
       insertion_lines.push(i2);
     }
+    if (rawRows[i2].match(/^\s*@hideRows\s*$/)) {
+      hidden_lines.push(i2);
+      shouldHideNonEmitterLines = true;
+    }
+    if (rawRows[i2].match(/^\s*@createUnit\s*$/)) {
+      hidden_lines.push(i2);
+    }
   }
   processedSource = processedSource.replace(/^([^#\r\n]*?)([\t ]*=>[\t ]*)(\$\{.*\})?(.*)$/gm, "$1");
   processedSource = processedSource.replace(/@\s*\[([^\]:]+)(::[^\]]*)?\](.*)$/gm, "$1$3");
   processedSource = processedSource.replace(/@sum/gi, "__total");
   processedSource = processedSource.replace(/@total/gi, "__total");
+  processedSource = processedSource.replace(/@prev/gi, "__prev");
+  processedSource = processedSource.replace(/^\s*@hideRows/gim, "");
   if (preProcessors && preProcessors.length > 0) {
     processedSource = replaceStringsInTextFromMap(processedSource, preProcessors);
   }
   return {
     rawRows,
     processedSource,
-    emitter_lines,
-    insertion_lines
+    blockInfo: {
+      emitter_lines,
+      insertion_lines,
+      hidden_lines,
+      shouldHideNonEmitterLines
+    }
   };
 }
 function evaluateMathFromSourceStrings(processedSource, scope) {
@@ -53773,6 +57632,17 @@ function evaluateMathFromSourceStrings(processedSource, scope) {
   for (const [index2, row2] of rowsToProcess.entries()) {
     const lastUndefinedRowIndex = results.slice(0, index2).lastIndexOf(void 0);
     try {
+      if (index2 > 0 && results.length > 0) {
+        const prevResult = results[results.length - 1];
+        scope.set("__prev", prevResult);
+      } else {
+        scope.set("__prev", void 0);
+        if (/__prev/i.test(row2)) {
+          errorMsg = { name: "Previous Value Error", message: "Error evaluating @prev directive. There is no previous result." };
+          errorInput = row2;
+          break;
+        }
+      }
       const partialResults = results.slice(lastUndefinedRowIndex + 1, index2).filter((result) => result !== void 0);
       if (partialResults.length > 1) {
         try {
@@ -54123,13 +57993,38 @@ var greekSymbols = [
   { trigger: "Psi", symbol: "\u03A8" },
   { trigger: "Omega", symbol: "\u03A9" }
 ];
+var numeralsDirectives = [
+  "@hideRows",
+  "@Sum",
+  "@Total",
+  "@Prev"
+];
 var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
+  //empty constructor
   constructor(plugin) {
     super(plugin.app);
+    /**
+     * Time of last suggestion list update
+     * @type {number}
+     * @private */
     this.lastSuggestionListUpdate = 0;
+    /**
+     * List of possible suggestions based on current code block
+     * @type {string[]}
+     * @private */
     this.localSuggestionCache = [];
     this.plugin = plugin;
   }
+  /**
+   * This function is triggered when the user starts typing in the editor. It checks if the user is in a math block and if there is a word in the current line.
+   * If these conditions are met, it returns an object with the start and end positions of the word and the word itself as the query.
+   * If not, it returns null.
+   *
+   * @param cursor - The current position of the cursor in the editor.
+   * @param editor - The current editor instance.
+   * @param file - The current file being edited.
+   * @returns An object with the start and end positions of the word and the word itself as the query, or null if the conditions are not met.
+   */
   onTrigger(cursor, editor, file) {
     const currentFileToCursor = editor.getRange({ line: 0, ch: 0 }, cursor);
     const indexOfLastCodeBlockStart = currentFileToCursor.lastIndexOf("```");
@@ -54138,7 +58033,7 @@ var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
       return null;
     }
     const currentLineToCursor = editor.getLine(cursor.line).slice(0, cursor.ch);
-    const currentLineLastWordStart = currentLineToCursor.search(/[:@]?[$\w\u0370-\u03FF]+$/);
+    const currentLineLastWordStart = currentLineToCursor.search(/[:]?[$@\w\u0370-\u03FF]+$/);
     if (currentLineLastWordStart === -1) {
       return null;
     }
@@ -54159,7 +58054,7 @@ var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
         const matches = lastCodeBlockStartToCursor.matchAll(/^\s*(\S*?)\s*=.*$/gm);
         localSymbols = [...new Set(Array.from(matches, (match) => "v|" + match[1]))];
       }
-      const metadata = getMetadataForFileAtPath(context.file.path);
+      const metadata = getMetadataForFileAtPath(context.file.path, this.app);
       if (metadata) {
         const frontmatterSymbols = getScopeFromFrontmatter(metadata, void 0, this.plugin.settings.forceProcessAllFrontmatter, void 0, true);
         const frontmatterSymbolsArray = Array.from(frontmatterSymbols.keys()).map((symbol) => "v|" + symbol);
@@ -54180,7 +58075,9 @@ var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
     } else {
       suggestions = local_suggestions;
     }
-    suggestions = suggestions.concat(["@Sum", "@Total"].filter((value) => value.slice(0, -1).toLowerCase().startsWith(query_lower, 0)).map((value) => "m|" + value));
+    suggestions = suggestions.concat(
+      numeralsDirectives.filter((value) => value.slice(0, -1).toLowerCase().startsWith(query_lower, 0)).map((value) => "m|" + value)
+    );
     if (this.plugin.settings.enableGreekAutoComplete) {
       const greek_suggestions = greekSymbols.filter(({ trigger }) => (":" + trigger.toLowerCase()).startsWith(query_lower)).map(({ symbol, trigger }) => "g|" + symbol + "|" + trigger);
       suggestions = suggestions.concat(greek_suggestions);
@@ -54213,6 +58110,12 @@ var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
       suggestionNote.setText(noteText);
     }
   }
+  /**
+   * Called when a suggestion is selected. Replaces the current word with the selected suggestion
+   * @param value The selected suggestion
+   * @param evt The event that triggered the selection
+   * @returns void
+   */
   selectSuggestion(value, evt) {
     if (this.context) {
       const editor = this.context.editor;
@@ -54235,7 +58138,7 @@ var NumeralsSuggestor = class extends import_obsidian2.EditorSuggest {
 // src/settings.ts
 var import_obsidian3 = require("obsidian");
 var NumberalsNumberFormatSettingsStrings = {
-  ["System" /* System */]: `System Formatted: ${100000.1 .toLocaleString()}`,
+  ["System" /* System */]: `System Formatted: ${100000.1.toLocaleString()}`,
   ["Fixed" /* Fixed */]: "Fixed: 100000.1",
   ["Exponential" /* Exponential */]: "Exponential: 1.000001e+5",
   ["Engineering" /* Engineering */]: "Engineering: 100.0001e+3",
@@ -54279,8 +58182,8 @@ var currencyCodesForYenSign = {
   KRW: "Korean Won"
 };
 var NumeralsSettingTab = class extends import_obsidian3.PluginSettingTab {
-  constructor(app2, plugin) {
-    super(app2, plugin);
+  constructor(app, plugin) {
+    super(app, plugin);
     this.plugin = plugin;
   }
   display() {
@@ -54459,10 +58362,12 @@ var NumeralsSettingTab = class extends import_obsidian3.PluginSettingTab {
       currencySaveButton = button;
     });
     new import_obsidian3.Setting(containerEl).setHeading().setName("Obsidian Integration");
-    new import_obsidian3.Setting(containerEl).setName("Always Process All Frontmatter").setDesc(htmlToElements(`Always process all frontmatter values and make them available as variables in <code>\`math\`</code> blocks<br><br><b><i>Note:</i></b> To process frontmatter values on a per file and/or per property basis, set a value for the <code>\`numerals\`</code> property in a file's frontmatter. Supported values are:<ul><li><code>all</code></li><li>specific property to process</li><li>a list/array of properties to process</li></ul><br>`)).addToggle((toggle) => toggle.setValue(this.plugin.settings.forceProcessAllFrontmatter).onChange(async (value) => {
-      this.plugin.settings.forceProcessAllFrontmatter = value;
-      await this.plugin.saveSettings();
-    }));
+    new import_obsidian3.Setting(containerEl).setName("Always Process All Frontmatter").setDesc(htmlToElements(`Always process all frontmatter values and make them available as variables in <code>\`math\`</code> blocks<br><br><b><i>Note:</i></b> To process frontmatter values on a per file and/or per property basis, set a value for the <code>\`numerals\`</code> property in a file's frontmatter. Supported values are:<ul><li><code>all</code></li><li>specific property to process</li><li>a list/array of properties to process</li></ul><br>`)).addToggle((toggle) => toggle.setValue(this.plugin.settings.forceProcessAllFrontmatter).onChange(
+      async (value) => {
+        this.plugin.settings.forceProcessAllFrontmatter = value;
+        await this.plugin.saveSettings();
+      }
+    ));
   }
 };
 
@@ -54471,12 +58376,13 @@ var import_fast_deep_equal = __toESM(require_fast_deep_equal());
 var import_obsidian4 = require("obsidian");
 var import_obsidian_dataview2 = __toESM(require_lib());
 var currencySymbols = defaultCurrencyMap.map((m) => m.symbol);
-var isAlphaOriginal = parse.isAlpha;
-parse.isAlpha = function(c, cPrev, cNext) {
+var isAlphaOriginal = parse2.isAlpha;
+parse2.isAlpha = function(c, cPrev, cNext) {
   return isAlphaOriginal(c, cPrev, cNext) || currencySymbols.includes(c);
 };
 var isUnitAlphaOriginal = Unit.isValidAlpha;
-Unit.isValidAlpha = function(c, cPrev, cNext) {
+Unit.isValidAlpha = // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function(c, cPrev, cNext) {
   return isUnitAlphaOriginal(c, cPrev, cNext) || currencySymbols.includes(c);
 };
 function getMathjsFormat(format5) {
@@ -54508,19 +58414,39 @@ var NumeralsPlugin = class extends import_obsidian4.Plugin {
     this.scopeCache = /* @__PURE__ */ new Map();
   }
   async numeralsMathBlockHandler(type, source, el, ctx) {
-    let metadata = getMetadataForFileAtPath(ctx.sourcePath);
-    const scope = processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type, this.settings, this.numberFormat, this.preProcessors);
+    let metadata = getMetadataForFileAtPath(ctx.sourcePath, this.app);
+    const scope = processAndRenderNumeralsBlockFromSource(
+      el,
+      source,
+      ctx,
+      metadata,
+      type,
+      this.settings,
+      this.numberFormat,
+      this.preProcessors,
+      this.app
+    );
     addGobalsFromScopeToPageCache(ctx.sourcePath, scope, this.scopeCache);
     const numeralsBlockChild = new import_obsidian4.MarkdownRenderChild(el);
     const numeralsBlockCallback = (_callbackType, _file, _oldPath) => {
-      const currentMetadata = getMetadataForFileAtPath(ctx.sourcePath);
+      const currentMetadata = getMetadataForFileAtPath(ctx.sourcePath, this.app);
       if ((0, import_fast_deep_equal.default)(currentMetadata, metadata)) {
         return;
       } else {
         metadata = currentMetadata;
       }
       el.empty();
-      const scope2 = processAndRenderNumeralsBlockFromSource(el, source, ctx, metadata, type, this.settings, this.numberFormat, this.preProcessors);
+      const scope2 = processAndRenderNumeralsBlockFromSource(
+        el,
+        source,
+        ctx,
+        metadata,
+        type,
+        this.settings,
+        this.numberFormat,
+        this.preProcessors,
+        this.app
+      );
       addGobalsFromScopeToPageCache(ctx.sourcePath, scope2, this.scopeCache);
     };
     const dataviewAPI = (0, import_obsidian_dataview2.getAPI)();
@@ -54563,7 +58489,11 @@ var NumeralsPlugin = class extends import_obsidian4.Plugin {
     return currencyMap;
   }
   updateCurrencyMap() {
-    this.currencyMap = this.createCurrencyMap(this.settings.dollarSymbolCurrency.currency, this.settings.yenSymbolCurrency.currency, this.settings.customCurrencySymbol);
+    this.currencyMap = this.createCurrencyMap(
+      this.settings.dollarSymbolCurrency.currency,
+      this.settings.yenSymbolCurrency.currency,
+      this.settings.customCurrencySymbol
+    );
   }
   async onload() {
     await this.loadSettings();
@@ -54580,7 +58510,9 @@ var NumeralsPlugin = class extends import_obsidian4.Plugin {
       return { regex: RegExp("\\" + m.symbol + "([\\d\\.]+)", "g"), replaceStr: "$1 " + m.currency };
     });
     this.preProcessors = [
+      // {regex: /\$((\d|\.|(,\d{3}))+)/g, replace: '$1 USD'}, // Use this if commas haven't been removed already
       { regex: /,(\d{3})/g, replaceStr: "$1" },
+      // remove thousands seperators. Will be wrong for add(100,100)
       ...this.currencyPreProcessors
     ];
     const priority = 100;
@@ -54634,29 +58566,33 @@ var NumeralsPlugin = class extends import_obsidian4.Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
   }
+  /**
+   * Update the locale used for formatting numbers. Takes no arguments and returnings nothing
+   * @returns {void}
+   */
   updateLocale() {
     this.numberFormat = getMathjsFormat(this.settings.numberFormat);
   }
 };
-/*!
- *  decimal.js v10.4.3
- *  An arbitrary-precision Decimal type for JavaScript.
- *  https://github.com/MikeMcl/decimal.js
- *  Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
- *  MIT Licence
- */
-/**
- * @license Complex.js v2.1.1 12/05/2020
- *
- * Copyright (c) 2020, Robert Eisele (robert@xarg.org)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- **/
-/**
- * @license Fraction.js v4.3.0 20/08/2023
- * https://www.xarg.org/2014/03/rational-numbers-in-javascript/
- *
- * Copyright (c) 2023, Robert Eisele (robert@raw.org)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- **/
+/*! Bundled license information:
+
+fraction.js/fraction.js:
+  (**
+   * @license Fraction.js v4.3.0 20/08/2023
+   * https://www.xarg.org/2014/03/rational-numbers-in-javascript/
+   *
+   * Copyright (c) 2023, Robert Eisele (robert@raw.org)
+   * Dual licensed under the MIT or GPL Version 2 licenses.
+   **)
+
+decimal.js/decimal.mjs:
+  (*!
+   *  decimal.js v10.5.0
+   *  An arbitrary-precision Decimal type for JavaScript.
+   *  https://github.com/MikeMcl/decimal.js
+   *  Copyright (c) 2025 Michael Mclaughlin <M8ch88l@gmail.com>
+   *  MIT Licence
+   *)
+*/
 
 /* nosourcemap */

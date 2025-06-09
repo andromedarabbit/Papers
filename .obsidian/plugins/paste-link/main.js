@@ -170,12 +170,6 @@ var clean_title_default = cleanTitle;
 
 // src/try-fetch-title.ts
 var tryFetchTitle = async (url, regexes) => {
-  const match = regexes.find(
-    ([pageRegex]) => new RegExp(pageRegex).test(url.href)
-  );
-  if (!match)
-    return;
-  const [, regex, template] = match;
   let title;
   if (["http:", "https:"].includes(url.protocol)) {
     new import_obsidian3.Notice(`Attempting to fetch title from ${url.href}`);
@@ -190,7 +184,15 @@ var tryFetchTitle = async (url, regexes) => {
   } else {
     title = url.href;
   }
-  return clean_title_default(title, regex, template);
+  const match = regexes.find(
+    ([pageRegex]) => new RegExp(pageRegex).test(url.href)
+  );
+  if (match) {
+    const [, regex, template] = match;
+    return clean_title_default(title, regex, template);
+  } else {
+    return title;
+  }
 };
 var try_fetch_title_default = tryFetchTitle;
 
