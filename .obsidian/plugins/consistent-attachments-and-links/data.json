@@ -4,6 +4,7 @@
   "excludePaths": [
     "/consistency-report\\.md$/"
   ],
+  "excludePathsFromAttachmentCollecting": [],
   "includePaths": [],
   "shouldChangeNoteBacklinksDisplayText": true,
   "shouldCollectAttachmentsAutomatically": false,

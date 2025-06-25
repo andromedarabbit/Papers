@@ -71,11 +71,13 @@ const DEFAULT_SETTINGS = {
     newHeadingStyle: HeadingStyle.Prefix,
     replaceStyle: false,
     underlineString: '===',
+    renameDebounceTimeout: 1000,
 };
 class FilenameHeadingSyncPlugin extends obsidian.Plugin {
     constructor() {
         super(...arguments);
         this.isRenameInProgress = false;
+        this.renameDebounceTimer = null;
     }
     waitForTemplater() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -100,7 +102,9 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
                 });
                 // Register all handlers
                 handlers.forEach((h) => this.app.workspace.on(h.event, () => {
-                    console.log(`[filename-heading-sync] templater event ${h.event} fired, cleaning up`);
+                    // console.log(
+                    //   `[filename-heading-sync] templater event ${h.event} fired, cleaning up`,
+                    // );
                     h.fn();
                 }));
                 // Timeout fallback that also cleans up
@@ -208,28 +212,50 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         if (this.fileIsIgnored(file, file.path)) {
             return;
         }
-        this.forceSyncHeadingToFilename(file);
+        // Clear any existing debounce timer
+        if (this.renameDebounceTimer) {
+            clearTimeout(this.renameDebounceTimer);
+        }
+        // Set a new debounce timer
+        this.renameDebounceTimer = setTimeout(() => {
+            this.forceSyncHeadingToFilename(file);
+            this.renameDebounceTimer = null;
+        }, this.settings.renameDebounceTimeout);
+    }
+    ensureFileSaved(file) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const leaf of this.app.workspace.getLeavesOfType('markdown')) {
+                if (leaf.view instanceof obsidian.MarkdownView &&
+                    leaf.view.file === file &&
+                    leaf.view.dirty) {
+                    yield leaf.view.save();
+                }
+            }
+        });
     }
     forceSyncHeadingToFilename(file) {
-        if (file === null) {
-            return;
-        }
-        this.app.vault.read(file).then((data) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            const lines = data.split('\n');
-            const start = this.findNoteStart(lines);
-            const heading = this.findHeading(lines, start);
-            if (heading === null)
-                return; // no heading found, nothing to do here
-            const sanitizedHeading = this.sanitizeHeading(heading.text);
-            if (sanitizedHeading.length > 0 &&
-                this.sanitizeHeading(file.basename) !== sanitizedHeading) {
-                const newPath = `${(_a = file.parent) === null || _a === void 0 ? void 0 : _a.path}/${sanitizedHeading}.md`;
-                this.isRenameInProgress = true;
-                yield this.app.fileManager.renameFile(file, newPath);
-                this.isRenameInProgress = false;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (file === null) {
+                return;
             }
-        }));
+            yield this.ensureFileSaved(file);
+            this.app.vault.read(file).then((data) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
+                const lines = data.split('\n');
+                const start = this.findNoteStart(lines);
+                const heading = this.findHeading(lines, start);
+                if (heading === null)
+                    return; // no heading found, nothing to do here
+                const sanitizedHeading = this.sanitizeHeading(heading.text);
+                if (sanitizedHeading.length > 0 &&
+                    this.sanitizeHeading(file.basename) !== sanitizedHeading) {
+                    const newPath = `${(_a = file.parent) === null || _a === void 0 ? void 0 : _a.path}/${sanitizedHeading}.md`;
+                    this.isRenameInProgress = true;
+                    yield this.app.fileManager.renameFile(file, newPath);
+                    this.isRenameInProgress = false;
+                }
+            }));
+        });
     }
     /**
      * Syncs the current filename to the first heading
@@ -267,21 +293,24 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         this.forceSyncFilenameToHeading(file);
     }
     forceSyncFilenameToHeading(file) {
-        if (file === null) {
-            return;
-        }
-        const sanitizedHeading = this.sanitizeHeading(file.basename);
-        this.app.vault.read(file).then((data) => {
-            const lines = data.split('\n');
-            const start = this.findNoteStart(lines);
-            const heading = this.findHeading(lines, start);
-            if (heading !== null) {
-                if (this.sanitizeHeading(heading.text) !== sanitizedHeading) {
-                    this.replaceHeading(file, lines, heading.lineNumber, heading.style, sanitizedHeading);
-                }
+        return __awaiter(this, void 0, void 0, function* () {
+            if (file === null) {
+                return;
             }
-            else
-                this.insertHeading(file, lines, start, sanitizedHeading);
+            yield this.ensureFileSaved(file);
+            const sanitizedHeading = this.sanitizeHeading(file.basename);
+            this.app.vault.read(file).then((data) => {
+                const lines = data.split('\n');
+                const start = this.findNoteStart(lines);
+                const heading = this.findHeading(lines, start);
+                if (heading !== null) {
+                    if (this.sanitizeHeading(heading.text) !== sanitizedHeading) {
+                        this.replaceHeading(file, lines, heading.lineNumber, heading.style, sanitizedHeading);
+                    }
+                }
+                else
+                    this.insertHeading(file, lines, start, sanitizedHeading);
+            });
         });
     }
     /**
@@ -508,6 +537,13 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
             yield this.saveData(this.settings);
         });
     }
+    onunload() {
+        // Clear any pending debounce timer
+        if (this.renameDebounceTimer) {
+            clearTimeout(this.renameDebounceTimer);
+            this.renameDebounceTimer = null;
+        }
+    }
 }
 class FilenameHeadingSyncSettingTab extends obsidian.PluginSettingTab {
     constructor(app, plugin) {
@@ -624,6 +660,19 @@ class FilenameHeadingSyncSettingTab extends obsidian.PluginSettingTab {
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.underlineString = value;
             yield this.plugin.saveSettings();
+        })));
+        new obsidian.Setting(containerEl)
+            .setName('Rename Debounce Timeout')
+            .setDesc('Delay in milliseconds before renaming the file after typing stops. This prevents frequent renames while typing. Default is 1000ms (2 seconds).')
+            .addText((text) => text
+            .setPlaceholder('1000')
+            .setValue(String(this.plugin.settings.renameDebounceTimeout))
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            const numValue = parseInt(value);
+            if (!isNaN(numValue) && numValue > 0) {
+                this.plugin.settings.renameDebounceTimeout = numValue;
+                yield this.plugin.saveSettings();
+            }
         })));
         containerEl.createEl('h2', { text: 'Ignored Files By Regex' });
         containerEl.createEl('p', {
