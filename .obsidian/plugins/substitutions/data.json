@@ -10,249 +10,249 @@
     "initialized": true,
     "definitions": [
       {
-        "id": 35,
+        "id": 0,
         "kind": "plain",
-        "enabled": true,
-        "source": "...",
-        "replacement": "…"
-      },
-      {
-        "id": 34,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/2",
-        "replacement": "½"
-      },
-      {
-        "id": 33,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/3",
-        "replacement": "⅓"
-      },
-      {
-        "id": 32,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/4",
-        "replacement": "¼"
-      },
-      {
-        "id": 31,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/5",
-        "replacement": "⅕"
-      },
-      {
-        "id": 30,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/6",
-        "replacement": "⅙"
-      },
-      {
-        "id": 29,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/7",
-        "replacement": "⅐"
-      },
-      {
-        "id": 28,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/9",
-        "replacement": "⅑"
-      },
-      {
-        "id": 27,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/10",
-        "replacement": "⅒"
-      },
-      {
-        "id": 26,
-        "kind": "plain",
-        "enabled": true,
-        "source": "1/8",
-        "replacement": "⅛"
-      },
-      {
-        "id": 25,
-        "kind": "plain",
-        "enabled": true,
-        "source": "2/3",
-        "replacement": "⅔"
-      },
-      {
-        "id": 24,
-        "kind": "plain",
-        "enabled": true,
-        "source": "2/5",
-        "replacement": "⅖"
-      },
-      {
-        "id": 23,
-        "kind": "plain",
-        "enabled": true,
-        "source": "3/4",
-        "replacement": "¾"
-      },
-      {
-        "id": 22,
-        "kind": "plain",
-        "enabled": true,
-        "source": "3/5",
-        "replacement": "⅗"
-      },
-      {
-        "id": 21,
-        "kind": "plain",
-        "enabled": true,
-        "source": "4/5",
-        "replacement": "⅘"
-      },
-      {
-        "id": 20,
-        "kind": "plain",
-        "enabled": true,
-        "source": "5/6",
-        "replacement": "⅚"
-      },
-      {
-        "id": 19,
-        "kind": "plain",
-        "enabled": true,
-        "source": "3/8",
-        "replacement": "⅜"
-      },
-      {
-        "id": 18,
-        "kind": "plain",
-        "enabled": true,
-        "source": "5/8",
-        "replacement": "⅝"
-      },
-      {
-        "id": 17,
-        "kind": "plain",
-        "enabled": true,
-        "source": "7/8",
-        "replacement": "⅞"
-      },
-      {
-        "id": 16,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<--",
-        "replacement": "←"
-      },
-      {
-        "id": 15,
-        "kind": "plain",
-        "enabled": true,
-        "source": "-->",
-        "replacement": "→"
-      },
-      {
-        "id": 14,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<->",
-        "replacement": "↔"
-      },
-      {
-        "id": 13,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<==",
-        "replacement": "⇐"
-      },
-      {
-        "id": 12,
-        "kind": "plain",
-        "enabled": true,
-        "source": "==>",
-        "replacement": "⇒"
-      },
-      {
-        "id": 11,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<=>",
-        "replacement": "⇔"
-      },
-      {
-        "id": 10,
-        "kind": "plain",
-        "enabled": false,
-        "source": "--",
-        "replacement": "–"
-      },
-      {
-        "id": 9,
-        "kind": "plain",
-        "enabled": false,
-        "source": "---",
-        "replacement": "—"
-      },
-      {
-        "id": 8,
-        "kind": "plain",
-        "enabled": true,
-        "source": "!=",
-        "replacement": "≠"
-      },
-      {
-        "id": 7,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<=",
-        "replacement": "≤"
-      },
-      {
-        "id": 6,
-        "kind": "plain",
-        "enabled": true,
-        "source": ">=",
-        "replacement": "≥"
-      },
-      {
-        "id": 5,
-        "kind": "plain",
-        "enabled": true,
-        "source": "~=",
-        "replacement": "≅"
-      },
-      {
-        "id": 4,
-        "kind": "plain",
-        "enabled": true,
-        "source": "+-",
-        "replacement": "±"
-      },
-      {
-        "id": 3,
-        "kind": "plain",
-        "enabled": true,
-        "source": "-+",
-        "replacement": "∓"
-      },
-      {
-        "id": 2,
-        "kind": "plain",
-        "enabled": true,
-        "source": "<<",
-        "replacement": "≪"
+        "source": ">>",
+        "replacement": "≫",
+        "enabled": true
       },
       {
         "id": 1,
         "kind": "plain",
-        "enabled": true,
-        "source": ">>",
-        "replacement": "≫"
+        "source": "<<",
+        "replacement": "≪",
+        "enabled": true
+      },
+      {
+        "id": 2,
+        "kind": "plain",
+        "source": "-+",
+        "replacement": "∓",
+        "enabled": true
+      },
+      {
+        "id": 3,
+        "kind": "plain",
+        "source": "+-",
+        "replacement": "±",
+        "enabled": true
+      },
+      {
+        "id": 4,
+        "kind": "plain",
+        "source": "~=",
+        "replacement": "≅",
+        "enabled": true
+      },
+      {
+        "id": 5,
+        "kind": "plain",
+        "source": ">=",
+        "replacement": "≥",
+        "enabled": true
+      },
+      {
+        "id": 6,
+        "kind": "plain",
+        "source": "<=",
+        "replacement": "≤",
+        "enabled": true
+      },
+      {
+        "id": 7,
+        "kind": "plain",
+        "source": "!=",
+        "replacement": "≠",
+        "enabled": true
+      },
+      {
+        "id": 8,
+        "kind": "plain",
+        "source": "---",
+        "replacement": "—",
+        "enabled": false
+      },
+      {
+        "id": 9,
+        "kind": "plain",
+        "source": "--",
+        "replacement": "–",
+        "enabled": false
+      },
+      {
+        "id": 10,
+        "kind": "plain",
+        "source": "<=>",
+        "replacement": "⇔",
+        "enabled": true
+      },
+      {
+        "id": 11,
+        "kind": "plain",
+        "source": "==>",
+        "replacement": "⇒",
+        "enabled": true
+      },
+      {
+        "id": 12,
+        "kind": "plain",
+        "source": "<==",
+        "replacement": "⇐",
+        "enabled": true
+      },
+      {
+        "id": 13,
+        "kind": "plain",
+        "source": "<->",
+        "replacement": "↔",
+        "enabled": true
+      },
+      {
+        "id": 14,
+        "kind": "plain",
+        "source": "-->",
+        "replacement": "→",
+        "enabled": true
+      },
+      {
+        "id": 15,
+        "kind": "plain",
+        "source": "<--",
+        "replacement": "←",
+        "enabled": true
+      },
+      {
+        "id": 16,
+        "kind": "plain",
+        "source": "7/8",
+        "replacement": "⅞",
+        "enabled": true
+      },
+      {
+        "id": 17,
+        "kind": "plain",
+        "source": "5/8",
+        "replacement": "⅝",
+        "enabled": true
+      },
+      {
+        "id": 18,
+        "kind": "plain",
+        "source": "3/8",
+        "replacement": "⅜",
+        "enabled": true
+      },
+      {
+        "id": 19,
+        "kind": "plain",
+        "source": "5/6",
+        "replacement": "⅚",
+        "enabled": true
+      },
+      {
+        "id": 20,
+        "kind": "plain",
+        "source": "4/5",
+        "replacement": "⅘",
+        "enabled": true
+      },
+      {
+        "id": 21,
+        "kind": "plain",
+        "source": "3/5",
+        "replacement": "⅗",
+        "enabled": true
+      },
+      {
+        "id": 22,
+        "kind": "plain",
+        "source": "3/4",
+        "replacement": "¾",
+        "enabled": true
+      },
+      {
+        "id": 23,
+        "kind": "plain",
+        "source": "2/5",
+        "replacement": "⅖",
+        "enabled": true
+      },
+      {
+        "id": 24,
+        "kind": "plain",
+        "source": "2/3",
+        "replacement": "⅔",
+        "enabled": true
+      },
+      {
+        "id": 25,
+        "kind": "plain",
+        "source": "1/8",
+        "replacement": "⅛",
+        "enabled": true
+      },
+      {
+        "id": 26,
+        "kind": "plain",
+        "source": "1/10",
+        "replacement": "⅒",
+        "enabled": true
+      },
+      {
+        "id": 27,
+        "kind": "plain",
+        "source": "1/9",
+        "replacement": "⅑",
+        "enabled": true
+      },
+      {
+        "id": 28,
+        "kind": "plain",
+        "source": "1/7",
+        "replacement": "⅐",
+        "enabled": true
+      },
+      {
+        "id": 29,
+        "kind": "plain",
+        "source": "1/6",
+        "replacement": "⅙",
+        "enabled": true
+      },
+      {
+        "id": 30,
+        "kind": "plain",
+        "source": "1/5",
+        "replacement": "⅕",
+        "enabled": true
+      },
+      {
+        "id": 31,
+        "kind": "plain",
+        "source": "1/4",
+        "replacement": "¼",
+        "enabled": true
+      },
+      {
+        "id": 32,
+        "kind": "plain",
+        "source": "1/3",
+        "replacement": "⅓",
+        "enabled": true
+      },
+      {
+        "id": 33,
+        "kind": "plain",
+        "source": "1/2",
+        "replacement": "½",
+        "enabled": true
+      },
+      {
+        "id": 34,
+        "kind": "plain",
+        "source": "...",
+        "replacement": "…",
+        "enabled": true
       }
     ]
   }
