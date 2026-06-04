@@ -8,6 +8,7 @@
   "indexedFileTypes": [
     "txt"
   ],
+  "indexFilesWithoutExtension": false,
   "displayTitle": "",
   "PDFIndexing": true,
   "officeIndexing": true,

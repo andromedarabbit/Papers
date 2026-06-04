@@ -79,9 +79,10 @@ body {
     overflow-wrap: break-word;
 }
 .numerals-block .numerals-input .math-parenthesis,
- .numerals-block .numerals-input .math-paranthesis {
-    padding-left: 0px;
-    padding-right: 0px;
+.numerals-block .numerals-input .math-paranthesis {
+    color: var(--code-punctuation);
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .numerals-block .numerals-input .math-number {
@@ -112,12 +113,6 @@ body {
 .numerals-block .numerals-input .math-operator {
     color: var(--code-operator);
 }
-.numerals-block .numerals-input .math-parenthesis,
- .numerals-block .numerals-input .math-paranthesis {
-    color: var(--code-punctuation);
-    padding-left: 0px;
-    padding-right: 0px;
-}
 .numerals-block .numerals-input .math-separator {
     color: var(--code-punctuation);
 }
@@ -130,10 +125,15 @@ body {
     padding: var(--size-4-4);    
 } 
 
-.numerals-block .MathJax {
-    text-align: left !important;
-    margin-top: .5em !important;
-    margin-bottom: .5em !important;
+.numerals-block .numerals-line {
+    cursor: text;
+}
+
+.markdown-rendered .numerals-block .MathJax,
+.markdown-source-view .numerals-block .MathJax {
+    text-align: left;
+    margin-top: .5em;
+    margin-bottom: .5em;
 } 
 
 .numerals-input.numerals-empty {
@@ -170,6 +170,10 @@ body {
     color:var(--color-red);
     padding-right: var(--size-4-2);
 }
+/* Ensure error text remains visible even when non-emitter results are hidden */
+.numerals-error-message {
+    color: var(--code-punctuation);
+}
 
 /**********************************/
 /* ** Right-aligned Style ** */
@@ -196,12 +200,8 @@ body {
 /* this leads to filling all the way to the bottom of the container. probably bigger than desired */
 .numerals-panes .numerals-line {
     line-height: var(--line-height-tight);
- 
-}
-
-.numerals-panes .numerals-line {
     display: flex;
- }
+}
  
 .numerals-panes .numerals-input {
     width:75%;
@@ -265,12 +265,11 @@ body {
     color: transparent;
 }
 
-
 /**********************************/
 /* ** Inline Style ** */
 /* TODO Switch to a diffent display layout so that result can be centered */
 
-.numerals-answer-right .numerals-line {
+.numerals-answer-inline .numerals-line {
     line-height: var(--line-height-tight);
     /* clear: both; */
     /* overflow: auto;     */
@@ -298,4 +297,54 @@ body {
 .numerals-suggestion {
     font-family: var(--numerals-font);
     font-size: var(--numerals-size);
+}
+
+/***************************/
+/* ** Inline Numerals ** */
+
+/* Inline numerals styling.
+ * In Reading mode, this sits on a <code> element (inherits code styling).
+ * In Live Preview, the widget also gets cm-inline-code (inherits code styling).
+ * Only numerals-specific overrides below. */
+
+/* Accent the computed value in both result-only and equation modes */
+.numerals-inline .numerals-inline-value {
+    color: var(--text-accent);
+    font-weight: var(--font-semibold, 600);
+}
+
+/* Faint separator between input and result in equation mode */
+.numerals-inline-equation .numerals-inline-separator {
+    color: var(--text-faint);
+}
+
+/* Error state: show the raw expression in error color */
+.numerals-inline-error {
+    color: var(--text-error);
+    border-bottom: 1px dotted var(--text-error);
+}
+
+/* Settings: currency mapping input fields */
+.numerals-settings-currency-input {
+    text-align: center;
+}
+.numerals-settings-currency-symbol {
+    width: 5em;
+}
+.numerals-settings-currency-code {
+    width: 6em;
+}
+
+/* Settings: currency save button states */
+.numerals-settings-save-btn {
+    width: 4em;
+}
+.numerals-settings-btn-disabled {
+    color: var(--text-faint);
+}
+.numerals-settings-btn-ready {
+    color: var(--text-normal);
+}
+.numerals-settings-btn-error {
+    color: var(--text-error);
 }

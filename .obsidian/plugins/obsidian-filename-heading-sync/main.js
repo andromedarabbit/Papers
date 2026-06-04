@@ -56,6 +56,33 @@ function isExcluded(app, f) {
 }
 
 const stockIllegalSymbols = /[\\/:|#^[\]]/g;
+function regExpEscape(str) {
+    return String(str).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+function generateFilenameFromHeading(heading, settings) {
+    // Strip stock illegal symbols
+    let text = heading.replace(stockIllegalSymbols, '');
+    // Strip user-defined illegal symbols
+    const escaped = settings.userIllegalSymbols.map((str) => regExpEscape(str));
+    if (escaped.length > 0 && escaped.join('') !== '') {
+        const userRegex = new RegExp(escaped.join('|'), 'g');
+        text = text.replace(userRegex, '');
+    }
+    // Replace spaces with configured character
+    if (settings.spaceReplacementCharacter) {
+        text = text.replace(/ /g, settings.spaceReplacementCharacter);
+    }
+    return text.trim();
+}
+function generateHeadingFromFilename(filename, settings) {
+    let text = filename;
+    if (settings.spaceReplacementCharacter) {
+        const escaped = regExpEscape(settings.spaceReplacementCharacter);
+        text = text.replace(new RegExp(escaped, 'g'), ' ');
+    }
+    return text.trim();
+}
+
 // Must be Strings unless settings dialog is updated.
 var HeadingStyle;
 (function (HeadingStyle) {
@@ -72,6 +99,8 @@ const DEFAULT_SETTINGS = {
     replaceStyle: false,
     underlineString: '===',
     renameDebounceTimeout: 1000,
+    insertHeadingIfMissing: true,
+    spaceReplacementCharacter: '',
 };
 class FilenameHeadingSyncPlugin extends obsidian.Plugin {
     constructor() {
@@ -251,8 +280,15 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
                     this.sanitizeHeading(file.basename) !== sanitizedHeading) {
                     const newPath = `${(_a = file.parent) === null || _a === void 0 ? void 0 : _a.path}/${sanitizedHeading}.md`;
                     this.isRenameInProgress = true;
-                    yield this.app.fileManager.renameFile(file, newPath);
-                    this.isRenameInProgress = false;
+                    try {
+                        yield this.app.fileManager.renameFile(file, newPath);
+                    }
+                    catch (error) {
+                        // Rename failed, but we still need to reset the flag
+                    }
+                    finally {
+                        this.isRenameInProgress = false;
+                    }
                 }
             }));
         });
@@ -298,18 +334,19 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
                 return;
             }
             yield this.ensureFileSaved(file);
-            const sanitizedHeading = this.sanitizeHeading(file.basename);
+            const newHeading = generateHeadingFromFilename(file.basename, this.settings);
             this.app.vault.read(file).then((data) => {
                 const lines = data.split('\n');
                 const start = this.findNoteStart(lines);
                 const heading = this.findHeading(lines, start);
                 if (heading !== null) {
-                    if (this.sanitizeHeading(heading.text) !== sanitizedHeading) {
-                        this.replaceHeading(file, lines, heading.lineNumber, heading.style, sanitizedHeading);
+                    if (heading.text !== newHeading) {
+                        this.replaceHeading(file, lines, heading.lineNumber, heading.style, newHeading);
                     }
                 }
-                else
-                    this.insertHeading(file, lines, start, sanitizedHeading);
+                else if (this.settings.insertHeadingIfMissing) {
+                    this.insertHeading(file, lines, start, newHeading);
+                }
             });
         });
     }
@@ -386,16 +423,8 @@ class FilenameHeadingSyncPlugin extends obsidian.Plugin {
         }
         return null; // no valid heading found outside code blocks
     }
-    regExpEscape(str) {
-        return String(str).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
-    }
     sanitizeHeading(text) {
-        // stockIllegalSymbols is a regExp object, but userIllegalSymbols is a list of strings and therefore they are handled separately.
-        text = text.replace(stockIllegalSymbols, '');
-        const userIllegalSymbolsEscaped = this.settings.userIllegalSymbols.map((str) => this.regExpEscape(str));
-        const userIllegalSymbolsRegExp = new RegExp(userIllegalSymbolsEscaped.join('|'), 'g');
-        text = text.replace(userIllegalSymbolsRegExp, '');
-        return text.trim();
+        return generateFilenameFromHeading(text, this.settings);
     }
     /**
      * Insert the `heading` at `lineNumber` in `file`.
@@ -583,12 +612,22 @@ class FilenameHeadingSyncSettingTab extends obsidian.PluginSettingTab {
         });
         new obsidian.Setting(containerEl)
             .setName('Custom Illegal Characters/Strings')
-            .setDesc('Type characters/strings separated by a comma. This input is space sensitive.')
+            .setDesc('Characters or strings to strip from the heading when generating the filename. Separated by commas. This input is space sensitive.')
             .addText((text) => text
             .setPlaceholder('[],#,...')
             .setValue(this.plugin.settings.userIllegalSymbols.join())
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.userIllegalSymbols = value.split(',');
+            yield this.plugin.saveSettings();
+        })));
+        new obsidian.Setting(containerEl)
+            .setName('Space Replacement')
+            .setDesc('Replace spaces with this character or string when syncing in both directions. For example, with "-" the heading "My Cool Note" becomes "My-Cool-Note", or with "---" it becomes "My---Cool---Note". Leave empty to keep spaces as-is.')
+            .addText((text) => text
+            .setPlaceholder('-, _,  ---')
+            .setValue(this.plugin.settings.spaceReplacementCharacter)
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            this.plugin.settings.spaceReplacementCharacter = value;
             yield this.plugin.saveSettings();
         })));
         new obsidian.Setting(containerEl)
@@ -624,6 +663,15 @@ class FilenameHeadingSyncSettingTab extends obsidian.PluginSettingTab {
             .setValue(this.plugin.settings.useFileSaveHook)
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.useFileSaveHook = value;
+            yield this.plugin.saveSettings();
+        })));
+        new obsidian.Setting(containerEl)
+            .setName('Insert Heading If Missing')
+            .setDesc('Whether to automatically insert a heading when none is found. Disable this to prevent the plugin from adding headings to files without them.')
+            .addToggle((toggle) => toggle
+            .setValue(this.plugin.settings.insertHeadingIfMissing)
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            this.plugin.settings.insertHeadingIfMissing = value;
             yield this.plugin.saveSettings();
         })));
         new obsidian.Setting(containerEl)

@@ -19,10 +19,12 @@
   "showOutlinks": true,
   "showDates": true,
   "combineLinks": false,
+  "limitLinks": false,
+  "linksLimit": 10,
   "updateDelay": 3000,
   "excludedParentSelectors": [
     "[data-type=\"thino_view\"]"
   ],
   "frontmatterExclusionField": "",
-  "lastVersion": "1.10.9"
+  "lastVersion": "1.12.0"
 }

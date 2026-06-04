@@ -87,8 +87,8 @@
   "selectedKit": "default",
   "actionMaxSteps": 100,
   "contextPagination": 25,
-  "skipFolderNames": [],
   "skipFolders": [],
+  "skipFolderNames": [],
   "enhancedLogs": false,
   "basics": true,
   "basicsSettings": null,
@@ -96,6 +96,10 @@
   "notesPreview": false,
   "editStickerInSidebar": true,
   "overrideNativeMenu": false,
+  "onboardingCompleted": false,
+  "contextCreateUseModal": false,
+  "homepagePath": "",
+  "mobileMakeHeader": false,
   "dataviewInlineContext": false,
   "searchWorker": false
 }

@@ -1,11 +1,13 @@
 {
+  "collectAttachmentUsedByMultipleNotesMode": "Skip",
   "consistencyReportFile": "자동생성 노트/consistency-report.md",
-  "emptyAttachmentFolderBehavior": "DeleteWithEmptyParents",
+  "emptyFolderBehavior": "DeleteWithEmptyParents",
   "excludePaths": [
     "/consistency-report\\.md$/"
   ],
   "excludePathsFromAttachmentCollecting": [],
   "includePaths": [],
+  "moveAttachmentToProperFolderUsedByMultipleNotesMode": "CopyAll",
   "shouldChangeNoteBacklinksDisplayText": true,
   "shouldCollectAttachmentsAutomatically": false,
   "shouldDeleteAttachmentsWithNote": false,

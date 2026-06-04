@@ -30,6 +30,7 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var import_obsidian = require("obsidian");
 var import_view = require("@codemirror/view");
+var import_language = require("@codemirror/language");
 var DateButtonWidget = class extends import_view.WidgetType {
   toDOM() {
     const button = document.createElement("span");
@@ -172,6 +173,21 @@ var DatepickerCMPlugin = class {
     );
     return formats;
   }
+  isInCodeblock(view, position) {
+    if (!DatepickerPlugin.settings.ignoreCodeblocks) {
+      return false;
+    }
+    const tree = (0, import_language.syntaxTree)(view.state);
+    let node = tree.resolve(position);
+    while (node) {
+      if (node.name === "FencedCode" || node.name === "CodeBlock" || node.name === "InlineCode" || node.name === "CodeText" || // Additional checks for different markdown parsers
+      node.name.includes("Code") || node.name.includes("code")) {
+        return true;
+      }
+      node = node.parent;
+    }
+    return false;
+  }
   getVisibleDates(view) {
     var _a;
     let visibleText = [];
@@ -186,6 +202,8 @@ var DatepickerCMPlugin = class {
           while ((matchingDate = format.regex.exec((_a = vt.text) != null ? _a : "")) !== null) {
             const matchingDateStart = (matchingDate == null ? void 0 : matchingDate.index) + vt.from;
             const matchingDateEnd = (matchingDate == null ? void 0 : matchingDate.index) + matchingDate[0].length + vt.from;
+            if (this.isInCodeblock(view, matchingDateStart))
+              continue;
             if (dateMatches.some((m) => matchingDateStart >= m.from && (matchingDateEnd <= m.to || matchingDateStart <= m.to)))
               continue;
             dateMatches.push({ from: matchingDate.index + vt.from, to: matchingDate.index + matchingDate[0].length + vt.from, value: matchingDate[0], format });
@@ -202,6 +220,8 @@ var DatepickerCMPlugin = class {
       while ((matchingDate = format.regex.exec(noteText)) !== null) {
         const matchingDateStart = matchingDate == null ? void 0 : matchingDate.index;
         const matchingDateEnd = (matchingDate == null ? void 0 : matchingDate.index) + matchingDate[0].length;
+        if (this.isInCodeblock(view, matchingDateStart))
+          continue;
         if (dateMatches.some((m) => matchingDateStart >= m.from && (matchingDateEnd <= m.to || matchingDateStart <= m.to)))
           continue;
         dateMatches.push({ from: matchingDate.index, to: matchingDate.index + matchingDate[0].length, value: matchingDate[0], format });
@@ -395,7 +415,8 @@ var DEFAULT_SETTINGS = {
   autofocus: false,
   focusOnArrowDown: false,
   insertIn24HourFormat: false,
-  selectDateText: false
+  selectDateText: false,
+  ignoreCodeblocks: false
 };
 var _DatepickerPlugin = class extends import_obsidian.Plugin {
   async onload() {
@@ -928,6 +949,10 @@ var DatepickerSettingTab = class extends import_obsidian.PluginSettingTab {
     }));
     new import_obsidian.Setting(settingsContainerElement).setName("Show a picker button for times").setDesc("Shows a button with a clock icon associated with time values, select it to open the picker (Reloading Obsidian may be required)").addToggle((toggle) => toggle.setValue(DatepickerPlugin.settings.showTimeButtons).onChange(async (value) => {
       DatepickerPlugin.settings.showTimeButtons = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian.Setting(settingsContainerElement).setName("Ignore dates in codeblocks").setDesc("When enabled, the datepicker will ignore dates inside markdown codeblocks (both inline code and fenced code blocks, Reloading Obsidian may be required)").addToggle((toggle) => toggle.setValue(DatepickerPlugin.settings.ignoreCodeblocks).onChange(async (value) => {
+      DatepickerPlugin.settings.ignoreCodeblocks = value;
       await this.plugin.saveSettings();
     }));
     new import_obsidian.Setting(settingsContainerElement).setName("Show automatically").setDesc("Datepicker will show automatically whenever a date/time value is selected").addToggle((toggle) => toggle.setValue(DatepickerPlugin.settings.showAutomatically).onChange(async (value) => {

@@ -38,10 +38,14 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 };
 
 const SAFE_DB_FLUSH_INTERVAL = 5000;
+const DEFAULT_DB_FILENAME_LEGACY = '.obsidian/plugins/remember-cursor-position/cursor-positions.json';
 const DEFAULT_SETTINGS = {
-    dbFileName: '.obsidian/plugins/remember-cursor-position/cursor-positions.json',
+    dbFileName: '',
     delayAfterFileOpening: 100,
     saveTimer: SAFE_DB_FLUSH_INTERVAL,
+    pruneOrphans: false,
+    maxAgeDays: 0,
+    maxCount: 0,
 };
 class RememberCursorPosition extends obsidian.Plugin {
     constructor() {
@@ -54,6 +58,7 @@ class RememberCursorPosition extends obsidian.Plugin {
             yield this.loadSettings();
             try {
                 this.db = yield this.readDb();
+                this.pruneDb();
                 this.lastSavedDb = yield this.readDb();
             }
             catch (e) {
@@ -62,13 +67,13 @@ class RememberCursorPosition extends obsidian.Plugin {
                 this.lastSavedDb = {};
             }
             this.addSettingTab(new SettingTab(this.app, this));
-            this.registerEvent(this.app.workspace.on('file-open', (file) => this.restoreEphemeralState()));
+            this.registerEvent(this.app.workspace.on('file-open', (file) => this.restoreEphemeralState(file)));
             this.registerEvent(this.app.workspace.on('quit', () => { this.writeDb(this.db); }));
             this.registerEvent(this.app.vault.on('rename', (file, oldPath) => this.renameFile(file, oldPath)));
             this.registerEvent(this.app.vault.on('delete', (file) => this.deleteFile(file)));
             //todo: replace by scroll and mouse cursor move events
             this.registerInterval(window.setInterval(() => this.checkEphemeralStateChanged(), 100));
-            this.registerInterval(window.setInterval(() => this.writeDb(this.db), this.settings.saveTimer));
+            this.saveTimerIntervalId = this.registerInterval(window.setInterval(() => this.writeDb(this.db), this.settings.saveTimer));
             this.restoreEphemeralState();
         });
     }
@@ -124,22 +129,24 @@ class RememberCursorPosition extends obsidian.Plugin {
         return __awaiter(this, void 0, void 0, function* () {
             let fileName = (_a = this.app.workspace.getActiveFile()) === null || _a === void 0 ? void 0 : _a.path;
             if (fileName && fileName == this.lastLoadedFileName) { //do not save if file changed or was not loaded
-                this.db[fileName] = st;
+                this.db[fileName] = Object.assign(Object.assign({}, st), { lastModified: Date.now() });
             }
         });
     }
-    restoreEphemeralState() {
-        var _a, _b, _c;
+    restoreEphemeralState(file) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let fileName = (_a = this.app.workspace.getActiveFile()) === null || _a === void 0 ? void 0 : _a.path;
             if (fileName && this.loadingFile && this.lastLoadedFileName == fileName) //if already started loading
                 return;
             let activeLeaf = this.app.workspace.getMostRecentLeaf();
+            //@ts-ignore no-official-API
             if (activeLeaf && this.loadedLeafIdList.includes(activeLeaf.id + ':' + activeLeaf.getViewState().state.file))
                 return;
             this.loadedLeafIdList = [];
             this.app.workspace.iterateAllLeaves((leaf) => {
                 if (leaf.getViewState().type === "markdown") {
+                    //@ts-ignore no-official-API
                     this.loadedLeafIdList.push(leaf.id + ':' + leaf.getViewState().state.file);
                 }
             });
@@ -153,16 +160,14 @@ class RememberCursorPosition extends obsidian.Plugin {
                     if (st) {
                         //waiting for load note
                         yield this.delay(this.settings.delayAfterFileOpening);
-                        let scroll;
-                        for (let i = 0; i < 20; i++) {
-                            scroll = (_c = (_b = this.app.workspace.getActiveViewOfType(obsidian.MarkdownView)) === null || _b === void 0 ? void 0 : _b.currentMode) === null || _c === void 0 ? void 0 : _c.getScroll();
-                            if (scroll !== null)
-                                break;
+                        // Don't scroll when a link scrolls and highlights text
+                        // i.e. if file is open by links like [link](note.md#header) and wikilinks
+                        // See #10, #32, #46, #51
+                        let containsFlashingSpan = this.app.workspace.containerEl.querySelector('.is-flashing');
+                        if (!containsFlashingSpan) {
                             yield this.delay(10);
+                            this.setEphemeralState(st);
                         }
-                        // TODO: if note opened by link like [link](note.md#header), do not scroll it
-                        yield this.delay(10);
-                        this.setEphemeralState(st);
                     }
                 }
                 this.lastEphemeralState = st;
@@ -170,12 +175,42 @@ class RememberCursorPosition extends obsidian.Plugin {
             this.loadingFile = false;
         });
     }
+    pruneDb() {
+        var _a;
+        const { pruneOrphans, maxAgeDays, maxCount } = this.settings;
+        if (pruneOrphans) {
+            for (const key of Object.keys(this.db)) {
+                if (!this.app.vault.getAbstractFileByPath(key)) {
+                    delete this.db[key];
+                }
+            }
+        }
+        if (maxAgeDays > 0) {
+            const cutoff = Date.now() - maxAgeDays * 86400000;
+            for (const key of Object.keys(this.db)) {
+                if (((_a = this.db[key].lastModified) !== null && _a !== void 0 ? _a : 0) < cutoff) {
+                    delete this.db[key];
+                }
+            }
+        }
+        if (maxCount > 0 && Object.keys(this.db).length > maxCount) {
+            const sorted = Object.entries(this.db)
+                .sort((a, b) => { var _a, _b; return ((_a = b[1].lastModified) !== null && _a !== void 0 ? _a : 0) - ((_b = a[1].lastModified) !== null && _b !== void 0 ? _b : 0); });
+            this.db = Object.fromEntries(sorted.slice(0, maxCount));
+        }
+    }
     readDb() {
         return __awaiter(this, void 0, void 0, function* () {
             let db = {};
             if (yield this.app.vault.adapter.exists(this.settings.dbFileName)) {
                 let data = yield this.app.vault.adapter.read(this.settings.dbFileName);
                 db = JSON.parse(data);
+                const now = Date.now();
+                for (const key of Object.keys(db)) {
+                    if (db[key].lastModified === undefined) {
+                        db[key].lastModified = now;
+                    }
+                }
             }
             return db;
         });
@@ -240,6 +275,9 @@ class RememberCursorPosition extends obsidian.Plugin {
             if ((settings === null || settings === void 0 ? void 0 : settings.saveTimer) < SAFE_DB_FLUSH_INTERVAL) {
                 settings.saveTimer = SAFE_DB_FLUSH_INTERVAL;
             }
+            if (!settings.dbFileName || settings.dbFileName === DEFAULT_DB_FILENAME_LEGACY) {
+                settings.dbFileName = this.manifest.dir + '/cursor-positions.json';
+            }
             this.settings = settings;
         });
     }
@@ -263,7 +301,8 @@ class SettingTab extends obsidian.PluginSettingTab {
         let { containerEl } = this;
         containerEl.empty();
         containerEl.createEl('h2', { text: 'Remember cursor position - Settings' });
-        new obsidian.Setting(containerEl)
+        new obsidian.SettingGroup(containerEl)
+            .addSetting((setting) => setting
             .setName('Data file name')
             .setDesc('Save positions to this file')
             .addText((text) => text
@@ -272,27 +311,91 @@ class SettingTab extends obsidian.PluginSettingTab {
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.dbFileName = value;
             yield this.plugin.saveSettings();
-        })));
-        new obsidian.Setting(containerEl)
+        }))))
+            .addSetting((setting) => setting
             .setName('Delay after opening a new note')
             .setDesc("This plugin shouldn't scroll if you used a link to the note header like [link](note.md#header). If it did, then increase the delay until everything works. If you are not using links to page sections, set the delay to zero (slider to the left). Slider values: 0-300 ms (default value: 100 ms).")
             .addSlider((text) => text
             .setLimits(0, 300, 10)
+            .setDynamicTooltip()
             .setValue(this.plugin.settings.delayAfterFileOpening)
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.delayAfterFileOpening = value;
             yield this.plugin.saveSettings();
-        })));
-        new obsidian.Setting(containerEl)
+        }))))
+            .addSetting((setting) => setting
             .setName('Delay between saving the cursor position to file')
             .setDesc("Useful for multi-device users. If you don't want to wait until closing Obsidian to the cursor position been saved.")
             .addSlider((text) => text
             .setLimits(SAFE_DB_FLUSH_INTERVAL, SAFE_DB_FLUSH_INTERVAL * 10, 10)
+            .setDynamicTooltip()
             .setValue(this.plugin.settings.saveTimer)
             .onChange((value) => __awaiter(this, void 0, void 0, function* () {
             this.plugin.settings.saveTimer = value;
             yield this.plugin.saveSettings();
-        })));
+            window.clearInterval(this.plugin.saveTimerIntervalId);
+            this.plugin.saveTimerIntervalId = this.plugin.registerInterval(window.setInterval(() => this.plugin.writeDb(this.plugin.db), value));
+        }))));
+        const { pruneOrphans, maxAgeDays, maxCount } = this.plugin.settings;
+        const pruningEnabled = pruneOrphans || maxAgeDays > 0 || maxCount > 0;
+        const entryCount = Object.keys(this.plugin.db).length;
+        new obsidian.SettingGroup(containerEl)
+            .setHeading('Pruning')
+            .addSetting((setting) => setting
+            .setName('Remove entries for deleted or missing files')
+            .setDesc('On startup, remove saved positions for files that no longer exist in the vault. ' +
+            'Disable this if you use junctions, removable drives, or other setups where files may be temporarily unavailable.')
+            .addToggle((toggle) => toggle
+            .setValue(this.plugin.settings.pruneOrphans)
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            this.plugin.settings.pruneOrphans = value;
+            yield this.plugin.saveSettings();
+            this.display();
+        }))))
+            .addSetting((setting) => setting
+            .setName('Remove entries older than')
+            .setDesc('On startup, remove saved positions for files that have not been visited within the selected period.')
+            .addDropdown((drop) => drop
+            .addOption('30', '30 days')
+            .addOption('60', '60 days')
+            .addOption('90', '90 days')
+            .addOption('365', '1 year')
+            .addOption('0', 'Never')
+            .setValue(String(this.plugin.settings.maxAgeDays))
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            this.plugin.settings.maxAgeDays = Number(value);
+            yield this.plugin.saveSettings();
+            this.display();
+        }))))
+            .addSetting((setting) => setting
+            .setName('Maximum number of entries to keep')
+            .setDesc('On startup, if the number of saved positions exceeds this limit, the oldest entries are removed. Most-recently visited files are kept.')
+            .addDropdown((drop) => drop
+            .addOption('50', '50')
+            .addOption('100', '100')
+            .addOption('250', '250')
+            .addOption('500', '500')
+            .addOption('0', 'Never')
+            .setValue(String(this.plugin.settings.maxCount))
+            .onChange((value) => __awaiter(this, void 0, void 0, function* () {
+            this.plugin.settings.maxCount = Number(value);
+            yield this.plugin.saveSettings();
+            this.display();
+        }))))
+            .addSetting((setting) => setting
+            .setName('Apply pruning rules')
+            .setDesc(`Currently tracking ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'}. Pruning runs automatically on next reload; use this to apply immediately.`)
+            .addButton((btn) => {
+            btn.setButtonText('Prune now')
+                .setDisabled(!pruningEnabled);
+            if (pruningEnabled)
+                btn.setCta();
+            btn.onClick(() => __awaiter(this, void 0, void 0, function* () {
+                this.plugin.pruneDb();
+                yield this.plugin.writeDb(this.plugin.db);
+                this.display();
+            }));
+        }));
     }
 }
 

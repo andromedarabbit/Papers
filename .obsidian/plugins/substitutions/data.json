@@ -1,183 +1,258 @@
 {
-  "initialized": true,
-  "version": "0.1.0",
-  "substitutions": {
+  "meta": {
     "initialized": true,
-    "records": [
+    "version": "0.5.0",
+    "pluginVersion": "0.6.0",
+    "events": []
+  },
+  "swap": {
+    "version": "0.1.0",
+    "initialized": true,
+    "definitions": [
       {
-        "from": "...",
-        "to": "…",
-        "enabled": true
+        "id": 35,
+        "kind": "plain",
+        "enabled": true,
+        "source": "...",
+        "replacement": "…"
       },
       {
-        "from": "1/2",
-        "to": "½",
-        "enabled": true
+        "id": 34,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/2",
+        "replacement": "½"
       },
       {
-        "from": "1/3",
-        "to": "⅓",
-        "enabled": true
+        "id": 33,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/3",
+        "replacement": "⅓"
       },
       {
-        "from": "1/4",
-        "to": "¼",
-        "enabled": true
+        "id": 32,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/4",
+        "replacement": "¼"
       },
       {
-        "from": "1/5",
-        "to": "⅕",
-        "enabled": true
+        "id": 31,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/5",
+        "replacement": "⅕"
       },
       {
-        "from": "1/6",
-        "to": "⅙",
-        "enabled": true
+        "id": 30,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/6",
+        "replacement": "⅙"
       },
       {
-        "from": "1/7",
-        "to": "⅐",
-        "enabled": true
+        "id": 29,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/7",
+        "replacement": "⅐"
       },
       {
-        "from": "1/9",
-        "to": "⅑",
-        "enabled": true
+        "id": 28,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/9",
+        "replacement": "⅑"
       },
       {
-        "from": "1/10",
-        "to": "⅒",
-        "enabled": true
+        "id": 27,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/10",
+        "replacement": "⅒"
       },
       {
-        "from": "1/8",
-        "to": "⅛",
-        "enabled": true
+        "id": 26,
+        "kind": "plain",
+        "enabled": true,
+        "source": "1/8",
+        "replacement": "⅛"
       },
       {
-        "from": "2/3",
-        "to": "⅔",
-        "enabled": true
+        "id": 25,
+        "kind": "plain",
+        "enabled": true,
+        "source": "2/3",
+        "replacement": "⅔"
       },
       {
-        "from": "2/5",
-        "to": "⅖",
-        "enabled": true
+        "id": 24,
+        "kind": "plain",
+        "enabled": true,
+        "source": "2/5",
+        "replacement": "⅖"
       },
       {
-        "from": "3/4",
-        "to": "¾",
-        "enabled": true
+        "id": 23,
+        "kind": "plain",
+        "enabled": true,
+        "source": "3/4",
+        "replacement": "¾"
       },
       {
-        "from": "3/5",
-        "to": "⅗",
-        "enabled": true
+        "id": 22,
+        "kind": "plain",
+        "enabled": true,
+        "source": "3/5",
+        "replacement": "⅗"
       },
       {
-        "from": "4/5",
-        "to": "⅘",
-        "enabled": true
+        "id": 21,
+        "kind": "plain",
+        "enabled": true,
+        "source": "4/5",
+        "replacement": "⅘"
       },
       {
-        "from": "5/6",
-        "to": "⅚",
-        "enabled": true
+        "id": 20,
+        "kind": "plain",
+        "enabled": true,
+        "source": "5/6",
+        "replacement": "⅚"
       },
       {
-        "from": "3/8",
-        "to": "⅜",
-        "enabled": true
+        "id": 19,
+        "kind": "plain",
+        "enabled": true,
+        "source": "3/8",
+        "replacement": "⅜"
       },
       {
-        "from": "5/8",
-        "to": "⅝",
-        "enabled": true
+        "id": 18,
+        "kind": "plain",
+        "enabled": true,
+        "source": "5/8",
+        "replacement": "⅝"
       },
       {
-        "from": "7/8",
-        "to": "⅞",
-        "enabled": true
+        "id": 17,
+        "kind": "plain",
+        "enabled": true,
+        "source": "7/8",
+        "replacement": "⅞"
       },
       {
-        "from": "<--",
-        "to": "←",
-        "enabled": true
+        "id": 16,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<--",
+        "replacement": "←"
       },
       {
-        "from": "-->",
-        "to": "→",
-        "enabled": true
+        "id": 15,
+        "kind": "plain",
+        "enabled": true,
+        "source": "-->",
+        "replacement": "→"
       },
       {
-        "from": "<->",
-        "to": "↔",
-        "enabled": true
+        "id": 14,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<->",
+        "replacement": "↔"
       },
       {
-        "from": "<==",
-        "to": "⇐",
-        "enabled": true
+        "id": 13,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<==",
+        "replacement": "⇐"
       },
       {
-        "from": "==>",
-        "to": "⇒",
-        "enabled": true
+        "id": 12,
+        "kind": "plain",
+        "enabled": true,
+        "source": "==>",
+        "replacement": "⇒"
       },
       {
-        "from": "<=>",
-        "to": "⇔",
-        "enabled": true
+        "id": 11,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<=>",
+        "replacement": "⇔"
       },
       {
-        "from": "--",
-        "to": "–",
-        "enabled": false
+        "id": 10,
+        "kind": "plain",
+        "enabled": false,
+        "source": "--",
+        "replacement": "–"
       },
       {
-        "from": "---",
-        "to": "—",
-        "enabled": false
+        "id": 9,
+        "kind": "plain",
+        "enabled": false,
+        "source": "---",
+        "replacement": "—"
       },
       {
-        "from": "!=",
-        "to": "≠",
-        "enabled": true
+        "id": 8,
+        "kind": "plain",
+        "enabled": true,
+        "source": "!=",
+        "replacement": "≠"
       },
       {
-        "from": "<=",
-        "to": "≤",
-        "enabled": true
+        "id": 7,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<=",
+        "replacement": "≤"
       },
       {
-        "from": ">=",
-        "to": "≥",
-        "enabled": true
+        "id": 6,
+        "kind": "plain",
+        "enabled": true,
+        "source": ">=",
+        "replacement": "≥"
       },
       {
-        "from": "~=",
-        "to": "≅",
-        "enabled": true
+        "id": 5,
+        "kind": "plain",
+        "enabled": true,
+        "source": "~=",
+        "replacement": "≅"
       },
       {
-        "from": "+-",
-        "to": "±",
-        "enabled": true
+        "id": 4,
+        "kind": "plain",
+        "enabled": true,
+        "source": "+-",
+        "replacement": "±"
       },
       {
-        "from": "-+",
-        "to": "∓",
-        "enabled": true
+        "id": 3,
+        "kind": "plain",
+        "enabled": true,
+        "source": "-+",
+        "replacement": "∓"
       },
       {
-        "from": "<<",
-        "to": "≪",
-        "enabled": true
+        "id": 2,
+        "kind": "plain",
+        "enabled": true,
+        "source": "<<",
+        "replacement": "≪"
       },
       {
-        "from": ">>",
-        "to": "≫",
-        "enabled": true
+        "id": 1,
+        "kind": "plain",
+        "enabled": true,
+        "source": ">>",
+        "replacement": "≫"
       }
     ]
   }

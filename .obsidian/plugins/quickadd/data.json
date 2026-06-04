@@ -33,7 +33,13 @@
         "focus": true
       },
       "openFile": true,
-      "openFileInMode": "default"
+      "openFileInMode": "default",
+      "fileOpening": {
+        "location": "tab",
+        "direction": "vertical",
+        "focus": true,
+        "mode": "default"
+      }
     },
     {
       "id": "12cc4df1-1007-4faa-b051-ddf980798ce6",
@@ -74,7 +80,13 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         },
         {
           "id": "40d22322-e5e7-4e62-a340-d727a38e0a3c",
@@ -109,7 +121,13 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         },
         {
           "id": "af5340bf-450f-4bfc-87dd-16badbb67c9b",
@@ -144,7 +162,13 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         },
         {
           "id": "ded2553d-354b-4660-9c8a-c943e25246e1",
@@ -179,7 +203,13 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         }
       ],
       "collapsed": false
@@ -223,7 +253,13 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         },
         {
           "id": "c7d16a80-758e-4428-9dce-370e3e66c156",
@@ -258,19 +294,42 @@
             "focus": true
           },
           "openFile": true,
-          "openFileInMode": "default"
+          "openFileInMode": "default",
+          "fileOpening": {
+            "location": "tab",
+            "direction": "vertical",
+            "focus": true,
+            "mode": "default"
+          }
         }
       ]
     }
   ],
-  "macros": [],
   "inputPrompt": "multi-line",
+  "persistInputPromptDrafts": true,
+  "useSelectionAsCaptureValue": true,
   "devMode": false,
   "templateFolderPath": "템플릿",
-  "announceUpdates": true,
-  "version": "1.17.0",
+  "announceUpdates": "all",
+  "version": "2.12.3",
+  "globalVariables": {},
+  "onePageInputEnabled": false,
   "disableOnlineFeatures": true,
   "enableRibbonIcon": true,
+  "showCaptureNotification": true,
+  "showInputCancellationNotification": false,
+  "enableTemplatePropertyTypes": false,
+  "dateAliases": {
+    "t": "today",
+    "tm": "tomorrow",
+    "yd": "yesterday",
+    "nw": "next week",
+    "nm": "next month",
+    "ny": "next year",
+    "lw": "last week",
+    "lm": "last month",
+    "ly": "last year"
+  },
   "ai": {
     "defaultModel": "Ask me",
     "defaultSystemPrompt": "As an AI assistant within Obsidian, your primary goal is to help users manage their ideas and knowledge more effectively. Format your responses using Markdown syntax. Please use the [[Obsidian]] link format. You can write aliases for the links by writing [[Obsidian|the alias after the pipe symbol]]. To use mathematical notation, use LaTeX syntax. LaTeX syntax for larger equations should be on separate lines, surrounded with double dollar signs ($$). You can also inline math expressions by wrapping it in $ symbols. For example, use $$w_{ij}^{\text{new}}:=w_{ij}^{\text{current}}+etacdotdelta_jcdot x_{ij}$$ on a separate line, but you can write \"($eta$ = learning rate, $delta_j$ = error term, $x_{ij}$ = input)\" inline.",
@@ -310,7 +369,8 @@
             "name": "text-davinci-003",
             "maxTokens": 4096
           }
-        ]
+        ],
+        "modelSource": "auto"
       }
     ]
   },
@@ -320,6 +380,13 @@
     "incrementFileNameSettingMoveToDefaultBehavior": true,
     "mutualExclusionInsertAfterAndWriteToBottomOfFile": true,
     "setVersionAfterUpdateModalRelease": true,
-    "addDefaultAIProviders": true
+    "addDefaultAIProviders": true,
+    "consolidateFileExistsBehavior": true,
+    "repairTemplateFileExistsBehavior": true,
+    "removeMacroIndirection": true,
+    "migrateFileOpeningSettings": true,
+    "backfillFileOpeningDefaults": true,
+    "setProviderModelDiscoveryMode": true,
+    "migrateProviderApiKeysToSecretStorage": true
   }
 }
