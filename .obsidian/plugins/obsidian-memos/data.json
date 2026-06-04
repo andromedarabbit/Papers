@@ -43,7 +43,7 @@
   "FetchMemosMark": "#memo",
   "FetchMemosFromNote": false,
   "ShowCommentOnMemos": false,
-  "ShowLeftSideBar": false,
+  "ShowLeftSideBar": true,
   "MemoListView": "list",
   "MemoSaveLocation": "DAILY",
   "MemoOtherSaveLocation": {
@@ -150,7 +150,7 @@
   "maxWordCount": 0,
   "enableReferenceLinksGroup": false,
   "doubleClickBehavior": "edit-thino",
-  "useMobileViewDefaultHeader": false,
+  "useMobileViewDefaultHeader": true,
   "IgnoreFolderForMultiType": [],
   "UseBlockLinkWhenDragging": false,
   "ShowScrollToTopButton": true,
