@@ -1,6 +1,5 @@
 ---
-created: <%
-tp.file.creation_date("YYYY-MM-DDTHH:mm") %>
+created: <% tp.file.creation_date("YYYY-MM-DDTHH:mm") %>
 updated: <% await tp.file.last_modified_date("YYYY-MM-DD'T'HH:mm") %>
 aliases: ["<% tp.date.now("MMMM Do, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMMM D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMM D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("MMM. D, YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M/D/YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M-D-YYYY", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("YYYY-MM-DD", 0, tp.file.title, "YYYY.MM.DD") %>","<% tp.date.now("M.D.YYYY", 0, tp.file.title, "YYYY.MM.DD") %>",]
 tags:
