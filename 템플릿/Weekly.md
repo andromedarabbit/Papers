@@ -3,7 +3,7 @@ aliases:
   - weekly
 tags:
   - week/weekly
-plugin-prettier: true
+plugin-prettier: <% true %>
 ---
 
 # weekly

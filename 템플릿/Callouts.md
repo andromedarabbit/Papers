@@ -1,5 +1,6 @@
 ---
 source url: https://github.com/lguenth/obsidian-templates?tab=readme-ov-file
+plugin-prettier: false
 ---
 
 <%*

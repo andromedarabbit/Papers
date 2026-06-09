@@ -6,7 +6,7 @@ tags:
 - DailyNote-<% tp.file.title.split('-')[0] %>
 - DailyNote
 - "<% tp.file.title.split('-')[0] %>"
-plugin-prettier: true
+plugin-prettier: <% true %>
 AutoNoteMover: disable
 ---
 

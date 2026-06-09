@@ -5,7 +5,7 @@ aliases: ["<% tp.date.now("MMMM Do, YYYY", 0) %>","<% tp.date.now("MMMM D, YYYY"
 tags:
 - '<% tp.file.creation_date("YYYY-MM-DD") %>'
 - 업무
-plugin-prettier: true
+plugin-prettier: <% true %>
 ---
 
 <%*
