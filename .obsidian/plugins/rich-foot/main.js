@@ -104,7 +104,7 @@ var ReleaseNotesModal = class extends import_obsidian.Modal {
 };
 
 // virtual-module:virtual:release-notes
-var releaseNotes = "<h2>\u{1F680} New Feature</h2>\n<h3>v1.12.0</h3>\n<h4>\u2728 Limit Links Shown</h4>\n<ul>\n<li>Added an option to limit the number of backlinks/outlinks shown in the footer</li>\n<li>Surplus links are hidden behind a <strong>Show More (X)</strong> button that expands them on click (and collapses again with <strong>Show Less</strong>)</li>\n<li>Helpful for notes with a large number of links that previously caused flickering and scroll-reset issues</li>\n<li>Configure via Settings \u2192 <strong>Limit Links Shown</strong> (toggle) and <strong>Links Limit</strong> (default 10)</li>\n</ul>\n<h2>\u{1F680} Code Refactoring</h2>\n<h3>v1.11.1</h3>\n<h4>\u{1F4E6} Update</h4>\n<ul>\n<li>Optimized CSS for rending <code>rich foot</code> element at the bottom of notes</li>\n</ul>\n<h3>v1.11.0</h3>\n<p>This release represents a complete architectural overhaul of the Rich Foot plugin, implementing modern best practices and significant performance improvements.</p>\n<h4>\u2728 Performance Enhancements</h4>\n<ul>\n<li>Implemented <code>requestAnimationFrame</code> for all visual updates to eliminate page jitter</li>\n<li>Optimized MutationObserver usage with RAF-debounced callbacks</li>\n<li>Added CSS <code>contain</code> and <code>will-change</code> properties for better rendering performance</li>\n<li>Reduced layout thrashing through batched DOM operations</li>\n<li>Smart update detection to skip unnecessary re-renders</li>\n</ul>\n<h4>\u{1F3D7}\uFE0F Architecture Improvements</h4>\n<ul>\n<li>Complete code reorganization with separation of concerns</li>\n<li>New modular structure:<ul>\n<li><strong>RichFootDataManager</strong>: Handles all data fetching and parsing</li>\n<li><strong>RichFootRenderer</strong>: Pure rendering logic with optimal DOM operations</li>\n<li><strong>RichFootViewManager</strong>: View lifecycle and observer management</li>\n</ul>\n</li>\n<li>Eliminated code duplication across date parsing and link creation</li>\n<li>Cleaner, more maintainable codebase with JSDoc documentation</li>\n</ul>\n<h4>\u{1F9F9} Cleanup &amp; Stability</h4>\n<ul>\n<li>Proper resource cleanup using Obsidian&#39;s <code>registerEvent</code> exclusively</li>\n<li>Improved observer management with automatic disconnection</li>\n<li>Data attributes for better element tracking</li>\n<li>No more manual event cleanup in <code>onunload</code> (automatic via registration)</li>\n<li>Fixed potential memory leaks from orphaned observers</li>\n</ul>\n<h4>\u{1F527} Compatibility</h4>\n<ul>\n<li>Enhanced native hover preview integration (works in all modes)</li>\n<li>Respects view lifecycle changes more accurately</li>\n</ul>\n<h4>\u{1F4CA} Code Quality</h4>\n<ul>\n<li>Comprehensive error handling with try-catch blocks</li>\n<li>Modern ES6+ patterns throughout</li>\n<li>Clear naming conventions and documentation</li>\n</ul>\n<h4>\u{1F3A8} CSS Optimizations</h4>\n<ul>\n<li>Added GPU-accelerated transforms for animations</li>\n<li>Optimized transitions with <code>will-change</code> hints</li>\n<li>Layout containment for better performance</li>\n<li>Smoother fade-in animations</li>\n</ul>\n<p>This update maintains 100% backwards compatibility with all existing settings and configurations while providing a more robust, performant foundation for future enhancements.</p>\n";
+var releaseNotes = "<h2>\u{1F680} New Feature</h2>\n<h3>v1.13.0</h3>\n<h4>\u2728 Adjustable Footer Width</h4>\n<ul>\n<li>Added a <strong>Footer Width</strong> setting to control how wide the footer is</li>\n<li>Choose <strong>Readable line length</strong> to lock the footer to Obsidian&#39;s readable line width, or <strong>Custom width</strong> to set a maximum width in pixels</li>\n<li>The footer now always caps at the width of the note, so it no longer causes horizontal scrolling on narrow screens (notably on mobile)</li>\n<li>Configure via Settings \u2192 Style Settings \u2192 <strong>Footer Width</strong></li>\n</ul>\n<h3>v1.12.0</h3>\n<h4>\u2728 Limit Links Shown</h4>\n<ul>\n<li>Added an option to limit the number of backlinks/outlinks shown in the footer</li>\n<li>Surplus links are hidden behind a <strong>Show More (X)</strong> button that expands them on click (and collapses again with <strong>Show Less</strong>)</li>\n<li>Helpful for notes with a large number of links that previously caused flickering and scroll-reset issues</li>\n<li>Configure via Settings \u2192 <strong>Limit Links Shown</strong> (toggle) and <strong>Links Limit</strong> (default 10)</li>\n</ul>\n<h2>\u{1F680} Code Refactoring</h2>\n<h3>v1.11.1</h3>\n<h4>\u{1F4E6} Update</h4>\n<ul>\n<li>Optimized CSS for rending <code>rich foot</code> element at the bottom of notes</li>\n</ul>\n<h3>v1.11.0</h3>\n<p>This release represents a complete architectural overhaul of the Rich Foot plugin, implementing modern best practices and significant performance improvements.</p>\n<h4>\u2728 Performance Enhancements</h4>\n<ul>\n<li>Implemented <code>requestAnimationFrame</code> for all visual updates to eliminate page jitter</li>\n<li>Optimized MutationObserver usage with RAF-debounced callbacks</li>\n<li>Added CSS <code>contain</code> and <code>will-change</code> properties for better rendering performance</li>\n<li>Reduced layout thrashing through batched DOM operations</li>\n<li>Smart update detection to skip unnecessary re-renders</li>\n</ul>\n<h4>\u{1F3D7}\uFE0F Architecture Improvements</h4>\n<ul>\n<li>Complete code reorganization with separation of concerns</li>\n<li>New modular structure:<ul>\n<li><strong>RichFootDataManager</strong>: Handles all data fetching and parsing</li>\n<li><strong>RichFootRenderer</strong>: Pure rendering logic with optimal DOM operations</li>\n<li><strong>RichFootViewManager</strong>: View lifecycle and observer management</li>\n</ul>\n</li>\n<li>Eliminated code duplication across date parsing and link creation</li>\n<li>Cleaner, more maintainable codebase with JSDoc documentation</li>\n</ul>\n<h4>\u{1F9F9} Cleanup &amp; Stability</h4>\n<ul>\n<li>Proper resource cleanup using Obsidian&#39;s <code>registerEvent</code> exclusively</li>\n<li>Improved observer management with automatic disconnection</li>\n<li>Data attributes for better element tracking</li>\n<li>No more manual event cleanup in <code>onunload</code> (automatic via registration)</li>\n<li>Fixed potential memory leaks from orphaned observers</li>\n</ul>\n<h4>\u{1F527} Compatibility</h4>\n<ul>\n<li>Enhanced native hover preview integration (works in all modes)</li>\n<li>Respects view lifecycle changes more accurately</li>\n</ul>\n<h4>\u{1F4CA} Code Quality</h4>\n<ul>\n<li>Comprehensive error handling with try-catch blocks</li>\n<li>Modern ES6+ patterns throughout</li>\n<li>Clear naming conventions and documentation</li>\n</ul>\n<h4>\u{1F3A8} CSS Optimizations</h4>\n<ul>\n<li>Added GPU-accelerated transforms for animations</li>\n<li>Optimized transitions with <code>will-change</code> hints</li>\n<li>Layout containment for better performance</li>\n<li>Smoother fade-in animations</li>\n</ul>\n<p>This update maintains 100% backwards compatibility with all existing settings and configurations while providing a more robust, performant foundation for future enhancements.</p>\n";
 
 // src/settings.js
 var import_obsidian2 = require("obsidian");
@@ -159,6 +159,8 @@ var DEFAULT_SETTINGS = {
   combineLinks: false,
   limitLinks: false,
   linksLimit: 10,
+  footerWidth: "default",
+  footerMaxWidth: 700,
   updateDelay: 3e3,
   excludedParentSelectors: [],
   frontmatterExclusionField: ""
@@ -296,6 +298,44 @@ var RichFootSettingTab = class extends import_obsidian2.PluginSettingTab {
     }));
     containerEl.createEl("hr");
     containerEl.createEl("h3", { text: "Style Settings" });
+    let customWidthSetting;
+    let footerMaxWidthSlider;
+    const toggleCustomWidthVisibility = (value) => {
+      if (customWidthSetting) {
+        customWidthSetting.settingEl.style.display = value === "custom" ? "" : "none";
+      }
+    };
+    new import_obsidian2.Setting(containerEl).setName("Footer Width").setDesc(`Control how wide the footer is. "Readable line length" locks the footer to Obsidian's readable line width (recommended when your notes use Readable Line Length), and "Custom" lets you set a maximum width in pixels. The footer never grows wider than the note, so it won't cause horizontal scrolling on narrow screens.`).addDropdown((dropdown) => {
+      dropdown.addOptions({
+        "default": "Default (match content width)",
+        "readable": "Readable line length",
+        "custom": "Custom width (px)"
+      }).setValue(this.plugin.settings.footerWidth).onChange(async (value) => {
+        this.plugin.settings.footerWidth = value;
+        await this.plugin.saveSettings();
+        await this.plugin.updateRichFoot();
+        toggleCustomWidthVisibility(value);
+      });
+    });
+    let footerMaxWidthDebounce;
+    customWidthSetting = new import_obsidian2.Setting(containerEl).setName("Custom Footer Width").setDesc("Maximum width of the footer in pixels (200-1200px)").addSlider((slider) => {
+      footerMaxWidthSlider = slider;
+      slider.setLimits(200, 1200, 10).setValue(this.plugin.settings.footerMaxWidth).setDynamicTooltip().onChange((value) => {
+        this.plugin.settings.footerMaxWidth = value;
+        document.documentElement.style.setProperty("--rich-foot-content-max-width", value + "px");
+        if (footerMaxWidthDebounce) clearTimeout(footerMaxWidthDebounce);
+        footerMaxWidthDebounce = setTimeout(async () => {
+          await this.plugin.saveSettings();
+          await this.plugin.updateRichFoot();
+        }, 300);
+      });
+    }).addButton((button) => button.setButtonText("Reset").onClick(async () => {
+      this.plugin.settings.footerMaxWidth = DEFAULT_SETTINGS.footerMaxWidth;
+      await this.plugin.saveSettings();
+      await this.plugin.updateRichFoot();
+      footerMaxWidthSlider.setValue(DEFAULT_SETTINGS.footerMaxWidth);
+    }));
+    toggleCustomWidthVisibility(this.plugin.settings.footerWidth);
     let borderWidthSlider;
     new import_obsidian2.Setting(containerEl).setName("Border Width").setDesc("Adjust the width of the footer border (1-10px)").addSlider((slider) => {
       borderWidthSlider = slider;
@@ -1379,7 +1419,8 @@ var RICH_FOOT_CSS_VARS = [
   "--rich-foot-border-color",
   "--rich-foot-link-color",
   "--rich-foot-link-background",
-  "--rich-foot-link-border-color"
+  "--rich-foot-link-border-color",
+  "--rich-foot-content-max-width"
 ];
 var RichFootPlugin = class extends import_obsidian4.Plugin {
   async onload() {
@@ -1505,11 +1546,13 @@ var RichFootPlugin = class extends import_obsidian4.Plugin {
       "--rich-foot-border-color": this.settings.borderColor,
       "--rich-foot-link-color": this.settings.linkColor,
       "--rich-foot-link-background": this.settings.linkBackgroundColor,
-      "--rich-foot-link-border-color": this.settings.linkBorderColor
+      "--rich-foot-link-border-color": this.settings.linkBorderColor,
+      "--rich-foot-content-max-width": `${this.settings.footerMaxWidth}px`
     };
     Object.entries(properties).forEach(([property, value]) => {
       document.documentElement.style.setProperty(property, value);
     });
+    document.body.setAttribute("data-rich-foot-width", this.settings.footerWidth);
   }
   /**
    * Update rich foot (called from settings)
@@ -1575,6 +1618,7 @@ var RichFootPlugin = class extends import_obsidian4.Plugin {
     RICH_FOOT_CSS_VARS.forEach((property) => {
       document.documentElement.style.removeProperty(property);
     });
+    document.body.removeAttribute("data-rich-foot-width");
   }
 };
 var main_default = RichFootPlugin;

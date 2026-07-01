@@ -27,6 +27,23 @@
   line-height: 1.6;
 }
 
+/* Advanced LLM settings — collapsed by default, expanded when .llm-wiki-advanced-expanded is added */
+.llm-wiki-advanced-settings {
+  display: none;
+  padding-left: 16px;
+  border-left: 2px solid var(--background-modifier-border);
+  margin-left: 8px;
+}
+
+.llm-wiki-settings .llm-wiki-advanced-expanded {
+  display: block;
+}
+
+/* Cursor hint on the heading that toggles the advanced section */
+.llm-wiki-settings .llm-wiki-advanced-toggle {
+  cursor: pointer;
+}
+
 /* 设置面板样式 */
 .llm-wiki-settings .setting-item {
   border-bottom: 1px solid var(--background-modifier-border);
@@ -46,16 +63,13 @@
   margin: 10px 0;
 }
 
-/* Query Modal */
-.llm-wiki-query-modal {
-  width: 800px;
-  height: 780px;
+/* Query View (right-docked side panel) */
+.llm-wiki-query-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 0;
   overflow: hidden;
-}
-
-.llm-wiki-query-modal .modal-header {
-  display: none;
 }
 
 .llm-wiki-query-content {
@@ -70,19 +84,21 @@
 }
 
 .llm-wiki-query-header {
-  background: #4caf50;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  font-size: 16px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 1px solid var(--background-modifier-border);
   flex-shrink: 0;
 }
 
 .llm-wiki-query-hint {
-  background: #fff3e0;
-  padding: 8px 16px;
-  font-size: 13px;
-  color: #666666;
+  background: var(--background-secondary);
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--background-modifier-border);
   flex-shrink: 0;
 }
 
@@ -90,14 +106,14 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px;
+  padding: 12px;
   background: var(--background-primary);
 }
 
 .llm-wiki-query-input-container {
-  border-top: 2px solid #dddddd;
-  padding: 16px;
-  background: white;
+  border-top: 1px solid var(--background-modifier-border);
+  padding: 12px;
+  background: var(--background-primary);
   flex-shrink: 0;
 }
 
@@ -109,8 +125,8 @@
 
 .llm-wiki-query-send-btn {
   flex: 2;
-  background: #2196f3;
-  color: white;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
   padding: 8px;
   cursor: pointer;
   border: none;
@@ -119,8 +135,8 @@
 
 .llm-wiki-query-stop-btn {
   flex: 2;
-  background: #f44336;
-  color: white;
+  background: var(--text-error);
+  color: var(--text-on-accent);
   padding: 8px;
   cursor: pointer;
   border: none;
@@ -129,8 +145,8 @@
 
 .llm-wiki-query-save-btn {
   flex: 1;
-  background: var(--interactive-accent);
-  color: white;
+  background: var(--interactive-normal);
+  color: var(--text-normal);
   padding: 8px;
   cursor: pointer;
   border: none;
@@ -138,8 +154,8 @@
 }
 
 .llm-wiki-query-clear-btn {
-  background: #999999;
-  color: white;
+  background: var(--interactive-normal);
+  color: var(--text-muted);
   padding: 8px;
   cursor: pointer;
   border: none;
@@ -149,7 +165,7 @@
 .llm-wiki-query-count {
   margin-top: 8px;
   font-size: 11px;
-  color: #999999;
+  color: var(--text-faint);
 }
 
 .llm-wiki-query-message-wrapper {
@@ -267,14 +283,75 @@
   background: var(--background-modifier-hover);
 }
 
+.llm-wiki-query-message-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.llm-wiki-query-message-user .llm-wiki-query-message-label {
+  text-align: right;
+}
+
 .llm-wiki-query-message-user .llm-wiki-query-message-body {
-  background: var(--background-secondary);
+  background: var(--interactive-accent);
+  color: var(--text-on-accent, var(--text-normal));
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 18px 18px 4px 18px;
+  max-width: 80%;
 }
 
 .llm-wiki-query-message-assistant .llm-wiki-query-message-body {
   /* markdown rendered by Obsidian has its own styling */
+}
+
+/* v1.20.0: collapsible thinking-block panel inside the assistant answer.
+   Renders above the visible markdown, default collapsed (ChatGPT-style). */
+.llm-wiki-query-thinking-block {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  margin: 0 0 12px 0;
+  padding: 6px 12px;
+  font-size: 0.85em;
+}
+
+.llm-wiki-query-thinking-block > summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  user-select: none;
+  list-style: none;
+  padding: 4px 0;
+}
+
+.llm-wiki-query-thinking-block > summary::-webkit-details-marker {
+  display: none;
+}
+
+.llm-wiki-query-thinking-block > summary::before {
+  content: '▸ ';
+  display: inline-block;
+  transition: transform 0.15s ease;
+  margin-right: 4px;
+}
+
+.llm-wiki-query-thinking-block[open] > summary::before {
+  content: '▾ ';
+}
+
+.llm-wiki-query-thinking-content {
+  background: var(--background-primary);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin: 6px 0 4px 0;
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-muted);
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 /* Live response (currently generating) */
@@ -283,7 +360,7 @@
 }
 
 .llm-wiki-query-response-live .llm-wiki-query-message-label {
-  color: #4caf50;
+  color: var(--interactive-accent);
 }
 
 .llm-wiki-query-status {
@@ -330,6 +407,14 @@
   color: var(--color-orange);
 }
 
+.llm-wiki-status-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
 .llm-wiki-plugin-info {
   margin: 16px 0 8px;
   font-size: 13px;
@@ -368,4 +453,272 @@
 /* Ingestion status bar */
 .llm-wiki-status-bar-hidden {
   display: none;
+}
+
+/* Issue #85 v2: Tag chip input (GitHub Issue Labels style) */
+.llm-wiki-tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;       /* chips top-aligned; input on its own row */
+  align-content: flex-start;
+  gap: 4px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px 6px;
+  min-height: 32px;
+  width: 100%;
+  background: var(--background-primary);
+  /* No left-padding from the input's border-box; chips start at padding-left. */
+  box-sizing: border-box;
+}
+.llm-wiki-tag-container:focus-within {
+  border-color: var(--interactive-accent);
+}
+.llm-wiki-tag-container--duplicate {
+  animation: llm-wiki-tag-shake 0.4s ease;
+}
+@keyframes llm-wiki-tag-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); border-color: var(--color-orange); }
+  75% { transform: translateX(4px); border-color: var(--color-orange); }
+}
+.llm-wiki-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--background-modifier-hover);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--text-normal);
+  font-family: var(--font-text);
+}
+.llm-wiki-tag-chip-remove {
+  cursor: pointer;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  padding: 0 2px;
+  font-size: 14px;
+  line-height: 1;
+}
+.llm-wiki-tag-chip-remove:hover {
+  color: var(--color-orange);
+}
+.llm-wiki-tag-input {
+  border: none;
+  outline: none;
+  /* Force the input onto its own row below the chips. flex-basis:100%
+     makes it span the full container width regardless of how many
+     chips exist; flex-shrink:1 lets it shrink when the container is
+     narrow (Obsidian narrow settings pane). */
+  flex: 0 0 100%;
+  order: 99;             /* always last, after all chips */
+  min-height: 22px;
+  background: transparent;
+  color: var(--text-normal);
+  font-family: var(--font-text);
+  font-size: 13px;
+}
+.llm-wiki-tag-sr-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Issue #85 v4: Default-reference fallback tags. When the persisted
+   custom CSV is empty, the chip input materializes the default
+   vocabulary (e.g. person/organization/…) as fully-editable chips —
+   visually identical to user-added ones, with a × remove button.
+   They are an editable baseline, not a read-only preview. */
+
+/* Operation History Panel: custom date range inputs */
+.llm-wiki-custom-range {
+  display: none;
+  gap: 6px;
+  align-items: center;
+}
+/* Chain selector to override base display:none without the specificity hack.
+   Obsidian review bot flags inline specificity overrides; higher specificity
+   (2 classes) wins over the single-class base rule regardless of CSS load order. */
+.llm-wiki-custom-range.llm-wiki-custom-range-visible {
+  display: flex;
+}
+/* Date input: calendar icon left-aligned, text right-aligned */
+.llm-wiki-date-input {
+  padding: 4px 8px 4px 28px;
+  border-radius: 4px;
+  border: 1px solid var(--background-modifier-border);
+  min-width: 120px;
+  text-align: right;
+}
+/* Ensure calendar icon doesn't overlap text */
+.llm-wiki-date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 8px;
+  cursor: pointer;
+}
+
+/* v1.22.0 #97: Schema diff Modal — IDE-style dual-pane preview. */
+.llm-wiki-schema-diff-modal {
+  /* The Modal element itself is a child of the Obsidian modal container.
+   * We size the inner content here, but Obsidian constrains the
+   * .modal-container max-width. We override the container so the
+   * diff has enough horizontal space for two side-by-side panes. */
+  min-width: 720px;
+}
+
+/* Obsidian's default modal width is too narrow for a side-by-side
+ * diff. We target the modal-container via the .llm-wiki-schema-diff-modal
+ * class added to BOTH modalEl (outer .modal) and contentEl (inner content)
+ * in onOpen. Direct class selector avoids :has() (Obsidian review warning:
+ * :has causes broad selector invalidation → perf cost). */
+.modal.llm-wiki-schema-diff-modal {
+  width: min(90vw, 1100px);
+}
+
+.llm-wiki-schema-diff-panes {
+  display: flex;
+  gap: 8px;
+  max-height: 50vh;
+  overflow: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  /* Outer container scrolls. The background lives here so the
+   * scrolled-into-view rows are filled all the way down (not just
+   * the first 50vh worth, leaving grey gaps when content is short).
+   * The pane-level background is set to "transparent" so it does
+   * not double-fill on top of the outer. */
+  background: var(--background-secondary);
+}
+
+.llm-wiki-schema-diff-pane {
+  flex: 1;
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 8px;
+  /* Transparent so the outer's background shows through. The
+   * .llm-wiki-schema-diff-row-highlight overlay paints red on
+   * individual rows. */
+  background: transparent;
+}
+
+.llm-wiki-schema-diff-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.llm-wiki-schema-diff-row-del {
+  /* Red-tinted background + red left border for the LEFT column
+   * (line removed from current schema). Text inherits pane color
+   * so contrast is preserved in both light and dark themes. */
+  background: rgba(var(--color-red-rgb, 255, 0, 0), 0.12);
+  border-left: 3px solid var(--text-error);
+}
+
+.llm-wiki-schema-diff-row-add {
+  /* Green-tinted background + green left border for the RIGHT column
+   * (line added by the LLM). Text inherits pane color. */
+  background: rgba(var(--color-green-rgb, 0, 255, 0), 0.12);
+  border-left: 3px solid var(--text-success);
+}
+
+.llm-wiki-schema-diff-gutter {
+  flex: 0 0 40px;
+  color: var(--text-faint);
+  text-align: right;
+  padding-right: 8px;
+  user-select: none;
+}
+
+.llm-wiki-schema-diff-content {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Content highlight — left column (del) gets a red-toned background tint,
+ * right column (add) gets a green-toned background tint. Text color is
+ * inherited from the parent (no override — keeps contrast readable in
+ * both light and dark themes). */
+
+/* Left column: deletion (line removed from current schema) */
+.llm-wiki-schema-diff-pane-left .llm-wiki-schema-diff-content-highlight {
+  background: rgba(var(--color-red-rgb, 255, 0, 0), 0.08);
+}
+
+/* Right column: addition (line added by the LLM) */
+.llm-wiki-schema-diff-pane-right .llm-wiki-schema-diff-content-highlight {
+  background: rgba(var(--color-green-rgb, 0, 255, 0), 0.08);
+}
+
+.llm-wiki-schema-diff-summary {
+  color: var(--text-muted);
+  margin: 0 0 8px 0;
+}
+
+/* v1.22.0 #97: LLM's rationale — shown before the diff in BOTH empty
+ * and has-changes mode so the user can read the "why" before deciding. */
+.llm-wiki-schema-diff-rationale {
+  border-left: 3px solid var(--text-accent);
+  background: var(--background-secondary);
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin: 0 0 12px 0;
+}
+
+.llm-wiki-schema-diff-rationale-text {
+  margin: 0;
+  color: var(--text-normal);
+  white-space: pre-wrap;
+  font-size: 0.9em;
+}
+
+.llm-wiki-schema-diff-regen-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.llm-wiki-schema-diff-regen-label {
+  margin: 0 0 4px 0;
+  font-weight: bold;
+}
+
+.llm-wiki-schema-diff-regen-textarea {
+  width: 100%;
+  min-height: 50px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.llm-wiki-schema-diff-btn-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.llm-wiki-schema-diff-empty-banner {
+  background: var(--background-modifier-border);
+  border-left: 3px solid var(--text-accent);
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin: 0 0 12px 0;
+}
+
+.llm-wiki-schema-diff-empty-title {
+  font-weight: bold;
+  margin: 0 0 4px 0;
+}
+
+.llm-wiki-schema-diff-empty-rationale {
+  margin: 0;
+  color: var(--text-muted);
+  white-space: pre-wrap;
 }

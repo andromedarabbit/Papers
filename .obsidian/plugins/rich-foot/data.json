@@ -21,10 +21,12 @@
   "combineLinks": false,
   "limitLinks": false,
   "linksLimit": 10,
+  "footerWidth": "default",
+  "footerMaxWidth": 700,
   "updateDelay": 3000,
   "excludedParentSelectors": [
     "[data-type=\"thino_view\"]"
   ],
   "frontmatterExclusionField": "",
-  "lastVersion": "1.12.0"
+  "lastVersion": "1.13.0"
 }
